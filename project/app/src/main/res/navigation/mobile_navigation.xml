@@ -12,14 +12,26 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.rawrick.flicklist.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
+        android:id="@+id/navigation_movies"
+        android:name="com.rawrick.flicklist.ui.movies.MoviesFragment"
+        android:label="@string/title_movies"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.rawrick.flicklist.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
+        android:id="@+id/navigation_series"
+        android:name="com.rawrick.flicklist.ui.series.SeriesFragment"
+        android:label="@string/title_series"
+        tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/navigation_watchlist"
+        android:name="com.rawrick.flicklist.ui.watchlist.WatchlistFragment"
+        android:label="@string/title_series"
+        tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.rawrick.flicklist.ui.profile.ProfileFragment"
+        android:label="@string/title_profile"
         tools:layout="@layout/fragment_notifications" />
 </navigation>

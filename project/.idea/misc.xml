@@ -10,7 +10,9 @@
         <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.24166666666666667" />
         <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/activity_main.xml" value="0.23645833333333333" />
         <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/fragment_dashboard.xml" value="0.23645833333333333" />
+        <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/fragment_home.xml" value="0.2328125" />
         <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/fragment_notifications.xml" value="0.23645833333333333" />
+        <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
       </map>
     </option>
   </component>

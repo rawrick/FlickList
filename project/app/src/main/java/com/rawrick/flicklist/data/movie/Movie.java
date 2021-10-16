@@ -37,12 +37,12 @@ public class Movie implements Serializable {
     }
 
     public static ArrayList<Movie> fromJSONString(String jsonString) {
-        ArrayList<Movie> audioBooks = new ArrayList<>();
+        ArrayList<Movie> movies = new ArrayList<>();
         JsonArray jsonArray = new Gson().fromJson(jsonString, JsonArray.class);
         jsonArray.forEach(jsonElement -> {
-            audioBooks.add(new Gson().fromJson(jsonElement.getAsJsonObject().toString(), Movie.class));
+            movies.add(new Gson().fromJson(jsonElement.getAsJsonObject().toString(), Movie.class));
         });
-        return audioBooks;
+        return movies;
     }
 
     public String getId() {

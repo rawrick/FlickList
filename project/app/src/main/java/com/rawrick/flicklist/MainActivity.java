@@ -1,8 +1,11 @@
 package com.rawrick.flicklist;
 
+import static androidx.recyclerview.widget.RecyclerView.*;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -11,13 +14,31 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.rawrick.flicklist.data.util.MovieManager;
+import com.rawrick.flicklist.data.util.MySingleton;
 import com.rawrick.flicklist.databinding.ActivityMainBinding;
+import com.rawrick.flicklist.ui.home.TrendingMoviesAdapter;
+import com.rawrick.flicklist.ui.home.TrendingMoviesViewHolder;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
         // makes status bar fully transparent
         setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
+
+
     }
 
     public static void setWindowFlag(Activity activity, final int bits, boolean on) {
@@ -52,5 +75,10 @@ public class MainActivity extends AppCompatActivity {
         }
         win.setAttributes(winParams);
     }
+
+
+
+
+
 
 }

@@ -3,7 +3,9 @@ package com.rawrick.flicklist.data.util;
 import android.content.Context;
 import android.util.Log;
 
-import com.rawrick.flicklist.data.movie.Movie;
+import com.rawrick.flicklist.data.movie.MovieTrending;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -11,24 +13,23 @@ public class MovieProvider {
 
 
     private final Context context;
-    private ArrayList<Movie> movieData;
+    private ArrayList<MovieTrending> movieData;
 
     public MovieProvider(Context context) {
         this.context = context;
     }
 
-    public void getDataForMovie(DataListener listener) {
+    public void getDataForMoviesTrending(DataListener listener) {
         if (movieData == null) {
-            updateMovieData(new APIRequest.ResponseListener() {
+            updateMoviesTrendingData(new APIRequest.ResponseListener() {
                 @Override
-                public void onResponse(String response) {
-                    movieData = Movie.fromJSONString(response);
+                public void onResponse(JSONObject response) {
+                    movieData = Parser.parseTrendingMovies(response);
                     listener.onDataAvailable(movieData);
                 }
-
                 @Override
                 public void onError() {
-                    Log.d("AudioBookApp", "No Connection");
+                    Log.d("FlickListApp", "No Connection");
                 }
             });
         } else {
@@ -36,13 +37,13 @@ public class MovieProvider {
         }
     }
 
-    private void updateMovieData(APIRequest.ResponseListener listener) {
-        APIRequest request = new APIRequest(APIRequest.Route.MOVIE_DATA, context);
+    private void updateMoviesTrendingData(APIRequest.ResponseListener listener) {
+        APIRequest request = new APIRequest(APIRequest.Route.MOVIES_TRENDING_WEEK_DATA, context);
         request.send(listener);
     }
 
     public interface DataListener {
-        void onDataAvailable(ArrayList<Movie> data
+        void onDataAvailable(ArrayList<MovieTrending> data
         );
     }
 }

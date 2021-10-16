@@ -41,8 +41,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginVertical="16dp">
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="16dp"
+            android:orientation="horizontal">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/home_fab_search"
@@ -140,36 +141,34 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginVertical="8dp"
             android:text="Trending Movies"
             android:textAlignment="textStart"
             android:textSize="20sp" />
 
         <include
             android:id="@+id/home_trending_movies"
-            layout="@layout/home_trending_view"
+            layout="@layout/home_trending_movies_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp" />
+            android:layout_marginHorizontal="16dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginVertical="8dp"
             android:text="Trending Series"
             android:textAlignment="textStart"
             android:textSize="20sp" />
 
         <include
             android:id="@+id/home_trending_series"
-            layout="@layout/home_trending_view"
+            layout="@layout/home_trending_movies_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp" />
+            android:layout_marginHorizontal="16dp" />
 
     </LinearLayout>
 

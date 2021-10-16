@@ -8,13 +8,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.rawrick.flicklist.BuildConfig;
 
 public class APIRequest {
 
     private final Route route;
     private final Context context;
 
-    private static final String key = "PLACEHOLDER";
+    private static final String key = BuildConfig.ApiKey;
     private static final String api = "https://api.themoviedb.org/3/movie/";
     private static final String id = "458156";
 

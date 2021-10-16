@@ -9,28 +9,31 @@ import java.util.ArrayList;
 
 public class Movie implements Serializable {
 
+    private final static String imageUrl = "https://image.tmdb.org/t/p/w500/";
+
     private final String id,
             title,
-            description,
-            author,
-            wallpaperURLString,
-            audioURLString;
-    private final int duration;
+            overview,
+            releaseDate,
+            posterPath;
+    private final int runtime;
+    private final boolean adult;
 
-    public Movie(String id, String title,
-                     String description,
-                     String author,
-                     String wallpaperURLString,
-                     String audioURLString,
-                     int duration) {
+    public Movie(String id,
+                 String title,
+                 String overview,
+                 Integer runtime,
+                 String releaseDate,
+                 boolean adult,
+                 String posterPath) {
         this.id = id;
         this.title = title;
-        this.description = description;
-        this.author = author;
-        this.wallpaperURLString =
-                wallpaperURLString;
-        this.audioURLString = audioURLString;
-        this.duration = duration;
+        this.overview = overview;
+        this.runtime = runtime;
+        this.releaseDate =
+                releaseDate;
+        this.adult = adult;
+        this.posterPath = posterPath;
     }
 
     public static ArrayList<Movie> fromJSONString(String jsonString) {
@@ -51,23 +54,23 @@ public class Movie implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        return overview;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public int getDuration() {
-        return duration;
+    public Integer getAuthor() {
+        return runtime;
     }
 
     public String getWallpaperURLString() {
-        return wallpaperURLString;
+        return releaseDate;
     }
 
-    public String getAudioURLString() {
-        return audioURLString;
+    public boolean getAudioURLString() {
+        return adult;
+    }
+
+    public String getPosterPath() {
+        return posterPath;
     }
 }
 

@@ -19,7 +19,7 @@ public class MovieProvider {
 
     public void getDataForMovie(DataListener listener) {
         if (movieData == null) {
-            updateAudioBookData(new APIRequest.ResponseListener() {
+            updateMovieData(new APIRequest.ResponseListener() {
                 @Override
                 public void onResponse(String response) {
                     movieData = Movie.fromJSONString(response);
@@ -36,7 +36,7 @@ public class MovieProvider {
         }
     }
 
-    private void updateAudioBookData(APIRequest.ResponseListener listener) {
+    private void updateMovieData(APIRequest.ResponseListener listener) {
         APIRequest request = new APIRequest(APIRequest.Route.MOVIE_DATA, context);
         request.send(listener);
     }

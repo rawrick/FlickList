@@ -15,8 +15,6 @@ public class Parser {
 
     private final static String img500 = "http://image.tmdb.org/t/p/w500/";
 
-
-    // TODO outsorce parsing for trending movies (less data needed)
     public static ArrayList<MovieTrending> parseTrendingMovies(JSONObject response) {
         try {
             JSONArray jsonArray = response.getJSONArray("results");
@@ -29,9 +27,16 @@ public class Parser {
                 String overview = result.getString("overview");
                 String releaseDate = result.getString("release_date");
                 int id = result.getInt("id");
-                boolean adult  = result.getBoolean("adult");
-                String backdrop_path = result.getString("backdrop_path");
+                boolean isAdult  = result.getBoolean("adult");
+                String backdropPath = result.getString("backdrop_path");
                 String posterPath = result.getString("poster_path");
+                int index = i;
+                boolean isSelected;
+                if (i == 0) {
+                    isSelected = true;
+                } else {
+                    isSelected = false;
+                }
 
                 // unused
                 int vote_count = result.getInt("vote_count");
@@ -43,9 +48,8 @@ public class Parser {
                 String media_type = result.getString("media_type");
 
                 String fullPosterPath = img500 + posterPath;
-                String fullBackdropPath = img500 + backdrop_path;
-                Log.d("backdrip", fullBackdropPath);
-                movieArrayList.add(new MovieTrending(adult, id, overview, fullPosterPath, fullBackdropPath, releaseDate, title, voteAverage));
+                String fullBackdropPath = img500 + backdropPath;
+                movieArrayList.add(new MovieTrending(fullBackdropPath, index, isSelected, isAdult, id, overview, fullPosterPath, releaseDate, title, voteAverage));
             }
             return movieArrayList;
         } catch (JSONException e) {

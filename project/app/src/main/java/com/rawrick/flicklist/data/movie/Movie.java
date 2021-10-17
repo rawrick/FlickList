@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 public class Movie implements Serializable {
 
-    private final boolean adult;
+    private final boolean isAdult;
     private final int id;
     private final String overview;
     private final String posterPath;
@@ -13,14 +13,14 @@ public class Movie implements Serializable {
     private final String title;
     private final double voteAverage;
 
-    public Movie(boolean adult,
+    public Movie(boolean isAdult,
                  int id,
                  String overview,
                  String posterPath,
                  String releaseDate,
                  String title,
                  double voteAverage) {
-        this.adult = adult;
+        this.isAdult = isAdult;
         this.id = id;
         this.overview = overview;
         this.posterPath = posterPath;
@@ -34,7 +34,7 @@ public class Movie implements Serializable {
     }
 
     public boolean isAdult() {
-        return adult;
+        return isAdult;
     }
 
     public int getId() {

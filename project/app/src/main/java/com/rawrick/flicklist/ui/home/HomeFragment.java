@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -42,6 +43,8 @@ public class HomeFragment extends Fragment implements MovieManager.MovieManagerL
     TextView featuredScore;
     ImageView featuredPoster;
     ImageView featuredBackdrop;
+    //
+    ImageView trendingMovieFrame;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -101,30 +104,44 @@ public class HomeFragment extends Fragment implements MovieManager.MovieManagerL
         featuredScore = view.findViewById(R.id.home_trending_view_score);
         featuredPoster = view.findViewById(R.id.home_trending_view_poster);
         featuredBackdrop = view.findViewById(R.id.home_featured_backdrop);
+        //
+        trendingMovieFrame = view.findViewById(R.id.home_trending_movie_item_frame);
     }
 
     @Override
     public void onMoviesUpdated() {
-        trendingMoviesAdapter.setAudioBooks(movieManager.getMoviesTrending());
+        trendingMoviesAdapter.setMoviesTrending(movieManager.getMoviesTrending());
         // sets default featured movie
         setFeaturedDetails(0);
+        // setSelectedFrame(0);
     }
 
     @Override
     public void onViewClicked(int position) {
         setFeaturedDetails(position);
+
     }
 
+    // provides details for featured view of a movie
     private void setFeaturedDetails(int position) {
         MovieTrending selectedMovie = movieManager.getMoviesTrending().get(position);
+        // sets title
         featuredTitle.setText(selectedMovie.getTitle());
-        featuredOverview.setText(selectedMovie.getOverview());
+        // sets overview
+        String overview = selectedMovie.getOverview();
+        if (selectedMovie.getOverview().length() > 230) {
+            overview = selectedMovie.getOverview().substring(0, 230) + "...";
+        }
+        featuredOverview.setText(overview);
+        // sets vote average
         int voteAverage = (int) (selectedMovie.getVoteAverage() * 10);
         featuredScore.setText(voteAverage + "%");
+        // sets poster
         Glide.with(getActivity())
                 .load(selectedMovie.getPosterPath())
                 .centerCrop()
                 .into(featuredPoster);
+        // sets backdrop
         Glide.with(getActivity())
                 .load(selectedMovie.getBackdropPath())
                 .centerCrop()

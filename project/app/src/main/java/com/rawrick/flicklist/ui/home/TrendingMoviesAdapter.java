@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rawrick.flicklist.R;
-import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 
 import java.util.ArrayList;
@@ -17,17 +16,18 @@ import java.util.ArrayList;
 public class TrendingMoviesAdapter extends RecyclerView.Adapter<TrendingMoviesViewHolder> {
 
     private final Context context;
-    private ArrayList<MovieTrending> audioBooks;
+    private ArrayList<MovieTrending> moviesTrending;
     private final TrendingMoviesViewHolder.ViewHolderListener listener;
+    private final int selectedPosition = RecyclerView.NO_POSITION;
 
     public TrendingMoviesAdapter(Context context, TrendingMoviesViewHolder.ViewHolderListener listener) {
         this.context = context;
         this.listener = listener;
-        audioBooks = new ArrayList<>();
+        moviesTrending = new ArrayList<>();
     }
 
-    public void setAudioBooks(ArrayList<MovieTrending> audioBooks) {
-        this.audioBooks = audioBooks;
+    public void setMoviesTrending(ArrayList<MovieTrending> moviesTrending) {
+        this.moviesTrending = moviesTrending;
         this.notifyDataSetChanged();
     }
 
@@ -40,12 +40,13 @@ public class TrendingMoviesAdapter extends RecyclerView.Adapter<TrendingMoviesVi
 
     @Override
     public void onBindViewHolder(@NonNull TrendingMoviesViewHolder holder, int position) {
-        Movie audioBook = audioBooks.get(position);
+        holder.itemView.setSelected(position == selectedPosition);
+        MovieTrending audioBook = moviesTrending.get(position);
         holder.bindView(audioBook);
     }
 
     @Override
     public int getItemCount() {
-        return audioBooks.size();
+        return moviesTrending.size();
     }
 }

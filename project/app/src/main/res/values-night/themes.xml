@@ -30,4 +30,9 @@
         <item name="elevation">0dp</item>
     </style>
 
+    <style name="ImageViewRoundedCorners">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/default_rounded_corners</item>
+    </style>
+
 </resources>

@@ -15,7 +15,6 @@ import com.rawrick.flicklist.R;
 import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 
-
 public class TrendingMoviesViewHolder extends RecyclerView.ViewHolder {
 
     private final Context context;
@@ -41,13 +40,13 @@ public class TrendingMoviesViewHolder extends RecyclerView.ViewHolder {
         trendingMovieView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onViewClicked(getAdapterPosition());
+                listener.onTrendingMovieClicked(getAdapterPosition());
 
             }
         });
     }
 
     public interface ViewHolderListener {
-        void onViewClicked(int position);
+        void onTrendingMovieClicked(int position);
     }
 }

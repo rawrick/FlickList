@@ -25,7 +25,7 @@ public class MovieProvider {
                 @Override
                 public void onResponse(JSONObject response) {
                     movieData = Parser.parseTrendingMovies(response);
-                    listener.onDataAvailable(movieData);
+                    listener.onTrendingMovieDataAvailable(movieData);
                 }
                 @Override
                 public void onError() {
@@ -33,7 +33,7 @@ public class MovieProvider {
                 }
             });
         } else {
-            listener.onDataAvailable(movieData);
+            listener.onTrendingMovieDataAvailable(movieData);
         }
     }
 
@@ -43,7 +43,7 @@ public class MovieProvider {
     }
 
     public interface DataListener {
-        void onDataAvailable(ArrayList<MovieTrending> data
+        void onTrendingMovieDataAvailable(ArrayList<MovieTrending> data
         );
     }
 }

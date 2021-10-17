@@ -21,21 +21,19 @@ public class MovieManager {
         MovieProvider provider = new MovieProvider(context);
         provider.getDataForMoviesTrending(new MovieProvider.DataListener() {
             @Override
-            public void onDataAvailable(ArrayList<MovieTrending> data) {
+            public void onTrendingMovieDataAvailable(ArrayList<MovieTrending> data) {
                 moviesTrending = data;
-                listener.onMoviesUpdated();
+                listener.onTrendingMoviesUpdated();
             }
         });
     }
-
-
 
     public ArrayList<MovieTrending> getMoviesTrending() {
         return moviesTrending;
     }
 
     public interface MovieManagerListener {
-        void onMoviesUpdated();
+        void onTrendingMoviesUpdated();
     }
 
 }

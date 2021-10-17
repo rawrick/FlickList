@@ -23,28 +23,37 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.rawrick.flicklist.R;
 import com.rawrick.flicklist.data.movie.MovieTrending;
+import com.rawrick.flicklist.data.movie.SeriesTrending;
 import com.rawrick.flicklist.data.util.MovieManager;
+import com.rawrick.flicklist.data.util.SeriesManager;
 import com.rawrick.flicklist.databinding.FragmentHomeBinding;
 
-public class HomeFragment extends Fragment implements MovieManager.MovieManagerListener, TrendingMoviesViewHolder.ViewHolderListener {
+public class HomeFragment extends Fragment implements MovieManager.MovieManagerListener, TrendingMoviesViewHolder.ViewHolderListener, SeriesManager.SeriesManagerListener, TrendingSeriesViewHolder.ViewHolderListener {
 
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
 
     private RequestQueue mQueue;
-
+    // movie data & adapter
     private MovieManager movieManager;
     private RecyclerView recyclerTrendingMovies;
     public TrendingMoviesAdapter trendingMoviesAdapter;
-
+    // series data & adapter
+    private SeriesManager seriesManager;
+    private RecyclerView recyclerTrendingSeries;
+    public TrendingSeriesAdapter trendingSeriesAdapter;
     // Views for featured trending movie
     TextView featuredTitle;
     TextView featuredOverview;
     TextView featuredScore;
     ImageView featuredPoster;
     ImageView featuredBackdrop;
-    //
-    ImageView trendingMovieFrame;
+    // Views for featured trending series
+    TextView featuredSeriesTitle;
+    TextView featuredSeriesOverview;
+    TextView featuredSeriesScore;
+    ImageView featuredSeriesPoster;
+    ImageView featuredSeriesBackdrop;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -89,10 +98,15 @@ public class HomeFragment extends Fragment implements MovieManager.MovieManagerL
         RequestQueue mQueue = Volley.newRequestQueue(getActivity());
         movieManager = new MovieManager(getActivity(), this);
         movieManager.getMoviesFromURL();
+        seriesManager = new SeriesManager(getActivity(), this);
+        seriesManager.getTrendingSeriesFromAPI();
         Log.d("getmovies", String.valueOf(movieManager.getMoviesTrending()));
     }
 
     private void initUI(View view) {
+        /**
+         * MOVIES
+         **/
         // initialize trending movies adapter
         recyclerTrendingMovies = view.findViewById(R.id.home_trending_movies_container);
         recyclerTrendingMovies.setLayoutManager(new LinearLayoutManager(getActivity(), HORIZONTAL, false));
@@ -104,26 +118,35 @@ public class HomeFragment extends Fragment implements MovieManager.MovieManagerL
         featuredScore = view.findViewById(R.id.home_trending_view_score);
         featuredPoster = view.findViewById(R.id.home_trending_view_poster);
         featuredBackdrop = view.findViewById(R.id.home_featured_backdrop);
-        //
-        trendingMovieFrame = view.findViewById(R.id.home_trending_movie_item_frame);
+        /**
+         * SERIES
+         **/
+        recyclerTrendingSeries = view.findViewById(R.id.home_trending_series_container);
+        recyclerTrendingSeries.setLayoutManager(new LinearLayoutManager(getActivity(), HORIZONTAL, false));
+        trendingSeriesAdapter = new TrendingSeriesAdapter(getActivity(), this);
+        recyclerTrendingSeries.setAdapter(trendingSeriesAdapter);
+        // Views for featured movie
+        featuredSeriesTitle = view.findViewById(R.id.home_trending_series_title);
+        featuredSeriesOverview = view.findViewById(R.id.home_trending_series_description);
+        featuredSeriesScore = view.findViewById(R.id.home_trending_series_score);
+        featuredSeriesPoster = view.findViewById(R.id.home_trending_series_poster);
+        featuredSeriesBackdrop = view.findViewById(R.id.home_featured_series_backdrop);
     }
 
     @Override
-    public void onMoviesUpdated() {
+    public void onTrendingMoviesUpdated() {
         trendingMoviesAdapter.setMoviesTrending(movieManager.getMoviesTrending());
         // sets default featured movie
-        setFeaturedDetails(0);
-        // setSelectedFrame(0);
+        setFeaturedMovieDetails(0);
     }
 
     @Override
-    public void onViewClicked(int position) {
-        setFeaturedDetails(position);
-
+    public void onTrendingMovieClicked(int position) {
+        setFeaturedMovieDetails(position);
     }
 
     // provides details for featured view of a movie
-    private void setFeaturedDetails(int position) {
+    private void setFeaturedMovieDetails(int position) {
         MovieTrending selectedMovie = movieManager.getMoviesTrending().get(position);
         // sets title
         featuredTitle.setText(selectedMovie.getTitle());
@@ -148,4 +171,41 @@ public class HomeFragment extends Fragment implements MovieManager.MovieManagerL
                 .into(featuredBackdrop);
     }
 
+    @Override
+    public void onTrendingSeriesUpdated() {
+        trendingSeriesAdapter.setSeriesTrending(seriesManager.getTrendingSeries());
+        // sets default featured series
+        setFeaturedSeriesDetails(0);
+    }
+
+    @Override
+    public void onTrendingSeriesClicked(int position) {
+        setFeaturedSeriesDetails(position);
+    }
+
+    // provides details for featured view of a series
+    private void setFeaturedSeriesDetails(int position) {
+        SeriesTrending selectedSeries = seriesManager.getTrendingSeries().get(position);
+        // sets title
+        featuredSeriesTitle.setText(selectedSeries.getTitle());
+        // sets overview
+        String overview = selectedSeries.getOverview();
+        if (selectedSeries.getOverview().length() > 230) {
+            overview = selectedSeries.getOverview().substring(0, 230) + "...";
+        }
+        featuredSeriesOverview.setText(overview);
+        // sets vote average
+        int voteAverage = (int) (selectedSeries.getVoteAverage() * 10);
+        featuredSeriesScore.setText(voteAverage + "%");
+        // sets poster
+        Glide.with(getActivity())
+                .load(selectedSeries.getPosterPath())
+                .centerCrop()
+                .into(featuredSeriesPoster);
+        // sets backdrop
+        Glide.with(getActivity())
+                .load(selectedSeries.getBackdropPath())
+                .centerCrop()
+                .into(featuredSeriesBackdrop);
+    }
 }

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieTrending;
+import com.rawrick.flicklist.data.movie.SeriesTrending;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,9 +54,44 @@ public class Parser {
             }
             return movieArrayList;
         } catch (JSONException e) {
-            Log.d("apidebug", "parse error");
+            Log.d("apidebug", "movie trending parse error");
             e.printStackTrace();
         }
         return null;
     }
+
+    public static ArrayList<SeriesTrending> parseTrendingSeries(JSONObject response) {
+        try {
+            JSONArray jsonArray = response.getJSONArray("results");
+            ArrayList<SeriesTrending> seriesArrayList = new ArrayList<>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject result = jsonArray.getJSONObject(i);
+
+                String title = result.getString("name");
+                double voteAverage = result.getDouble("vote_average");
+                String overview = result.getString("overview");
+                String releaseDate = result.getString("first_air_date");
+                int id = result.getInt("id");
+                String backdropPath = result.getString("backdrop_path");
+                String posterPath = result.getString("poster_path");
+                int index = i;
+                boolean isSelected;
+                if (i == 0) {
+                    isSelected = true;
+                } else {
+                    isSelected = false;
+                }
+
+                String fullPosterPath = img500 + posterPath;
+                String fullBackdropPath = img500 + backdropPath;
+                seriesArrayList.add(new SeriesTrending(fullBackdropPath, index, isSelected, id, overview, fullPosterPath, releaseDate, title, voteAverage));
+            }
+            return seriesArrayList;
+        } catch (JSONException e) {
+            Log.d("apidebug", "series trending parse error");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

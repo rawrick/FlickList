@@ -165,7 +165,7 @@
 
         <include
             android:id="@+id/home_trending_series"
-            layout="@layout/home_trending_movies_view"
+            layout="@layout/home_trending_series_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp" />

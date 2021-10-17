@@ -6,7 +6,7 @@
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/defaultBackgroundDark</item>
+        <item name="colorSecondary">@color/colorPrimary</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
@@ -28,11 +28,16 @@
         <item name="tint">@color/colorPrimary</item>
         <item name="borderWidth">0dp</item>
         <item name="elevation">0dp</item>
+        <item name="backgroundTint">@color/defaultBackgroundDark</item>
     </style>
 
     <style name="ImageViewRoundedCorners">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/default_rounded_corners</item>
+    </style>
+
+    <style name="Toolbar">
+        <item name="android:background">@color/variation1BackgroundDark</item>
     </style>
 
 </resources>

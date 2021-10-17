@@ -11,7 +11,10 @@
         <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/rc_home_featured.xml" value="0.412962962962963" />
         <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/rc_home_textview.xml" value="0.412962962962963" />
         <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/activity_main.xml" value="0.4305555555555556" />
+        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/activity_settings.xml" value="0.4388888888888889" />
         <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/fragment_home.xml" value="0.37777777777777777" />
+        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/fragment_notifications.xml" value="0.5364583333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/fragment_profile.xml" value="0.4388888888888889" />
         <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/hom_trending_view.xml" value="0.5364583333333334" />
         <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/home_trending_movies_item.xml" value="0.8456659619450317" />
         <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/home_trending_movies_view.xml" value="0.37777777777777777" />
@@ -19,6 +22,8 @@
         <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/home_trending_series_view.xml" value="0.37037037037037035" />
         <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/home_trending_view.xml" value="0.37777777777777777" />
         <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/home_trending_view_detail.xml" value="0.5364583333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/nav_toolbar.xml" value="0.41388888888888886" />
+        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/xml/preferences.xml" value="0.4388888888888889" />
         <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.24166666666666667" />
         <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/gradient.xml" value="0.24895833333333334" />
         <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.24166666666666667" />

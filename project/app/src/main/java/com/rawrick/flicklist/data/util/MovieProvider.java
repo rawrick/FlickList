@@ -1,5 +1,8 @@
 package com.rawrick.flicklist.data.util;
 
+import static com.rawrick.flicklist.data.tools.SettingsManager.getPreferenceAPIkey;
+import static com.rawrick.flicklist.data.util.APIRequest.key;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -38,6 +41,7 @@ public class MovieProvider {
     }
 
     private void updateMoviesTrendingData(APIRequest.ResponseListener listener) {
+        key = getPreferenceAPIkey(context);
         APIRequest request = new APIRequest(APIRequest.Route.MOVIES_TRENDING_WEEK_DATA, context);
         request.send(listener);
     }

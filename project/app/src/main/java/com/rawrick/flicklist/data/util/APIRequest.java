@@ -1,5 +1,7 @@
 package com.rawrick.flicklist.data.util;
 
+import static com.rawrick.flicklist.data.tools.SettingsManager.getPreferenceAPIkey;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -23,7 +25,8 @@ public class APIRequest {
     private final Route route;
     private final Context context;
 
-    private static final String key = BuildConfig.ApiKey;
+    public static String key;
+            //BuildConfig.ApiKey;
 
     private static final String trendingMoviesWeekURL = "https://api.themoviedb.org/3/trending/movie/week";
     private static final String trendingMoviesDayURL = "https://api.themoviedb.org/3/trending/movie/day";
@@ -33,7 +36,7 @@ public class APIRequest {
 
     public APIRequest(Route route, Context context) {
         this.route = route;
-        this.context = context;
+        this.context = context.getApplicationContext();
     }
 
     public void send(ResponseListener listener) {

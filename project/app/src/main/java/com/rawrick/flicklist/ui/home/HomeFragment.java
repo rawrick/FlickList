@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -33,7 +33,8 @@ public class HomeFragment extends Fragment implements MovieManager.MovieManagerL
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
 
-    private RequestQueue mQueue;
+    //private RequestQueue mQueue;
+    private SwipeRefreshLayout swipeRefreshLayout;
     // movie data & adapter
     private MovieManager movieManager;
     private RecyclerView recyclerTrendingMovies;
@@ -94,14 +95,24 @@ public class HomeFragment extends Fragment implements MovieManager.MovieManagerL
         initData();
     }
 
+    /**
+     * DATA
+     */
+
     private void initData() {
-        RequestQueue mQueue = Volley.newRequestQueue(getActivity());
         movieManager = new MovieManager(getActivity(), this);
-        movieManager.getMoviesFromURL();
         seriesManager = new SeriesManager(getActivity(), this);
-        seriesManager.getTrendingSeriesFromAPI();
-        Log.d("getmovies", String.valueOf(movieManager.getMoviesTrending()));
+        getTrendingData();
     }
+
+    private void getTrendingData() {
+        movieManager.getTrendingMoviesFromAPI();
+        seriesManager.getTrendingSeriesFromAPI();
+    }
+
+    /**
+     * UI
+     */
 
     private void initUI(View view) {
         /**
@@ -131,6 +142,19 @@ public class HomeFragment extends Fragment implements MovieManager.MovieManagerL
         featuredSeriesScore = view.findViewById(R.id.home_trending_series_score);
         featuredSeriesPoster = view.findViewById(R.id.home_trending_series_poster);
         featuredSeriesBackdrop = view.findViewById(R.id.home_featured_series_backdrop);
+
+        swipeRefreshLayout = view.findViewById(R.id.home_swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getTrendingData();
+                onTrendingMoviesUpdated();
+                onTrendingSeriesUpdated();
+                trendingMoviesAdapter.notifyDataSetChanged();
+                trendingSeriesAdapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override

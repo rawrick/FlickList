@@ -17,7 +17,7 @@ public class MovieManager {
         this.listener = listener;
     }
 
-    public void getMoviesFromURL() {
+    public void getTrendingMoviesFromAPI() {
         MovieProvider provider = new MovieProvider(context);
         provider.getDataForMoviesTrending(new MovieProvider.DataListener() {
             @Override

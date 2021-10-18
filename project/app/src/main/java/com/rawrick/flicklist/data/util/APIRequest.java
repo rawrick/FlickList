@@ -26,13 +26,17 @@ public class APIRequest {
     private final Context context;
 
     public static String key;
-            //BuildConfig.ApiKey;
+    //BuildConfig.ApiKey;
 
     private static final String trendingMoviesWeekURL = "https://api.themoviedb.org/3/trending/movie/week";
     private static final String trendingMoviesDayURL = "https://api.themoviedb.org/3/trending/movie/day";
     private static final String trendingSeriesWeekURL = "https://api.themoviedb.org/3/trending/tv/week";
     private static final String trendingSeriesDayURL = "https://api.themoviedb.org/3/trending/tv/day";
     private static final String movieURL = "https://api.themoviedb.org/3/movie/";
+
+    private static final String authenticationTokenNew = "https://api.themoviedb.org/3/authentication/token/new";
+    private static final String authenticationSessionNew = "https://api.themoviedb.org/3/authentication/session/new";
+    private static final String authenticationSessionGuestNew = "https://api.themoviedb.org/3/authentication/guest_session/new";
 
     public APIRequest(Route route, Context context) {
         this.route = route;
@@ -63,7 +67,11 @@ public class APIRequest {
         MOVIES_TRENDING_WEEK_DATA(trendingMoviesWeekURL + "?api_key=" + key),
         MOVIES_TRENDING_DAY_DATA(trendingMoviesDayURL + "?api_key=" + key),
         SERIES_TRENDING_WEEK_DATA(trendingSeriesWeekURL + "?api_key=" + key),
-        SERIES_TRENDING_DAY_DATA(trendingSeriesDayURL + "?api_key=" + key);
+        SERIES_TRENDING_DAY_DATA(trendingSeriesDayURL + "?api_key=" + key),
+
+        AUTHENTICATION_TOKEN_NEW(authenticationTokenNew + "?api_key=" + key),
+        AUTHENTICATION_SESSION_NEW(authenticationSessionNew + "?api_key=" + key),
+        AUTHENTICATION_SESSION_GUEST_NEW(authenticationSessionGuestNew + "?api_key=" + key);
 
         private final String url;
 
@@ -74,6 +82,7 @@ public class APIRequest {
 
     public interface ResponseListener {
         void onResponse(JSONObject response);
+
         void onError();
     }
 }

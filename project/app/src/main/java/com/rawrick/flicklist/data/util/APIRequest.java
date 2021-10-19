@@ -1,7 +1,5 @@
 package com.rawrick.flicklist.data.util;
 
-import static com.rawrick.flicklist.data.tools.SettingsManager.getPreferenceAPIkey;
-
 import android.content.Context;
 import android.util.Log;
 
@@ -11,13 +9,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonObject;
-import com.rawrick.flicklist.BuildConfig;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class APIRequest {
@@ -26,6 +19,8 @@ public class APIRequest {
     private final Context context;
 
     public static String key;
+    public static String token;
+    public static String sessionID;
     //BuildConfig.ApiKey;
 
     private static final String trendingMoviesWeekURL = "https://api.themoviedb.org/3/trending/movie/week";
@@ -43,13 +38,19 @@ public class APIRequest {
         this.context = context.getApplicationContext();
     }
 
+
     public void send(ResponseListener listener) {
         RequestQueue queue = Volley.newRequestQueue(context);
         VolleyLog.DEBUG = true;
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, this.route.url, null,
+        String request = this.route.url;
+        if (token != null) {
+            request = authenticationSessionNew + "?api_key=" + key + "&request_token=" + token;
+        }
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, request, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        token = null;
                         listener.onResponse(response);
                     }
                 }, new Response.ErrorListener() {
@@ -69,8 +70,8 @@ public class APIRequest {
         SERIES_TRENDING_WEEK_DATA(trendingSeriesWeekURL + "?api_key=" + key),
         SERIES_TRENDING_DAY_DATA(trendingSeriesDayURL + "?api_key=" + key),
 
+        AUTHENTICATION_SESSION_NEW(""),
         AUTHENTICATION_TOKEN_NEW(authenticationTokenNew + "?api_key=" + key),
-        AUTHENTICATION_SESSION_NEW(authenticationSessionNew + "?api_key=" + key),
         AUTHENTICATION_SESSION_GUEST_NEW(authenticationSessionGuestNew + "?api_key=" + key);
 
         private final String url;

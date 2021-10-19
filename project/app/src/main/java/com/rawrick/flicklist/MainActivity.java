@@ -5,6 +5,7 @@ import static com.rawrick.flicklist.data.tools.SettingsManager.getLoginStatus;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,20 +24,22 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        checkLoginStatus();
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        checkLoginStatus();
+
         // ?
         initializeNavigation();
 
         // makes status bar fully transparent
         setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
+
+
     }
 
     private void checkLoginStatus() {
@@ -69,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
         }
         win.setAttributes(winParams);
     }
-
-
-
 
 
 

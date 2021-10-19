@@ -11,13 +11,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="DEFAULT"
-        app:layout_constraintBottom_toTopOf="@id/login_generate_guest_request_token"
+        app:layout_constraintBottom_toTopOf="@id/login_generate_guest_session"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/login_generate_guest_request_token"
+        android:id="@+id/login_generate_guest_session"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="GUEST"

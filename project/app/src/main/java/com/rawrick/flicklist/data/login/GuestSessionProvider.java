@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.rawrick.flicklist.BuildConfig;
 import com.rawrick.flicklist.data.util.APIRequest;
+import com.rawrick.flicklist.data.util.Parser;
 
 import org.json.JSONObject;
 
@@ -20,13 +21,13 @@ public class GuestSessionProvider {
         this.context = context;
     }
 
-    public void getSession(GuestSessionProvider.DataListener listener) {
+    public void getGuestSessionID(GuestSessionProvider.DataListener listener) {
         // TODO check for existing session
         if (session == null) {
             sendSessionRequest(new APIRequest.ResponseListener() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    // parse result
+                    session = Parser.parseLoginGuestSession(response);
                     listener.onGuestSessionDataAvailable(session);
                 }
 

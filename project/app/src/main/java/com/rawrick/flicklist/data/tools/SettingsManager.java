@@ -13,10 +13,44 @@ public class SettingsManager {
         return isLoggedIn;
     }
 
+    public static void setLoginStatus(Context context, boolean isLoggedIn) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("login", isLoggedIn);
+        editor.apply();
+    }
+
+    public static boolean getLoginProgress(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean isLoggedIn = sharedPreferences.getBoolean("loginprogress", false);
+        return isLoggedIn;
+    }
+
+    public static void setLoginProgress(Context context, boolean isInProgress) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("loginprogress", isInProgress);
+        editor.apply();
+    }
+
+    public static String getSessionID(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String sessionID = sharedPreferences.getString("sessionid", "");
+        return sessionID;
+    }
+
+    public static void setSessionID(Context context, String sessionID) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("sessionid", sessionID);
+        editor.apply();
+    }
+
     public static String getPreferenceAPIkey(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         String key = sharedPreferences.getString("api_key", "");
         return key;
     }
+
 
 }

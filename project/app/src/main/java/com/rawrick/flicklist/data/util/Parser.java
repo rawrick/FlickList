@@ -16,6 +16,56 @@ public class Parser {
 
     private final static String img500 = "http://image.tmdb.org/t/p/w500/";
 
+    public static String parseLoginToken(JSONObject response) {
+        try {
+            boolean success = response.getBoolean("success");
+            if (!success) {
+                Log.d("apidebug", "token creation failed");
+                return null;
+            }
+            String expiration = response.getString("expires_at");
+            String token = response.getString("request_token");
+            return token;
+        } catch (JSONException e) {
+            Log.d("apidebug", "token parse error");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String parseLoginSession(JSONObject response) {
+        try {
+            boolean success = response.getBoolean("success");
+            if (!success) {
+                Log.d("apidebug", "session creation failed");
+                return null;
+            }
+            String id = response.getString("session_id");
+            return id;
+        } catch (JSONException e) {
+            Log.d("apidebug", "session parse error");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String parseLoginGuestSession(JSONObject response) {
+        try {
+            boolean success = response.getBoolean("success");
+            if (!success) {
+                Log.d("apidebug", "guest session creation failed");
+                return null;
+            }
+            String expiration = response.getString("expires_at");
+            String guest_session_id = response.getString("guest_session_id");
+            return guest_session_id;
+        } catch (JSONException e) {
+            Log.d("apidebug", "token parse error");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static ArrayList<MovieTrending> parseTrendingMovies(JSONObject response) {
         try {
             JSONArray jsonArray = response.getJSONArray("results");

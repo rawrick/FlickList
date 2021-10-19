@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.rawrick.flicklist.BuildConfig;
 import com.rawrick.flicklist.data.util.APIRequest;
+import com.rawrick.flicklist.data.util.Parser;
 
 import org.json.JSONObject;
 
@@ -25,7 +26,7 @@ public class TokenProvider {
             sendSessionRequest(new APIRequest.ResponseListener() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    // parse result
+                    token = Parser.parseLoginToken(response);
                     listener.onTokenDataAvailable(token);
                 }
 

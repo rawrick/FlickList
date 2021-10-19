@@ -33,6 +33,8 @@ public class APIRequest {
     private static final String authenticationSessionNew = "https://api.themoviedb.org/3/authentication/session/new";
     private static final String authenticationSessionGuestNew = "https://api.themoviedb.org/3/authentication/guest_session/new";
 
+    private static final String accountURL = "https://api.themoviedb.org/3/account?api_key=";
+
     public APIRequest(Route route, Context context) {
         this.route = route;
         this.context = context.getApplicationContext();
@@ -72,7 +74,10 @@ public class APIRequest {
 
         AUTHENTICATION_SESSION_NEW(""),
         AUTHENTICATION_TOKEN_NEW(authenticationTokenNew + "?api_key=" + key),
-        AUTHENTICATION_SESSION_GUEST_NEW(authenticationSessionGuestNew + "?api_key=" + key);
+        AUTHENTICATION_SESSION_GUEST_NEW(authenticationSessionGuestNew + "?api_key=" + key),
+        ACCOUNT_DATA(accountURL + key +  "&session_id=" + sessionID)
+
+        ;
 
         private final String url;
 

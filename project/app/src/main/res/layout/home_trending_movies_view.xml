@@ -49,15 +49,25 @@
         app:layout_constraintTop_toTopOf="@id/home_trending_view_banner"
         app:layout_constraintVertical_bias="0.75" />
 
+    <ImageView
+        android:id="@+id/home_trending_movie_score_star"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:src="@drawable/ic_rating"
+        app:layout_constraintBottom_toBottomOf="@id/home_trending_view_score"
+        app:layout_constraintLeft_toRightOf="@id/home_trending_view_poster"
+        app:layout_constraintRight_toLeftOf="@id/home_trending_view_score" />
+
     <TextView
         android:id="@+id/home_trending_view_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:textColor="@color/white"
         android:textSize="18sp"
+        android:layout_marginStart="6dp"
         app:layout_constraintBottom_toBottomOf="@id/home_trending_view_poster"
-        app:layout_constraintLeft_toRightOf="@id/home_trending_view_poster"
+        app:layout_constraintLeft_toRightOf="@id/home_trending_movie_score_star"
         app:layout_constraintTop_toBottomOf="@id/home_trending_view_title"
         app:layout_constraintVertical_bias="1" />
 

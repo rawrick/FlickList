@@ -21,19 +21,20 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.rawrick.flicklist.R;
+import com.rawrick.flicklist.data.account.AccountManager;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 import com.rawrick.flicklist.data.movie.SeriesTrending;
+import com.rawrick.flicklist.data.tools.SettingsManager;
 import com.rawrick.flicklist.data.util.MovieManager;
 import com.rawrick.flicklist.data.util.SeriesManager;
 import com.rawrick.flicklist.databinding.FragmentHomeBinding;
 
-public class HomeFragment extends Fragment implements MovieManager.MovieManagerListener, TrendingMoviesViewHolder.ViewHolderListener, SeriesManager.SeriesManagerListener, TrendingSeriesViewHolder.ViewHolderListener {
+public class HomeFragment extends Fragment implements MovieManager.MovieManagerListener, TrendingMoviesViewHolder.ViewHolderListener, SeriesManager.SeriesManagerListener, TrendingSeriesViewHolder.ViewHolderListener, AccountManager.AccountManagerListener {
 
-    private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
 
-    //private RequestQueue mQueue;
     private SwipeRefreshLayout swipeRefreshLayout;
     // movie data & adapter
     private MovieManager movieManager;
@@ -55,25 +56,15 @@ public class HomeFragment extends Fragment implements MovieManager.MovieManagerL
     TextView featuredSeriesScore;
     ImageView featuredSeriesPoster;
     ImageView featuredSeriesBackdrop;
+    // Views for banner
+    private AccountManager accountManager;
+    ShapeableImageView userAvatar;
+    TextView userName;
 
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
-
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        /*
-        final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-         */
         return root;
     }
 
@@ -100,9 +91,13 @@ public class HomeFragment extends Fragment implements MovieManager.MovieManagerL
      */
 
     private void initData() {
+        Log.d("session", SettingsManager.getSessionID(this.getActivity()));
         movieManager = new MovieManager(getActivity(), this);
         seriesManager = new SeriesManager(getActivity(), this);
+        accountManager = new AccountManager(getActivity(), this);
+        accountManager.getAccountDataFromAPI();
         getTrendingData();
+
     }
 
     private void getTrendingData() {
@@ -115,6 +110,12 @@ public class HomeFragment extends Fragment implements MovieManager.MovieManagerL
      */
 
     private void initUI(View view) {
+        /**
+         * BANNER
+         */
+        userName = view.findViewById(R.id.home_header_name);
+        userAvatar = view.findViewById(R.id.home_header_avatar);
+
         /**
          * MOVIES
          **/
@@ -231,5 +232,15 @@ public class HomeFragment extends Fragment implements MovieManager.MovieManagerL
                 .load(selectedSeries.getBackdropPath())
                 .centerCrop()
                 .into(featuredSeriesBackdrop);
+    }
+
+    @Override
+    public void onAccountDataUpdated() {
+        String welcomeText = "Hello, " + accountManager.getAccountData()[1] + ".";
+        userName.setText(welcomeText);
+        Glide.with(getActivity())
+                .load(accountManager.getAccountData()[3])
+                .centerCrop()
+                .into(userAvatar);
     }
 }

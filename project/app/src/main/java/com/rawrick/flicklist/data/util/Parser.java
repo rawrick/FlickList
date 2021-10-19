@@ -14,7 +14,8 @@ import java.util.ArrayList;
 
 public class Parser {
 
-    private final static String img500 = "http://image.tmdb.org/t/p/w500/";
+    private final static String img300 = "https://image.tmdb.org/t/p/w300";
+    private final static String img500 = "https://image.tmdb.org/t/p/w500/";
 
     public static String parseLoginToken(JSONObject response) {
         try {
@@ -139,6 +140,31 @@ public class Parser {
             return seriesArrayList;
         } catch (JSONException e) {
             Log.d("apidebug", "series trending parse error");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String[] parseAccountData(JSONObject response) {
+        try {
+            JSONObject avatar = response.getJSONObject("avatar");
+
+            JSONObject tmdb = avatar.getJSONObject("tmdb");
+            String avatarPath = tmdb.getString("avatar_path");
+            String avatarPathFull = img300 + avatarPath;
+
+            JSONObject gravatar = avatar.getJSONObject("gravatar");
+            String hash = gravatar.getString("hash");
+
+            String id = String.valueOf(response.getInt("id"));
+            String name = response.getString("name");
+            String username = response.getString("username");
+            String adult = String.valueOf(response.getBoolean("include_adult"));
+
+            String[] accountDetails = new String[] {id, name, username, avatarPathFull, hash, adult};
+            return accountDetails;
+        } catch (JSONException e) {
+            Log.d("apidebug", "account details parsing error");
             e.printStackTrace();
         }
         return null;

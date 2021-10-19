@@ -9,5 +9,11 @@
         android:title="API Key"
         app:icon="@drawable/ic_home_fab_social" />
 
+    <Preference
+        android:title="Log Out"
+        android:icon="@drawable/ic_home_fab_explore"
+        android:key="log_out"
+        />
+
 
 </PreferenceScreen>

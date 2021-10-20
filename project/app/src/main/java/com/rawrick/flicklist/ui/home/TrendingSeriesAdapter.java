@@ -9,21 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rawrick.flicklist.R;
-import com.rawrick.flicklist.data.movie.MovieTrending;
-
-import java.util.ArrayList;        import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.rawrick.flicklist.R;
-import com.rawrick.flicklist.data.movie.MovieTrending;
-import com.rawrick.flicklist.data.movie.SeriesTrending;
 
 import java.util.ArrayList;
+
+import com.rawrick.flicklist.data.series.SeriesTrending;
 
 public class TrendingSeriesAdapter extends RecyclerView.Adapter<TrendingSeriesViewHolder> {
 

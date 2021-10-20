@@ -2,6 +2,8 @@ package com.rawrick.flicklist.ui.home;
 
 import static androidx.recyclerview.widget.RecyclerView.HORIZONTAL;
 
+import static com.rawrick.flicklist.data.tools.SettingsManager.setAccountID;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,25 +15,25 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.rawrick.flicklist.R;
 import com.rawrick.flicklist.data.account.AccountManager;
 import com.rawrick.flicklist.data.movie.MovieTrending;
-import com.rawrick.flicklist.data.movie.SeriesTrending;
+import com.rawrick.flicklist.data.series.SeriesTrending;
 import com.rawrick.flicklist.data.tools.SettingsManager;
 import com.rawrick.flicklist.data.util.MovieManager;
 import com.rawrick.flicklist.data.util.SeriesManager;
 import com.rawrick.flicklist.databinding.FragmentHomeBinding;
 
-public class HomeFragment extends Fragment implements MovieManager.MovieManagerListener, TrendingMoviesViewHolder.ViewHolderListener, SeriesManager.SeriesManagerListener, TrendingSeriesViewHolder.ViewHolderListener, AccountManager.AccountManagerListener {
+import java.util.ArrayList;
+
+public class HomeFragment extends Fragment implements MovieManager.TrendingMoviesManagerListener, TrendingMoviesViewHolder.ViewHolderListener, SeriesManager.SeriesManagerListener, TrendingSeriesViewHolder.ViewHolderListener, AccountManager.AccountManagerListener, MovieManager.RatedMoviesManagerListener {
 
     private FragmentHomeBinding binding;
 
@@ -61,6 +63,7 @@ public class HomeFragment extends Fragment implements MovieManager.MovieManagerL
     ShapeableImageView userAvatar;
     TextView userName;
 
+    ArrayList<String[]> rM;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -91,11 +94,12 @@ public class HomeFragment extends Fragment implements MovieManager.MovieManagerL
      */
 
     private void initData() {
-        Log.d("session", SettingsManager.getSessionID(this.getActivity()));
-        movieManager = new MovieManager(getActivity(), this);
+        Log.d("FlickListApp", SettingsManager.getSessionID(this.getActivity()));
+        movieManager = new MovieManager(getActivity(), this, this);
         seriesManager = new SeriesManager(getActivity(), this);
         accountManager = new AccountManager(getActivity(), this);
         accountManager.getAccountDataFromAPI();
+        movieManager.getRatedMoviesFromAPI();
         getTrendingData();
 
     }
@@ -154,6 +158,18 @@ public class HomeFragment extends Fragment implements MovieManager.MovieManagerL
                 trendingMoviesAdapter.notifyDataSetChanged();
                 trendingSeriesAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+        //DEBUG
+        FloatingActionButton fab = view.findViewById(R.id.explore_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rM = movieManager.getRatedMovies();
+                for (String[] movie : rM) {
+                    Log.d("FlickListApp", "id: " + movie[0] + ", rating: " + movie[1]);
+                }
+
             }
         });
     }
@@ -236,11 +252,17 @@ public class HomeFragment extends Fragment implements MovieManager.MovieManagerL
 
     @Override
     public void onAccountDataUpdated() {
+        setAccountID(this.getActivity(), accountManager.getAccountData()[0]);
         String welcomeText = "Hello, " + accountManager.getAccountData()[1] + ".";
         userName.setText(welcomeText);
         Glide.with(getActivity())
                 .load(accountManager.getAccountData()[3])
                 .centerCrop()
                 .into(userAvatar);
+    }
+
+    @Override
+    public void onRatedMoviesUpdated() {
+        rM = movieManager.getRatedMovies();
     }
 }

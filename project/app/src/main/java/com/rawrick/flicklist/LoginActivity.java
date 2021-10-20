@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
     @Override
     protected void onResume() {
         //token = loginManager.getToken();
-        Log.d("login", "onResume: " + token);
+        Log.d("FlickListApp", "login token: " + token);
         if (token != null) {
             loginManager.getSessionIDFromAPI();
         }
@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
     @Override
     public void onTokenCreated() {
         token = loginManager.getToken();
-        Log.d("login", "onTokenCreated: " + loginManager.getToken());
+        Log.d("FlickListApp", "token: " + loginManager.getToken());
         setLoginProgress(this, true);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(loginManager.getAuthenticationURL(token)));
@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
 
     @Override
     public void onSessionCreated() {
-        Log.d("login", loginManager.getSessionID());
+        Log.d("FlickListApp", "sessionId: " + loginManager.getSessionID());
         setSessionID(this, loginManager.getSessionID());
         setLoginProgress(this, false);
         setLoginStatus(this, true);
@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
     @Override
     public void onGuestSessionCreated() {
         // TODO check if creation successful
-        Log.d("login guest", loginManager.getGuestSessionID());
+        Log.d("FlickListApp", "guest sessionID: " + loginManager.getGuestSessionID());
         setSessionID(this, loginManager.getGuestSessionID());
         setLoginStatus(this, true);
         Intent intent = new Intent(this, MainActivity.class);

@@ -2,9 +2,9 @@ package com.rawrick.flicklist.data.util;
 
 import android.util.Log;
 
-import com.rawrick.flicklist.data.movie.Movie;
+import com.google.gson.JsonArray;
 import com.rawrick.flicklist.data.movie.MovieTrending;
-import com.rawrick.flicklist.data.movie.SeriesTrending;
+import com.rawrick.flicklist.data.series.SeriesTrending;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,14 +21,14 @@ public class Parser {
         try {
             boolean success = response.getBoolean("success");
             if (!success) {
-                Log.d("apidebug", "token creation failed");
+                Log.d("FlickListApp", "token creation failed");
                 return null;
             }
             String expiration = response.getString("expires_at");
             String token = response.getString("request_token");
             return token;
         } catch (JSONException e) {
-            Log.d("apidebug", "token parse error");
+            Log.d("FlickListApp", "token parse error");
             e.printStackTrace();
         }
         return null;
@@ -38,13 +38,13 @@ public class Parser {
         try {
             boolean success = response.getBoolean("success");
             if (!success) {
-                Log.d("apidebug", "session creation failed");
+                Log.d("FlickListApp", "session creation failed");
                 return null;
             }
             String id = response.getString("session_id");
             return id;
         } catch (JSONException e) {
-            Log.d("apidebug", "session parse error");
+            Log.d("FlickListApp", "session parse error");
             e.printStackTrace();
         }
         return null;
@@ -54,14 +54,14 @@ public class Parser {
         try {
             boolean success = response.getBoolean("success");
             if (!success) {
-                Log.d("apidebug", "guest session creation failed");
+                Log.d("FlickListApp", "guest session creation failed");
                 return null;
             }
             String expiration = response.getString("expires_at");
             String guest_session_id = response.getString("guest_session_id");
             return guest_session_id;
         } catch (JSONException e) {
-            Log.d("apidebug", "token parse error");
+            Log.d("FlickListApp", "token parse error");
             e.printStackTrace();
         }
         return null;
@@ -79,7 +79,7 @@ public class Parser {
                 String overview = result.getString("overview");
                 String releaseDate = result.getString("release_date");
                 int id = result.getInt("id");
-                boolean isAdult  = result.getBoolean("adult");
+                boolean isAdult = result.getBoolean("adult");
                 String backdropPath = result.getString("backdrop_path");
                 String posterPath = result.getString("poster_path");
                 int index = i;
@@ -105,7 +105,7 @@ public class Parser {
             }
             return movieArrayList;
         } catch (JSONException e) {
-            Log.d("apidebug", "movie trending parse error");
+            Log.d("FlickListApp", "movie trending parse error");
             e.printStackTrace();
         }
         return null;
@@ -139,7 +139,7 @@ public class Parser {
             }
             return seriesArrayList;
         } catch (JSONException e) {
-            Log.d("apidebug", "series trending parse error");
+            Log.d("FlickListApp", "series trending parse error");
             e.printStackTrace();
         }
         return null;
@@ -157,14 +157,38 @@ public class Parser {
             String hash = gravatar.getString("hash");
 
             String id = String.valueOf(response.getInt("id"));
+            Log.d("FlickListApp", "account id:" + id);
             String name = response.getString("name");
             String username = response.getString("username");
             String adult = String.valueOf(response.getBoolean("include_adult"));
 
-            String[] accountDetails = new String[] {id, name, username, avatarPathFull, hash, adult};
+            String[] accountDetails = new String[]{id, name, username, avatarPathFull, hash, adult};
             return accountDetails;
         } catch (JSONException e) {
-            Log.d("apidebug", "account details parsing error");
+            Log.d("FlickListApp", "account details parsing error");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static ArrayList<String[]> parseRatedMoviesData(JSONObject response) {
+        try {
+            String page = response.getString("page");
+            JSONArray resultsArray = response.getJSONArray("results");
+
+            ArrayList<String[]> ratedMovies = new ArrayList<>();
+            for (int i = 0; i < resultsArray.length(); i++) {
+                JSONObject result = resultsArray.getJSONObject(i);
+
+                String id = String.valueOf(result.getInt("id"));
+                Log.d("FlickListApp", "parsing movie with id " + id);
+                String rating = String.valueOf(result.getDouble("rating"));
+                String[] ratedMovie = new String[]{id, rating};
+                ratedMovies.add(ratedMovie);
+            }
+                return ratedMovies;
+        } catch (JSONException e) {
+            Log.d("FlickListApp", "account details parsing error");
             e.printStackTrace();
         }
         return null;

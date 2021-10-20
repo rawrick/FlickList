@@ -1,9 +1,9 @@
 package com.rawrick.flicklist.data.movie;
 
 
-import java.io.Serializable;
 
-public class Movie implements Serializable {
+
+public class Movie {
 
     private final boolean isAdult;
     private final int id;

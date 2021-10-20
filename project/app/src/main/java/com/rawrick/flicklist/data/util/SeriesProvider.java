@@ -4,8 +4,7 @@ package com.rawrick.flicklist.data.util;
 import android.content.Context;
 import android.util.Log;
 
-import com.rawrick.flicklist.data.movie.MovieTrending;
-import com.rawrick.flicklist.data.movie.SeriesTrending;
+import com.rawrick.flicklist.data.series.SeriesTrending;
 
 import org.json.JSONObject;
 

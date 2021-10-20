@@ -1,4 +1,4 @@
-package com.rawrick.flicklist.data.movie;
+package com.rawrick.flicklist.data.series;
 
 import java.io.Serializable;
 

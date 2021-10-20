@@ -1,7 +1,11 @@
 package com.rawrick.flicklist.data.util;
 
+import static com.rawrick.flicklist.data.tools.SettingsManager.getAccountID;
 import static com.rawrick.flicklist.data.tools.SettingsManager.getPreferenceAPIkey;
+import static com.rawrick.flicklist.data.tools.SettingsManager.getSessionID;
+import static com.rawrick.flicklist.data.util.APIRequest.accountID;
 import static com.rawrick.flicklist.data.util.APIRequest.key;
+import static com.rawrick.flicklist.data.util.APIRequest.sessionID;
 
 import android.content.Context;
 import android.util.Log;
@@ -17,27 +21,30 @@ public class MovieProvider {
 
 
     private final Context context;
-    private ArrayList<MovieTrending> movieData;
+
+    private ArrayList<MovieTrending> trendingMovieData;
+    private ArrayList<String[]> ratedMovieData;
 
     public MovieProvider(Context context) {
         this.context = context;
     }
 
     public void getDataForMoviesTrending(DataListener listener) {
-        if (movieData == null) {
+        if (trendingMovieData == null) {
             updateMoviesTrendingData(new APIRequest.ResponseListener() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    movieData = Parser.parseTrendingMovies(response);
-                    listener.onTrendingMovieDataAvailable(movieData);
+                    trendingMovieData = Parser.parseTrendingMovies(response);
+                    listener.onTrendingMovieDataAvailable(trendingMovieData);
                 }
+
                 @Override
                 public void onError() {
                     Log.d("FlickListApp", "No Connection");
                 }
             });
         } else {
-            listener.onTrendingMovieDataAvailable(movieData);
+            listener.onTrendingMovieDataAvailable(trendingMovieData);
         }
     }
 
@@ -51,7 +58,40 @@ public class MovieProvider {
     }
 
     public interface DataListener {
-        void onTrendingMovieDataAvailable(ArrayList<MovieTrending> data
-        );
+        void onTrendingMovieDataAvailable(ArrayList<MovieTrending> data);
+    }
+
+    public void getDataForRatedMovies(RatedMoviesDataListener listener) {
+        if (ratedMovieData == null) {
+            updateRatedMoviesData(new APIRequest.ResponseListener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    ratedMovieData = Parser.parseRatedMoviesData(response);
+                    listener.onRatedMoviesDataAvailable(ratedMovieData);
+                }
+
+                @Override
+                public void onError() {
+                    Log.d("FlickListApp", "No Connection");
+                }
+            });
+        } else {
+            listener.onRatedMoviesDataAvailable(ratedMovieData);
+        }
+    }
+
+    private void updateRatedMoviesData(APIRequest.ResponseListener listener) {
+        key = getPreferenceAPIkey(context);
+        if (!key.equals(BuildConfig.ApiKey)) {
+            key = BuildConfig.ApiKey;
+        }
+        sessionID = getSessionID(context);
+        accountID = getAccountID(context);
+        APIRequest request = new APIRequest(APIRequest.Route.RATED_MOVIES_DATA, context);
+        request.send(listener);
+    }
+
+    public interface RatedMoviesDataListener {
+        void onRatedMoviesDataAvailable(ArrayList<String[]> data);
     }
 }

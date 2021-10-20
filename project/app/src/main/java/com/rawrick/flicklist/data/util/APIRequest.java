@@ -21,6 +21,7 @@ public class APIRequest {
     public static String key;
     public static String token;
     public static String sessionID;
+    public static String accountID;
     //BuildConfig.ApiKey;
 
     private static final String trendingMoviesWeekURL = "https://api.themoviedb.org/3/trending/movie/week";
@@ -33,7 +34,9 @@ public class APIRequest {
     private static final String authenticationSessionNew = "https://api.themoviedb.org/3/authentication/session/new";
     private static final String authenticationSessionGuestNew = "https://api.themoviedb.org/3/authentication/guest_session/new";
 
-    private static final String accountURL = "https://api.themoviedb.org/3/account?api_key=";
+    private static final String accountURL = "https://api.themoviedb.org/3/account";
+
+    private static final String ratedMoviesURL = "";
 
     public APIRequest(Route route, Context context) {
         this.route = route;
@@ -59,7 +62,7 @@ public class APIRequest {
             @Override
             public void onErrorResponse(VolleyError error) {
                 listener.onError();
-                Log.d("apidebug", "No Connection");
+                Log.d("FlickListApp", "No Connection");
                 error.printStackTrace();
             }
         });
@@ -75,9 +78,9 @@ public class APIRequest {
         AUTHENTICATION_SESSION_NEW(""),
         AUTHENTICATION_TOKEN_NEW(authenticationTokenNew + "?api_key=" + key),
         AUTHENTICATION_SESSION_GUEST_NEW(authenticationSessionGuestNew + "?api_key=" + key),
-        ACCOUNT_DATA(accountURL + key +  "&session_id=" + sessionID)
+        ACCOUNT_DATA(accountURL + "?api_key=" + key + "&session_id=" + sessionID),
 
-        ;
+        RATED_MOVIES_DATA(accountURL + "/" + accountID + "/rated/movies?api_key=" + key + "&language=en-US&&session_id=" + sessionID + "&sort_by=created_at.asc&page=1");
 
         private final String url;
 

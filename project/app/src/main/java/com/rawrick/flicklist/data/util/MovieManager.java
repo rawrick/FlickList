@@ -9,12 +9,15 @@ import java.util.ArrayList;
 public class MovieManager {
 
     private ArrayList<MovieTrending> moviesTrending;
+    private ArrayList<String[]> ratedMovies;
     private final Context context;
-    private final MovieManagerListener listener;
+    private final TrendingMoviesManagerListener listenerTrendingMovies;
+    private final RatedMoviesManagerListener listenerRatedMovies;
 
-    public MovieManager(Context context, MovieManagerListener listener) {
+    public MovieManager(Context context, TrendingMoviesManagerListener listenerTrendingMovies, RatedMoviesManagerListener listenerRatedMovies) {
         this.context = context;
-        this.listener = listener;
+        this.listenerTrendingMovies = listenerTrendingMovies;
+        this.listenerRatedMovies = listenerRatedMovies;
     }
 
     public void getTrendingMoviesFromAPI() {
@@ -23,7 +26,7 @@ public class MovieManager {
             @Override
             public void onTrendingMovieDataAvailable(ArrayList<MovieTrending> data) {
                 moviesTrending = data;
-                listener.onTrendingMoviesUpdated();
+                listenerTrendingMovies.onTrendingMoviesUpdated();
             }
         });
     }
@@ -32,8 +35,27 @@ public class MovieManager {
         return moviesTrending;
     }
 
-    public interface MovieManagerListener {
+    public interface TrendingMoviesManagerListener {
         void onTrendingMoviesUpdated();
+    }
+
+    public void getRatedMoviesFromAPI() {
+        MovieProvider provider = new MovieProvider(context);
+        provider.getDataForRatedMovies(new MovieProvider.RatedMoviesDataListener() {
+            @Override
+            public void onRatedMoviesDataAvailable(ArrayList<String[]> data) {
+                ratedMovies = data;
+                listenerRatedMovies.onRatedMoviesUpdated();
+            }
+        });
+    }
+
+    public ArrayList<String[]> getRatedMovies() {
+        return ratedMovies;
+    }
+
+    public interface RatedMoviesManagerListener {
+        void onRatedMoviesUpdated();
     }
 
 }

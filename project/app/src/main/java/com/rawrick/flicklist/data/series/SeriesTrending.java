@@ -1,4 +1,6 @@
-package com.rawrick.flicklist.data.movie;
+package com.rawrick.flicklist.data.series;
+
+import com.rawrick.flicklist.data.series.Series;
 
 public class SeriesTrending extends Series {
 

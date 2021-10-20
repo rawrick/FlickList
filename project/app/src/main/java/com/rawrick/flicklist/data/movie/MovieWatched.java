@@ -14,5 +14,7 @@ public class MovieWatched {
         this.isRated = isRated;
     }
 
-
+    public Movie getMovie() {
+        return movie;
+    }
 }

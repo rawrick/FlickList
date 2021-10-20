@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.rawrick.flicklist.ui.settings.SettingsFragment;
@@ -26,6 +27,12 @@ public class SettingsActivity extends AppCompatActivity {
         //replaces Actionbar with custom Toolbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         // sets title in Toolbar
         setTitle(getIntent().getExtras().getString("activity_title"));
         // always display backwards-arrow icon

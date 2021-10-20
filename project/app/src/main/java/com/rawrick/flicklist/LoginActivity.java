@@ -18,7 +18,7 @@ import com.rawrick.flicklist.data.login.LoginManager;
 
 public class LoginActivity extends AppCompatActivity implements LoginManager.LoginTokenListener, LoginManager.LoginSessionListener, LoginManager.LoginGuestSessionListener {
 
-    public static LoginManager loginManager;
+    private LoginManager loginManager;
     private String guestSessionID;
 
     @Override

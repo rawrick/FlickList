@@ -78,18 +78,18 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
         setLoginProgress(this, false);
         setLoginStatus(this, true);
         Intent intent = new Intent(this, MainActivity.class);
-        finish();
         startActivity(intent);
+        finish();
     }
 
     @Override
     public void onGuestSessionCreated() {
         // TODO check if creation successful
-        guestSessionID = loginManager.getGuestSessionID();
-        Log.d("login", guestSessionID);
+        Log.d("login guest", loginManager.getGuestSessionID());
+        setSessionID(this, loginManager.getGuestSessionID());
         setLoginStatus(this, true);
         Intent intent = new Intent(this, MainActivity.class);
-        finish();
         startActivity(intent);
+        finish();
     }
 }

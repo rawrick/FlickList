@@ -89,7 +89,9 @@ public class MainActivity extends FragmentActivity {
         initializeNavigation();
         // makes status bar fully transparent
         setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
+        //setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, false);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
+        //getWindow().setNavigationBarColor(Color.TRANSPARENT);
     }
 
     @Override

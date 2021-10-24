@@ -3,36 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/fab_border.xml" value="0.5441025641025641" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/gradient.xml" value="0.47314814814814815" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/home_trending_selected_frame.xml" value="0.412962962962963" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/ic_home_fab_explore.xml" value="0.5441025641025641" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/ic_home_fab_search.xml" value="0.5441025641025641" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/rc_home_featured.xml" value="0.412962962962963" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/rc_home_textview.xml" value="0.412962962962963" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/splash_background.xml" value="0.5526041666666667" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/activity_login.xml" value="0.40925925925925927" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/activity_main.xml" value="0.5037037037037037" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/activity_screen_slide.xml" value="0.5282051282051282" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/activity_settings.xml" value="0.4388888888888889" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/fragment_home.xml" value="0.39345274861025326" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/fragment_movies.xml" value="0.33177083333333335" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/fragment_notifications.xml" value="0.5364583333333334" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/fragment_profile.xml" value="0.4388888888888889" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/fragment_screen_slide_page.xml" value="0.40370370370370373" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/fragment_splash.xml" value="0.5364583333333334" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/hom_trending_view.xml" value="0.5364583333333334" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/home_trending_movies_item.xml" value="0.8456659619450317" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/home_trending_movies_view.xml" value="0.37777777777777777" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/home_trending_series_item.xml" value="0.5364583333333334" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/home_trending_series_view.xml" value="0.37037037037037035" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/home_trending_view.xml" value="0.37777777777777777" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/home_trending_view_detail.xml" value="0.5364583333333334" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/movie_list_item.xml" value="0.5138888888888888" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/movie_view.xml" value="0.33177083333333335" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/nav_toolbar.xml" value="0.41388888888888886" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/menu/bottom_nav_menu.xml" value="0.5364583333333334" />
-        <entry key="..\:/Android/AndroidStudioProjects/FlickList/project/app/src/main/res/xml/preferences.xml" value="0.4388888888888889" />
         <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.24166666666666667" />
         <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/gradient.xml" value="0.24895833333333334" />
         <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.24166666666666667" />
@@ -40,6 +10,7 @@
         <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/ic_launcher_background.xml" value="0.24166666666666667" />
         <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/ic_nav_home.xml" value="0.24895833333333334" />
         <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.24166666666666667" />
+        <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/drawable/splash_background.xml" value="0.36944444444444446" />
         <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/activity_main.xml" value="0.23645833333333333" />
         <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/fragment_dashboard.xml" value="0.23645833333333333" />
         <entry key="..\:/Program Files/Java/AndroidStudioProjects/FlickList/project/app/src/main/res/layout/fragment_home.xml" value="0.22777777777777777" />

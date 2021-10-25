@@ -48,7 +48,7 @@ public class SessionProvider {
         if (!key.equals(BuildConfig.ApiKey)) {
             key = BuildConfig.ApiKey;
         }
-        APIRequest request = new APIRequest(APIRequest.Route.AUTHENTICATION_SESSION_NEW, context);
+        APIRequest request = new APIRequest("", context);
         request.send(listener);
     }
 

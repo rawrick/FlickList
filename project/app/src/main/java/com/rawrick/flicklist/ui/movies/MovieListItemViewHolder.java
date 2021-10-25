@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.rawrick.flicklist.R;
-import com.rawrick.flicklist.data.movie.MovieWatched;
+import com.rawrick.flicklist.data.movie.MovieRated;
 
 public class MovieListItemViewHolder extends RecyclerView.ViewHolder {
 
@@ -24,12 +24,14 @@ public class MovieListItemViewHolder extends RecyclerView.ViewHolder {
         thumbnail = itemView.findViewById(R.id.movie_list_item_poster);
     }
 
-    public void bindView(MovieWatched movie) {
+    public void bindView(MovieRated movie) {
 
         Glide.with(context)
-                .load(movie.getMovie().getPosterPath())
+                .load(movie.getPosterPath())
                 .centerCrop()
                 .into(thumbnail);
+
+
 
     }
 

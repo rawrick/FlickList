@@ -1,7 +1,12 @@
 package com.rawrick.flicklist.data.util;
 
 import android.content.Context;
+import android.util.Log;
 
+import static com.rawrick.flicklist.data.tools.SettingsManager.getAccountID;
+import static com.rawrick.flicklist.data.util.APIRequest.accountID;
+
+import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 
 import java.util.ArrayList;
@@ -9,7 +14,7 @@ import java.util.ArrayList;
 public class MovieManager {
 
     private ArrayList<MovieTrending> moviesTrending;
-    private ArrayList<String[]> ratedMovies;
+    private ArrayList<MovieRated> ratedMovies;
     private final Context context;
     private final TrendingMoviesManagerListener listenerTrendingMovies;
     private final RatedMoviesManagerListener listenerRatedMovies;
@@ -43,14 +48,14 @@ public class MovieManager {
         MovieProvider provider = new MovieProvider(context);
         provider.getDataForRatedMovies(new MovieProvider.RatedMoviesDataListener() {
             @Override
-            public void onRatedMoviesDataAvailable(ArrayList<String[]> data) {
+            public void onRatedMoviesDataAvailable(ArrayList<MovieRated> data) {
                 ratedMovies = data;
                 listenerRatedMovies.onRatedMoviesUpdated();
             }
         });
     }
 
-    public ArrayList<String[]> getRatedMovies() {
+    public ArrayList<MovieRated> getRatedMovies() {
         return ratedMovies;
     }
 

@@ -3,6 +3,7 @@ package com.rawrick.flicklist.data.util;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
+import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 import com.rawrick.flicklist.data.series.SeriesTrending;
 
@@ -84,11 +85,7 @@ public class Parser {
                 String posterPath = result.getString("poster_path");
                 int index = i;
                 boolean isSelected;
-                if (i == 0) {
-                    isSelected = true;
-                } else {
-                    isSelected = false;
-                }
+                isSelected = i == 0;
 
                 // unused
                 int vote_count = result.getInt("vote_count");
@@ -127,11 +124,7 @@ public class Parser {
                 String posterPath = result.getString("poster_path");
                 int index = i;
                 boolean isSelected;
-                if (i == 0) {
-                    isSelected = true;
-                } else {
-                    isSelected = false;
-                }
+                isSelected = i == 0;
 
                 String fullPosterPath = img500 + posterPath;
                 String fullBackdropPath = img500 + backdropPath;
@@ -171,19 +164,25 @@ public class Parser {
         return null;
     }
 
-    public static ArrayList<String[]> parseRatedMoviesData(JSONObject response) {
+    public static ArrayList<MovieRated> parseRatedMoviesData(JSONObject response) {
         try {
             String page = response.getString("page");
             JSONArray resultsArray = response.getJSONArray("results");
 
-            ArrayList<String[]> ratedMovies = new ArrayList<>();
+            ArrayList<MovieRated> ratedMovies = new ArrayList<>();
             for (int i = 0; i < resultsArray.length(); i++) {
                 JSONObject result = resultsArray.getJSONObject(i);
 
-                String id = String.valueOf(result.getInt("id"));
+                int id = result.getInt("id");
                 Log.d("FlickListApp", "parsing movie with id " + id);
-                String rating = String.valueOf(result.getDouble("rating"));
-                String[] ratedMovie = new String[]{id, rating};
+                double rating = result.getDouble("rating");
+                String title = result.getString("title");
+                String releaseYear = result.getString("release_date");
+                String posterPath = result.getString("poster_path");
+                String fullPosterPath = img500 + posterPath;
+
+
+                MovieRated ratedMovie = new MovieRated(id, rating, title, releaseYear, fullPosterPath);
                 ratedMovies.add(ratedMovie);
             }
                 return ratedMovies;

@@ -24,6 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.rawrick.flicklist.R;
 import com.rawrick.flicklist.data.account.AccountManager;
+import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 import com.rawrick.flicklist.data.series.SeriesTrending;
 import com.rawrick.flicklist.data.tools.SettingsManager;
@@ -33,7 +34,7 @@ import com.rawrick.flicklist.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
 
-public class HomeFragment extends Fragment implements MovieManager.TrendingMoviesManagerListener, TrendingMoviesViewHolder.ViewHolderListener, SeriesManager.SeriesManagerListener, TrendingSeriesViewHolder.ViewHolderListener, AccountManager.AccountManagerListener, MovieManager.RatedMoviesManagerListener {
+public class HomeFragment extends Fragment implements MovieManager.TrendingMoviesManagerListener, TrendingMoviesViewHolder.ViewHolderListener, SeriesManager.SeriesManagerListener, TrendingSeriesViewHolder.ViewHolderListener, MovieManager.RatedMoviesManagerListener {
 
     private FragmentHomeBinding binding;
 
@@ -59,11 +60,11 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
     ImageView featuredSeriesPoster;
     ImageView featuredSeriesBackdrop;
     // Views for banner
-    private AccountManager accountManager;
     ShapeableImageView userAvatar;
     TextView userName;
 
-    ArrayList<String[]> rM;
+
+    ArrayList<MovieRated> rM;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -97,9 +98,6 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
         Log.d("FlickListApp", SettingsManager.getSessionID(this.getActivity()));
         movieManager = new MovieManager(getActivity(), this, this);
         seriesManager = new SeriesManager(getActivity(), this);
-        accountManager = new AccountManager(getActivity(), this);
-        accountManager.getAccountDataFromAPI();
-        movieManager.getRatedMoviesFromAPI();
         getTrendingData();
 
     }
@@ -117,8 +115,7 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
         /**
          * BANNER
          */
-        userName = view.findViewById(R.id.home_header_name);
-        userAvatar = view.findViewById(R.id.home_header_avatar);
+
 
         /**
          * MOVIES
@@ -160,16 +157,21 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-        //DEBUG
+
+        userName = view.findViewById(R.id.home_header_name);
+        userAvatar = view.findViewById(R.id.home_header_avatar);
+        //String welcomeText = "Hello, " + accountManager.getAccountData()[1] + ".";
+        userName.setText("welcomeText");
+        //Glide.with(this)
+        //        .load(accountManager.getAccountData()[3])
+        //        .centerCrop()
+        //        .into(userAvatar);
+
+        //fab
         FloatingActionButton fab = view.findViewById(R.id.explore_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rM = movieManager.getRatedMovies();
-                for (String[] movie : rM) {
-                    Log.d("FlickListApp", "id: " + movie[0] + ", rating: " + movie[1]);
-                }
-
             }
         });
     }
@@ -250,16 +252,7 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
                 .into(featuredSeriesBackdrop);
     }
 
-    @Override
-    public void onAccountDataUpdated() {
-        setAccountID(this.getActivity(), accountManager.getAccountData()[0]);
-        String welcomeText = "Hello, " + accountManager.getAccountData()[1] + ".";
-        userName.setText(welcomeText);
-        Glide.with(getActivity())
-                .load(accountManager.getAccountData()[3])
-                .centerCrop()
-                .into(userAvatar);
-    }
+
 
     @Override
     public void onRatedMoviesUpdated() {

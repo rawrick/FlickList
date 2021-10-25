@@ -1,6 +1,8 @@
 package com.rawrick.flicklist.data.util;
 
 
+import static com.rawrick.flicklist.data.tools.URL.trendingSeriesWeekURL;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -9,6 +11,9 @@ import com.rawrick.flicklist.data.series.SeriesTrending;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import static com.rawrick.flicklist.data.util.APIRequest.key;
+
 
 public class SeriesProvider {
 
@@ -27,6 +32,7 @@ public class SeriesProvider {
                     seriesData = Parser.parseTrendingSeries(response);
                     listener.onTrendingSeriesDataAvailable(seriesData);
                 }
+
                 @Override
                 public void onError() {
                     Log.d("FlickListApp", "No Connection");
@@ -38,7 +44,7 @@ public class SeriesProvider {
     }
 
     private void updateSeriesTrendingData(APIRequest.ResponseListener listener) {
-        APIRequest request = new APIRequest(APIRequest.Route.SERIES_TRENDING_WEEK_DATA, context);
+        APIRequest request = new APIRequest(trendingSeriesWeekURL + "?api_key=" + key, context);
         request.send(listener);
     }
 

@@ -1,6 +1,7 @@
 package com.rawrick.flicklist;
 
 import static com.rawrick.flicklist.data.tools.SettingsManager.getLoginStatus;
+import static com.rawrick.flicklist.data.tools.SettingsManager.setAccountID;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,21 +23,25 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.rawrick.flicklist.data.account.AccountManager;
 import com.rawrick.flicklist.ui.home.HomeFragment;
 import com.rawrick.flicklist.ui.movies.MoviesFragment;
 import com.rawrick.flicklist.ui.profile.ProfileFragment;
 import com.rawrick.flicklist.ui.series.SeriesFragment;
 import com.rawrick.flicklist.ui.watchlist.WatchlistFragment;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity  {
 
     //private ActivityMainBinding binding;
     /**
      * The number of pages (wizard steps) to show in this demo.
      */
     private static final int NUM_PAGES = 5;
+    // account data
 
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous

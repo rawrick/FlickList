@@ -1,5 +1,7 @@
 package com.rawrick.flicklist.data.util;
 
+import static com.rawrick.flicklist.data.tools.URL.authenticationSessionNew;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -15,7 +17,7 @@ import org.json.JSONObject;
 
 public class APIRequest {
 
-    private final Route route;
+    private final String destination;
     private final Context context;
 
     public static String key;
@@ -24,22 +26,12 @@ public class APIRequest {
     public static String accountID;
     //BuildConfig.ApiKey;
 
-    private static final String trendingMoviesWeekURL = "https://api.themoviedb.org/3/trending/movie/week";
-    private static final String trendingMoviesDayURL = "https://api.themoviedb.org/3/trending/movie/day";
-    private static final String trendingSeriesWeekURL = "https://api.themoviedb.org/3/trending/tv/week";
-    private static final String trendingSeriesDayURL = "https://api.themoviedb.org/3/trending/tv/day";
-    private static final String movieURL = "https://api.themoviedb.org/3/movie/";
 
-    private static final String authenticationTokenNew = "https://api.themoviedb.org/3/authentication/token/new";
-    private static final String authenticationSessionNew = "https://api.themoviedb.org/3/authentication/session/new";
-    private static final String authenticationSessionGuestNew = "https://api.themoviedb.org/3/authentication/guest_session/new";
-
-    private static final String accountURL = "https://api.themoviedb.org/3/account";
 
     private static final String ratedMoviesURL = "";
 
-    public APIRequest(Route route, Context context) {
-        this.route = route;
+    public APIRequest(String destination, Context context) {
+        this.destination = destination;
         this.context = context.getApplicationContext();
     }
 
@@ -47,7 +39,7 @@ public class APIRequest {
     public void send(ResponseListener listener) {
         RequestQueue queue = Volley.newRequestQueue(context);
         VolleyLog.DEBUG = true;
-        String request = this.route.url;
+        String request = destination;
         if (token != null) {
             request = authenticationSessionNew + "?api_key=" + key + "&request_token=" + token;
         }
@@ -70,17 +62,16 @@ public class APIRequest {
     }
 
     public enum Route {
-        MOVIES_TRENDING_WEEK_DATA(trendingMoviesWeekURL + "?api_key=" + key),
-        MOVIES_TRENDING_DAY_DATA(trendingMoviesDayURL + "?api_key=" + key),
-        SERIES_TRENDING_WEEK_DATA(trendingSeriesWeekURL + "?api_key=" + key),
-        SERIES_TRENDING_DAY_DATA(trendingSeriesDayURL + "?api_key=" + key),
+        MOVIES_TRENDING_WEEK_DATA(""),
+        SERIES_TRENDING_WEEK_DATA(""),
+
 
         AUTHENTICATION_SESSION_NEW(""),
-        AUTHENTICATION_TOKEN_NEW(authenticationTokenNew + "?api_key=" + key),
-        AUTHENTICATION_SESSION_GUEST_NEW(authenticationSessionGuestNew + "?api_key=" + key),
-        ACCOUNT_DATA(accountURL + "?api_key=" + key + "&session_id=" + sessionID),
+        AUTHENTICATION_TOKEN_NEW(""),
+        AUTHENTICATION_SESSION_GUEST_NEW(""),
+        ACCOUNT_DATA(""),
 
-        RATED_MOVIES_DATA(accountURL + "/" + accountID + "/rated/movies?api_key=" + key + "&language=en-US&&session_id=" + sessionID + "&sort_by=created_at.asc&page=1");
+        RATED_MOVIES_DATA("");
 
         private final String url;
 

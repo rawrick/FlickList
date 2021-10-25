@@ -1,6 +1,7 @@
 package com.rawrick.flicklist.data.login;
 
 import static com.rawrick.flicklist.data.tools.SettingsManager.getPreferenceAPIkey;
+import static com.rawrick.flicklist.data.tools.URL.authenticationTokenNew;
 import static com.rawrick.flicklist.data.util.APIRequest.key;
 
 import android.content.Context;
@@ -45,7 +46,7 @@ public class TokenProvider {
         if (!key.equals(BuildConfig.ApiKey)) {
             key = BuildConfig.ApiKey;
         }
-        APIRequest request = new APIRequest(APIRequest.Route.AUTHENTICATION_TOKEN_NEW, context);
+        APIRequest request = new APIRequest(authenticationTokenNew + "?api_key=" + key, context);
         request.send(listener);
     }
 

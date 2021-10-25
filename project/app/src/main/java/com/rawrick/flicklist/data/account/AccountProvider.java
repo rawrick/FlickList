@@ -2,6 +2,7 @@ package com.rawrick.flicklist.data.account;
 
 import static com.rawrick.flicklist.data.tools.SettingsManager.getPreferenceAPIkey;
 import static com.rawrick.flicklist.data.tools.SettingsManager.getSessionID;
+import static com.rawrick.flicklist.data.tools.URL.accountURL;
 import static com.rawrick.flicklist.data.util.APIRequest.key;
 
 import android.content.Context;
@@ -62,7 +63,7 @@ public class AccountProvider {
             key = BuildConfig.ApiKey;
         }
         sessionID = getSessionID(context);
-        APIRequest request = new APIRequest(APIRequest.Route.ACCOUNT_DATA, context);
+        APIRequest request = new APIRequest(accountURL + "?api_key=" + key + "&session_id=" + sessionID, context);
         request.send(listener);
     }
 

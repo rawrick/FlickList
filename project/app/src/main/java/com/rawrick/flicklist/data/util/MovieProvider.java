@@ -2,7 +2,8 @@ package com.rawrick.flicklist.data.util;
 
 import static com.rawrick.flicklist.data.tools.SettingsManager.getAccountID;
 import static com.rawrick.flicklist.data.tools.SettingsManager.getPreferenceAPIkey;
-import static com.rawrick.flicklist.data.tools.SettingsManager.getSessionID;
+import static com.rawrick.flicklist.data.tools.URL.accountURL;
+import static com.rawrick.flicklist.data.tools.URL.trendingMoviesWeekURL;
 import static com.rawrick.flicklist.data.util.APIRequest.accountID;
 import static com.rawrick.flicklist.data.util.APIRequest.key;
 import static com.rawrick.flicklist.data.util.APIRequest.sessionID;
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.rawrick.flicklist.BuildConfig;
+import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 
 import org.json.JSONObject;
@@ -23,7 +25,7 @@ public class MovieProvider {
     private final Context context;
 
     private ArrayList<MovieTrending> trendingMovieData;
-    private ArrayList<String[]> ratedMovieData;
+    private ArrayList<MovieRated> ratedMovieData;
 
     public MovieProvider(Context context) {
         this.context = context;
@@ -53,7 +55,7 @@ public class MovieProvider {
         if (!key.equals(BuildConfig.ApiKey)) {
             key = BuildConfig.ApiKey;
         }
-        APIRequest request = new APIRequest(APIRequest.Route.MOVIES_TRENDING_WEEK_DATA, context);
+        APIRequest request = new APIRequest(trendingMoviesWeekURL + "?api_key=" + key, context);
         request.send(listener);
     }
 
@@ -85,13 +87,12 @@ public class MovieProvider {
         if (!key.equals(BuildConfig.ApiKey)) {
             key = BuildConfig.ApiKey;
         }
-        sessionID = getSessionID(context);
         accountID = getAccountID(context);
-        APIRequest request = new APIRequest(APIRequest.Route.RATED_MOVIES_DATA, context);
+        APIRequest request = new APIRequest(accountURL + "/" + accountID + "/rated/movies?api_key=" + key + "&language=en-US&&session_id=" + sessionID + "&sort_by=created_at.asc&page=1", context);
         request.send(listener);
     }
 
     public interface RatedMoviesDataListener {
-        void onRatedMoviesDataAvailable(ArrayList<String[]> data);
+        void onRatedMoviesDataAvailable(ArrayList<MovieRated> data);
     }
 }

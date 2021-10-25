@@ -1,6 +1,7 @@
 package com.rawrick.flicklist.data.login;
 
 import static com.rawrick.flicklist.data.tools.SettingsManager.getPreferenceAPIkey;
+import static com.rawrick.flicklist.data.tools.URL.authenticationSessionGuestNew;
 import static com.rawrick.flicklist.data.util.APIRequest.key;
 
 import android.content.Context;
@@ -46,7 +47,7 @@ public class GuestSessionProvider {
         if (!key.equals(BuildConfig.ApiKey)) {
             key = BuildConfig.ApiKey;
         }
-        APIRequest request = new APIRequest(APIRequest.Route.AUTHENTICATION_SESSION_GUEST_NEW, context);
+        APIRequest request = new APIRequest(authenticationSessionGuestNew + "?api_key=" + key, context);
         request.send(listener);
     }
 

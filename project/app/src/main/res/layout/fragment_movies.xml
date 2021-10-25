@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/animeListRecyclerView"
+        android:id="@+id/movie_list"
         android:paddingTop="8dp"
         android:paddingStart="8dp"
         android:clipToPadding="false"

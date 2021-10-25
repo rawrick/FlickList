@@ -31,7 +31,7 @@ import org.json.JSONObject;
 public class AccountProvider {
 
     private final Context context;
-    private static String[] details;
+    private static Account details;
 
     public AccountProvider(Context context) {
         this.context = context;
@@ -68,6 +68,6 @@ public class AccountProvider {
     }
 
     public interface DataListener {
-        void onAccountDataAvailable(String[] data);
+        void onAccountDataAvailable(Account data);
     }
 }

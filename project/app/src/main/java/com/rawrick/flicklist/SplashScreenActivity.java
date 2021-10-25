@@ -46,12 +46,14 @@ public class SplashScreenActivity extends AppCompatActivity implements AccountMa
 
     @Override
     public void onAccountDataUpdated() {
-        String id = accountManager.getAccountData()[0];
+        String id = accountManager.getAccountData().getId();
         setAccountID(this.getApplicationContext(), id);
         Log.d("accid", "id: " + id);
         Intent intent;
         if (getLoginStatus(this.getApplicationContext())) {
             intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+            intent.putExtra("name", accountManager.getAccountData().getName());
+            intent.putExtra("avatar", accountManager.getAccountData().getAvatar());
         } else {
             intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
         }

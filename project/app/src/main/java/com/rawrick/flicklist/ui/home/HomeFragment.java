@@ -4,6 +4,7 @@ import static androidx.recyclerview.widget.RecyclerView.HORIZONTAL;
 
 import static com.rawrick.flicklist.data.tools.SettingsManager.setAccountID;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -116,7 +117,17 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
          * BANNER
          */
 
-
+        Intent intent = this.getActivity().getIntent();
+        String name = intent.getStringExtra("name");
+        String avatar = intent.getStringExtra("avatar");
+        userName = view.findViewById(R.id.home_header_name);
+        userAvatar = view.findViewById(R.id.home_header_avatar);
+        String welcomeText = "Hello, " + name + ".";
+        userName.setText(welcomeText);
+        Glide.with(this)
+                .load(avatar)
+                .centerCrop()
+                .into(userAvatar);
         /**
          * MOVIES
          **/
@@ -158,14 +169,6 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
             }
         });
 
-        userName = view.findViewById(R.id.home_header_name);
-        userAvatar = view.findViewById(R.id.home_header_avatar);
-        //String welcomeText = "Hello, " + accountManager.getAccountData()[1] + ".";
-        userName.setText("welcomeText");
-        //Glide.with(this)
-        //        .load(accountManager.getAccountData()[3])
-        //        .centerCrop()
-        //        .into(userAvatar);
 
         //fab
         FloatingActionButton fab = view.findViewById(R.id.explore_fab);
@@ -251,7 +254,6 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
                 .centerCrop()
                 .into(featuredSeriesBackdrop);
     }
-
 
 
     @Override

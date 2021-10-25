@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class AccountManager {
 
-    private String[] accountData;
+    private Account accountData;
     private final Context context;
     private final AccountManager.AccountManagerListener listener;
 
@@ -22,14 +22,14 @@ public class AccountManager {
         AccountProvider provider = new AccountProvider(context);
         provider.getAccountDetails(new AccountProvider.DataListener() {
             @Override
-            public void onAccountDataAvailable(String[] data) {
+            public void onAccountDataAvailable(Account data) {
                 accountData = data;
                 listener.onAccountDataUpdated();
             }
         });
     }
 
-    public String[] getAccountData() {
+    public Account getAccountData() {
         return accountData;
     }
 

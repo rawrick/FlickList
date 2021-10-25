@@ -3,6 +3,7 @@ package com.rawrick.flicklist.data.util;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
+import com.rawrick.flicklist.data.account.Account;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 import com.rawrick.flicklist.data.series.SeriesTrending;
@@ -138,7 +139,7 @@ public class Parser {
         return null;
     }
 
-    public static String[] parseAccountData(JSONObject response) {
+    public static Account parseAccountData(JSONObject response) {
         try {
             JSONObject avatar = response.getJSONObject("avatar");
 
@@ -155,7 +156,7 @@ public class Parser {
             String username = response.getString("username");
             String adult = String.valueOf(response.getBoolean("include_adult"));
 
-            String[] accountDetails = new String[]{id, name, username, avatarPathFull, hash, adult};
+            Account accountDetails = new Account(id, name, username, avatarPathFull, hash, adult);
             return accountDetails;
         } catch (JSONException e) {
             Log.d("FlickListApp", "account details parsing error");
@@ -177,7 +178,8 @@ public class Parser {
                 Log.d("FlickListApp", "parsing movie with id " + id);
                 double rating = result.getDouble("rating");
                 String title = result.getString("title");
-                String releaseYear = result.getString("release_date");
+                String releaseDate = result.getString("release_date");
+                String releaseYear = releaseDate.substring(0,4);
                 String posterPath = result.getString("poster_path");
                 String fullPosterPath = img500 + posterPath;
 

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.rawrick.flicklist.data.account.Account;
+import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 import com.rawrick.flicklist.data.series.SeriesTrending;
@@ -179,7 +180,7 @@ public class Parser {
                 double rating = result.getDouble("rating");
                 String title = result.getString("title");
                 String releaseDate = result.getString("release_date");
-                String releaseYear = releaseDate.substring(0,4);
+                String releaseYear = releaseDate.substring(0, 4);
                 String posterPath = result.getString("poster_path");
                 String fullPosterPath = img500 + posterPath;
 
@@ -187,9 +188,32 @@ public class Parser {
                 MovieRated ratedMovie = new MovieRated(id, rating, title, releaseYear, fullPosterPath);
                 ratedMovies.add(ratedMovie);
             }
-                return ratedMovies;
+            return ratedMovies;
         } catch (JSONException e) {
             Log.d("FlickListApp", "account details parsing error");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public static Movie parseMovieData(JSONObject response) {
+        try {
+            boolean isAdult = response.getBoolean("adult");
+            int id = response.getInt("id");
+            String overview = response.getString("overview");
+            String posterPath = response.getString("poster_path");
+            String backdropPath = response.getString("backdrop_path");
+            String releaseDate = response.getString("release_date");
+            String title = response.getString("title");
+            double voteAverage = response.getDouble("vote_average");
+
+            String fullPosterPath = img500 + posterPath;
+            String fullBackdropPath = img500 + backdropPath;
+            Movie movie = new Movie(isAdult, id, overview, fullPosterPath, fullBackdropPath, releaseDate, title, voteAverage);
+            return movie;
+        } catch (JSONException e) {
+            Log.d("FlickListApp", "movie details parse error");
             e.printStackTrace();
         }
         return null;

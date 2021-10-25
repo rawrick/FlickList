@@ -9,6 +9,7 @@ public class Movie {
     private final int id;
     private final String overview;
     private final String posterPath;
+    private final String backdropPath;
     private final String releaseDate;
     private final String title;
     private final double voteAverage;
@@ -17,6 +18,7 @@ public class Movie {
                  int id,
                  String overview,
                  String posterPath,
+                 String backdropPath,
                  String releaseDate,
                  String title,
                  double voteAverage) {
@@ -24,6 +26,7 @@ public class Movie {
         this.id = id;
         this.overview = overview;
         this.posterPath = posterPath;
+        this.backdropPath = backdropPath;
         this.releaseDate = releaseDate;
         this.title = title;
         this.voteAverage = voteAverage;
@@ -31,6 +34,10 @@ public class Movie {
 
     public String getPosterPath() {
         return posterPath;
+    }
+
+    public String getBackdropPath() {
+        return backdropPath;
     }
 
     public boolean isAdult() {

@@ -24,6 +24,7 @@ public class APIRequest {
     public static String token;
     public static String sessionID;
     public static String accountID;
+    public static String movieID;
     //BuildConfig.ApiKey;
 
 
@@ -59,25 +60,6 @@ public class APIRequest {
             }
         });
         queue.add(stringRequest);
-    }
-
-    public enum Route {
-        MOVIES_TRENDING_WEEK_DATA(""),
-        SERIES_TRENDING_WEEK_DATA(""),
-
-
-        AUTHENTICATION_SESSION_NEW(""),
-        AUTHENTICATION_TOKEN_NEW(""),
-        AUTHENTICATION_SESSION_GUEST_NEW(""),
-        ACCOUNT_DATA(""),
-
-        RATED_MOVIES_DATA("");
-
-        private final String url;
-
-        Route(String url) {
-            this.url = url;
-        }
     }
 
     public interface ResponseListener {

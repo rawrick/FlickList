@@ -6,6 +6,7 @@ import android.util.Log;
 import static com.rawrick.flicklist.data.tools.SettingsManager.getAccountID;
 import static com.rawrick.flicklist.data.util.APIRequest.accountID;
 
+import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 
@@ -15,14 +16,17 @@ public class MovieManager {
 
     private ArrayList<MovieTrending> moviesTrending;
     private ArrayList<MovieRated> ratedMovies;
+    private Movie movie;
     private final Context context;
     private final TrendingMoviesManagerListener listenerTrendingMovies;
     private final RatedMoviesManagerListener listenerRatedMovies;
+    private final MovieDetailsManagerListener listenerMovieDetails;
 
-    public MovieManager(Context context, TrendingMoviesManagerListener listenerTrendingMovies, RatedMoviesManagerListener listenerRatedMovies) {
+    public MovieManager(Context context, TrendingMoviesManagerListener listenerTrendingMovies, RatedMoviesManagerListener listenerRatedMovies, MovieDetailsManagerListener listenerMovieDetails) {
         this.context = context;
         this.listenerTrendingMovies = listenerTrendingMovies;
         this.listenerRatedMovies = listenerRatedMovies;
+        this.listenerMovieDetails = listenerMovieDetails;
     }
 
     public void getTrendingMoviesFromAPI() {
@@ -44,6 +48,10 @@ public class MovieManager {
         void onTrendingMoviesUpdated();
     }
 
+    /**
+     * RATED/WATCHED MOVIES
+     */
+
     public void getRatedMoviesFromAPI() {
         MovieProvider provider = new MovieProvider(context);
         provider.getDataForRatedMovies(new MovieProvider.RatedMoviesDataListener() {
@@ -63,4 +71,27 @@ public class MovieManager {
         void onRatedMoviesUpdated();
     }
 
+
+    /**
+     * MOVIE DETAILS
+     */
+
+    public void getMovieDetailsFromAPI() {
+        MovieProvider provider = new MovieProvider(context);
+        provider.getDataForMovie(new MovieProvider.MovieDataListener() {
+            @Override
+            public void onMovieDataAvailable(Movie data) {
+                movie = data;
+                listenerMovieDetails.onMovieDetailsUpdated();
+            }
+        });
+    }
+
+    public Movie getMovieDetails() {
+        return movie;
+    }
+
+    public interface MovieDetailsManagerListener {
+        void onMovieDetailsUpdated();
+    }
 }

@@ -3,15 +3,18 @@ package com.rawrick.flicklist.data.util;
 import static com.rawrick.flicklist.data.tools.SettingsManager.getAccountID;
 import static com.rawrick.flicklist.data.tools.SettingsManager.getPreferenceAPIkey;
 import static com.rawrick.flicklist.data.tools.URL.accountURL;
+import static com.rawrick.flicklist.data.tools.URL.movieURL;
 import static com.rawrick.flicklist.data.tools.URL.trendingMoviesWeekURL;
 import static com.rawrick.flicklist.data.util.APIRequest.accountID;
 import static com.rawrick.flicklist.data.util.APIRequest.key;
+import static com.rawrick.flicklist.data.util.APIRequest.movieID;
 import static com.rawrick.flicklist.data.util.APIRequest.sessionID;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.rawrick.flicklist.BuildConfig;
+import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 
@@ -26,6 +29,7 @@ public class MovieProvider {
 
     private ArrayList<MovieTrending> trendingMovieData;
     private ArrayList<MovieRated> ratedMovieData;
+    private Movie movieData;
 
     public MovieProvider(Context context) {
         this.context = context;
@@ -94,5 +98,42 @@ public class MovieProvider {
 
     public interface RatedMoviesDataListener {
         void onRatedMoviesDataAvailable(ArrayList<MovieRated> data);
+    }
+
+    /**
+     * MOVIE DETAILS
+     **/
+
+    public void getDataForMovie(MovieDataListener listener) {
+        if (movieData == null) {
+            updateMovieData(new APIRequest.ResponseListener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    movieData = Parser.parseMovieData(response);
+                    listener.onMovieDataAvailable(movieData);
+                }
+
+                @Override
+                public void onError() {
+                    Log.d("FlickListApp", "No Connection");
+                }
+            });
+        } else {
+            listener.onMovieDataAvailable(movieData);
+        }
+    }
+
+    private void updateMovieData(APIRequest.ResponseListener listener) {
+        key = getPreferenceAPIkey(context);
+        if (!key.equals(BuildConfig.ApiKey)) {
+            key = BuildConfig.ApiKey;
+        }
+        accountID = getAccountID(context);
+        APIRequest request = new APIRequest(movieURL + movieID + "?api_key=" + key + "&language=en-US", context);
+        request.send(listener);
+    }
+
+    public interface MovieDataListener {
+        void onMovieDataAvailable(Movie data);
     }
 }

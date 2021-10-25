@@ -6,6 +6,7 @@ public class URL {
     public static final String trendingMoviesDayURL = "https://api.themoviedb.org/3/trending/movie/day";
     public static final String trendingSeriesWeekURL = "https://api.themoviedb.org/3/trending/tv/week";
     public static final String trendingSeriesDayURL = "https://api.themoviedb.org/3/trending/tv/day";
+
     public static final String movieURL = "https://api.themoviedb.org/3/movie/";
 
     public static final String authenticationTokenNew = "https://api.themoviedb.org/3/authentication/token/new";

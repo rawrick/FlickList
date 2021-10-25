@@ -2,7 +2,11 @@ package com.rawrick.flicklist.ui.movies;
 
 import static androidx.recyclerview.widget.RecyclerView.VERTICAL;
 
+import static com.rawrick.flicklist.data.util.APIRequest.movieID;
+
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.rawrick.flicklist.MainActivity;
+import com.rawrick.flicklist.MovieActivity;
 import com.rawrick.flicklist.R;
 import com.rawrick.flicklist.data.util.MovieManager;
 import com.rawrick.flicklist.databinding.FragmentMoviesBinding;
@@ -24,7 +30,7 @@ import com.rawrick.flicklist.databinding.FragmentMoviesBinding;
 import java.util.Collection;
 import java.util.Collections;
 
-public class MoviesFragment extends Fragment implements MovieManager.RatedMoviesManagerListener, MovieListItemViewHolder.ViewHolderListener, MovieManager.TrendingMoviesManagerListener {
+public class MoviesFragment extends Fragment implements MovieManager.RatedMoviesManagerListener, MovieListItemViewHolder.ViewHolderListener, MovieManager.TrendingMoviesManagerListener, MovieManager.MovieDetailsManagerListener {
 
     private FragmentMoviesBinding binding;
 
@@ -60,7 +66,7 @@ public class MoviesFragment extends Fragment implements MovieManager.RatedMovies
     }
 
     private void initData() {
-        movieManager = new MovieManager(getActivity(), this, this);
+        movieManager = new MovieManager(getActivity(), this, this, this);
         movieManager.getRatedMoviesFromAPI();
     }
 
@@ -99,10 +105,20 @@ public class MoviesFragment extends Fragment implements MovieManager.RatedMovies
     @Override
     public void onMovieListItemClicked(int position) {
         // go to movie detail activity
+        Log.d("list_dick", "clicked " + position);
+        Intent intent = new Intent(this.getActivity(), MovieActivity.class);
+        movieID = String.valueOf(movieManager.getRatedMovies().get(position).getId());
+        intent.putExtra("id", movieManager.getRatedMovies().get(position).getId());
+        startActivity(intent);
     }
 
     @Override
     public void onTrendingMoviesUpdated() {
         // empty
+    }
+
+    @Override
+    public void onMovieDetailsUpdated() {
+
     }
 }

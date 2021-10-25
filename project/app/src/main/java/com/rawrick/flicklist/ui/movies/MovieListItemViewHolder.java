@@ -41,6 +41,13 @@ public class MovieListItemViewHolder extends RecyclerView.ViewHolder {
         rating.setText(String.valueOf(movie.getRating()));
         releaseYear.setText(movie.getReleaseYear());
 
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onMovieListItemClicked(getAdapterPosition());
+            }
+        });
+
     }
 
     public interface ViewHolderListener {

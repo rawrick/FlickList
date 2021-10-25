@@ -14,19 +14,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FlickList">
         <activity
+            android:name=".MovieActivity"
+            android:exported="true" />
+        <activity
             android:name=".SplashScreenActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".SettingsActivity"
             android:exported="true"
@@ -34,9 +36,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:label="@string/app_name">
-
-        </activity>
+            android:label="@string/app_name"></activity>
     </application>
 
 </manifest>

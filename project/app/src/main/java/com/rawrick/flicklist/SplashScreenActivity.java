@@ -18,19 +18,25 @@ import com.rawrick.flicklist.data.account.AccountManager;
 public class SplashScreenActivity extends AppCompatActivity implements AccountManager.AccountManagerListener {
 
     private AccountManager accountManager;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // data
-        accountManager = new AccountManager(this, this);
-        accountManager.getAccountDataFromAPI();
         //  ui
         setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         //setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, false);
         //getWindow().setNavigationBarColor(Color.TRANSPARENT);
-
+        // data
+        if (getLoginStatus(this.getApplicationContext())) {
+            accountManager = new AccountManager(this, this);
+            accountManager.getAccountDataFromAPI();
+        } else {
+            intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     private static void setWindowFlag(Activity activity, final int bits, boolean on) {
@@ -48,19 +54,10 @@ public class SplashScreenActivity extends AppCompatActivity implements AccountMa
     public void onAccountDataUpdated() {
         String id = accountManager.getAccountData().getId();
         setAccountID(this.getApplicationContext(), id);
-        Log.d("accid", "id: " + id);
-        Intent intent;
-        if (getLoginStatus(this.getApplicationContext())) {
-            intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-            intent.putExtra("name", accountManager.getAccountData().getName());
-            intent.putExtra("avatar", accountManager.getAccountData().getAvatar());
-        } else {
-            intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
-        }
+        intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+        intent.putExtra("name", accountManager.getAccountData().getName());
+        intent.putExtra("avatar", accountManager.getAccountData().getAvatar());
         startActivity(intent);
         finish();
-
-
     }
-
 }

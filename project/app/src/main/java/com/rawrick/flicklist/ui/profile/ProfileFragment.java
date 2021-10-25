@@ -44,7 +44,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 // starts SsettingsActivity
                 Intent intent = new Intent(getActivity(), SettingsActivity.class);
-                intent.putExtra("activity_title", "SettingsActivity");
+                intent.putExtra("activity_title", "Settings");
                 startActivity(intent);
             }
         });

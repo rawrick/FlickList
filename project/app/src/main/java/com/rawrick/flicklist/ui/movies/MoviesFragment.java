@@ -21,6 +21,9 @@ import com.rawrick.flicklist.R;
 import com.rawrick.flicklist.data.util.MovieManager;
 import com.rawrick.flicklist.databinding.FragmentMoviesBinding;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class MoviesFragment extends Fragment implements MovieManager.RatedMoviesManagerListener, MovieListItemViewHolder.ViewHolderListener, MovieManager.TrendingMoviesManagerListener {
 
     private FragmentMoviesBinding binding;
@@ -81,6 +84,8 @@ public class MoviesFragment extends Fragment implements MovieManager.RatedMovies
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                onRatedMoviesUpdated();
+                movieListAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });

@@ -1,6 +1,7 @@
 package com.rawrick.flicklist.ui.movies;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import com.rawrick.flicklist.data.movie.MovieTrending;
 import com.rawrick.flicklist.ui.home.TrendingMoviesViewHolder;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListItemViewHolder> {
 
@@ -30,7 +33,27 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListItemViewHold
 
     public void setRatedMovies(ArrayList<MovieRated> moviesRated) {
         this.moviesRated = moviesRated;
+        sortMovies();
         this.notifyDataSetChanged();
+    }
+
+    private void sortMovies() {
+        moviesRated.sort(new Comparator<MovieRated>() {
+            @Override
+            public int compare(MovieRated m1, MovieRated m2) {
+                if (m1.getRating() > m2.getRating()) {
+                    return -1;
+                }
+                if (m1.getRating() < m2.getRating()) {
+                    return 1;
+                }
+                // TODO escape "The" from sorting
+                if (m1.getRating() == m2.getRating()) {
+                    return m1.getTitle().compareTo(m2.getTitle());
+                }
+                return 0;
+            }
+        });
     }
 
     @NonNull

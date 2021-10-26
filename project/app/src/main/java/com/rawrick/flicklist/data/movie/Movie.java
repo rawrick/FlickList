@@ -11,6 +11,7 @@ public class Movie {
     private final String posterPath;
     private final String backdropPath;
     private final String releaseDate;
+    private final int runtime;
     private final String title;
     private final double voteAverage;
 
@@ -20,6 +21,7 @@ public class Movie {
                  String posterPath,
                  String backdropPath,
                  String releaseDate,
+                 int runtime,
                  String title,
                  double voteAverage) {
         this.isAdult = isAdult;
@@ -28,6 +30,7 @@ public class Movie {
         this.posterPath = posterPath;
         this.backdropPath = backdropPath;
         this.releaseDate = releaseDate;
+        this.runtime = runtime;
         this.title = title;
         this.voteAverage = voteAverage;
     }
@@ -50,6 +53,10 @@ public class Movie {
 
     public String getReleaseDate() {
         return releaseDate;
+    }
+
+    public int getRuntime() {
+        return runtime;
     }
 
     public String getTitle() {

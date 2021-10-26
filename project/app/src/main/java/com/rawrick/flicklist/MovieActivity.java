@@ -1,5 +1,7 @@
 package com.rawrick.flicklist;
 
+import static com.rawrick.flicklist.data.util.Formatter.runtimeFormatter;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -19,6 +21,8 @@ public class MovieActivity extends AppCompatActivity implements MovieManager.Mov
     private MovieManager movieManager;
 
     private TextView movieTitle;
+    private TextView movieReleaseYear;
+    private TextView movieRuntime;
     private ImageView moviePoster;
     private ImageView movieBackdrop;
 
@@ -36,6 +40,8 @@ public class MovieActivity extends AppCompatActivity implements MovieManager.Mov
         movieTitle = findViewById(R.id.movie_title);
         moviePoster = findViewById(R.id.movie_poster);
         movieBackdrop = findViewById(R.id.movie_backdrop);
+        movieReleaseYear = findViewById(R.id.movie_release);
+        movieRuntime = findViewById(R.id.movie_runtime);
     }
 
     private void initData() {
@@ -48,7 +54,8 @@ public class MovieActivity extends AppCompatActivity implements MovieManager.Mov
     public void onMovieDetailsUpdated() {
         Movie movie = movieManager.getMovieDetails();
         movieTitle.setText(movie.getTitle());
-
+        movieReleaseYear.setText(movie.getReleaseDate().substring(0, 4));
+        movieRuntime.setText(runtimeFormatter(movie.getRuntime()));
         Glide.with(this)
                 .load(movie.getPosterPath())
                 .centerCrop()

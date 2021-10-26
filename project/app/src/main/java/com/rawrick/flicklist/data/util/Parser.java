@@ -1,5 +1,7 @@
 package com.rawrick.flicklist.data.util;
 
+import static com.rawrick.flicklist.data.util.Formatter.runtimeFormatter;
+
 import android.util.Log;
 
 import com.google.gson.JsonArray;
@@ -237,10 +239,11 @@ public class Parser {
             String releaseDate = response.getString("release_date");
             String title = response.getString("title");
             double voteAverage = response.getDouble("vote_average");
+            int runtime = response.getInt("runtime");
 
             String fullPosterPath = img500 + posterPath;
             String fullBackdropPath = img500 + backdropPath;
-            Movie movie = new Movie(isAdult, id, overview, fullPosterPath, fullBackdropPath, releaseDate, title, voteAverage);
+            Movie movie = new Movie(isAdult, id, overview, fullPosterPath, fullBackdropPath, releaseDate, runtime, title, voteAverage);
             return movie;
         } catch (JSONException e) {
             Log.d("FlickListApp", "movie details parse error");

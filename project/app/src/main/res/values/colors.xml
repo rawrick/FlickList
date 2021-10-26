@@ -12,4 +12,10 @@
 
     <color name="defaultBackgroundDark">#0B1622</color>
     <color name="variation1BackgroundDark">#151F2E</color>
+    <color name="textDefaultDark">#b6babd</color>
+    <color name="textTitleDark">#FAFAFA</color>
+    <color name="textSubtitleDark">#8c8c8c</color>
+    <color name="textTitleVariationDark">#dbdbdb</color>
+    <color name="textSubtitleVariationDark">#b8b8b8</color>
+
 </resources>

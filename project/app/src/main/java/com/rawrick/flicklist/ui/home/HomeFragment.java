@@ -3,6 +3,7 @@ package com.rawrick.flicklist.ui.home;
 import static androidx.recyclerview.widget.RecyclerView.HORIZONTAL;
 
 import static com.rawrick.flicklist.data.tools.SettingsManager.setAccountID;
+import static com.rawrick.flicklist.data.util.APIRequest.movieID;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +25,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.rawrick.flicklist.MovieActivity;
 import com.rawrick.flicklist.R;
 import com.rawrick.flicklist.data.account.AccountManager;
 import com.rawrick.flicklist.data.movie.MovieRated;
@@ -40,6 +43,7 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
     private FragmentHomeBinding binding;
 
     private SwipeRefreshLayout swipeRefreshLayout;
+    private View featuredMovie;
     // movie data & adapter
     private MovieManager movieManager;
     private RecyclerView recyclerTrendingMovies;
@@ -156,6 +160,8 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
         featuredSeriesPoster = view.findViewById(R.id.home_trending_series_poster);
         featuredSeriesBackdrop = view.findViewById(R.id.home_featured_series_backdrop);
 
+        featuredMovie = view.findViewById(R.id.home_featured_movie);
+
         swipeRefreshLayout = view.findViewById(R.id.home_swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -215,6 +221,17 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
                 .load(selectedMovie.getBackdropPath())
                 .centerCrop()
                 .into(featuredBackdrop);
+        // onclick
+        Intent intent = new Intent(this.getActivity(), MovieActivity.class);
+        featuredMovie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                movieID = String.valueOf(movieManager.getMoviesTrending().get(position).getId());
+                intent.putExtra("id", movieID);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override

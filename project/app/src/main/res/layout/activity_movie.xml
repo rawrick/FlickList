@@ -21,17 +21,11 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.35" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideHorEnd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.35" />
-
     <FrameLayout
+        android:id="@+id/movie_backdrop_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/guideHorEnd"
+        app:layout_constraintDimensionRatio="4:2"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -49,33 +43,86 @@
             android:layout_height="match_parent"
             android:background="@drawable/gradient_top" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/gradient_bottom" />
-
     </FrameLayout>
 
-    <ImageView
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/variation1BackgroundDark"
+        app:layout_constraintDimensionRatio="5:2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/movie_backdrop_layout" />
+
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/movie_poster"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="@id/guideHorEnd"
+        app:layout_constraintBottom_toBottomOf="@id/movie_backdrop_layout"
         app:layout_constraintDimensionRatio="2:3"
         app:layout_constraintEnd_toStartOf="@id/guideVerEnd"
         app:layout_constraintStart_toStartOf="@id/guideVerStart"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/movie_backdrop_layout"
+        app:shapeAppearanceOverlay="@style/ImageViewRoundedCorners"
         tools:ignore="ContentDescription" />
+
 
     <TextView
         android:id="@+id/movie_title"
+        style="@style/Title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/movie_poster"
+        app:layout_constraintTop_toBottomOf="@id/movie_backdrop_layout" />
+
+    <TextView
+        android:id="@+id/movie_release"
+        style="@style/Subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Title"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/movie_poster"
+        app:layout_constraintTop_toBottomOf="@id/movie_title" />
+
+
+    <TextView
+        android:id="@+id/separator"
+        style="@style/Subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text=" • "
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/movie_release"
+        app:layout_constraintTop_toBottomOf="@id/movie_title" />
+
+    <TextView
+        android:id="@+id/movie_runtime"
+        style="@style/Subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideHorEnd" />
+        app:layout_constraintStart_toEndOf="@id/separator"
+        app:layout_constraintTop_toBottomOf="@id/movie_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

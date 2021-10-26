@@ -38,22 +38,37 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListItemViewHold
     }
 
     private void sortMovies() {
-        moviesRated.sort(new Comparator<MovieRated>() {
-            @Override
-            public int compare(MovieRated m1, MovieRated m2) {
-                if (m1.getRating() > m2.getRating()) {
-                    return -1;
-                }
-                if (m1.getRating() < m2.getRating()) {
-                    return 1;
-                }
-                // TODO escape "The" from sorting
-                if (m1.getRating() == m2.getRating()) {
-                    return m1.getTitle().compareTo(m2.getTitle());
-                }
-                return 0;
-            }
-        });
+        Collections.sort(moviesRated, CompDefault);
+    }
+
+    Comparator<MovieRated> CompDefault = (M1, M2) -> {
+        double R1 = M1.getRating();
+        double R2 = M2.getRating();
+        String T1 = M1.getTitle();
+        String T2 = M2.getTitle();
+        String t1 = ignoreArticles(T1);
+        String t2 = ignoreArticles(T2);
+
+        if (R1 > R2) {
+            return -1;
+        }
+        if (R1 < R2) {
+            return 1;
+        }
+        if (R1 == R2) {
+            return t1.compareTo(t2);
+        }
+        return 0;
+    };
+
+    private String ignoreArticles(String input) {
+        if (input.startsWith("The")) {
+            return input.substring(4);
+        } else if (input.startsWith("A")) {
+            return input.substring(2);
+        } else {
+            return input;
+        }
     }
 
     @NonNull

@@ -7,6 +7,7 @@ import com.rawrick.flicklist.data.account.Account;
 import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
+import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 import com.rawrick.flicklist.data.series.SeriesTrending;
 
 import org.json.JSONArray;
@@ -168,7 +169,7 @@ public class Parser {
 
     public static ArrayList<MovieRated> parseRatedMoviesData(JSONObject response) {
         try {
-            String page = response.getString("page");
+            int pagesTotal = response.getInt("total_pages");
             JSONArray resultsArray = response.getJSONArray("results");
 
             ArrayList<MovieRated> ratedMovies = new ArrayList<>();
@@ -176,7 +177,6 @@ public class Parser {
                 JSONObject result = resultsArray.getJSONObject(i);
 
                 int id = result.getInt("id");
-                Log.d("FlickListApp", "parsing movie with id " + id);
                 double rating = result.getDouble("rating");
                 String title = result.getString("title");
                 String releaseDate = result.getString("release_date");
@@ -184,8 +184,9 @@ public class Parser {
                 String posterPath = result.getString("poster_path");
                 String fullPosterPath = img500 + posterPath;
 
+                Log.d("FlickListApp", "Parsing movie: " + title + ", with ID: " + id);
 
-                MovieRated ratedMovie = new MovieRated(id, rating, title, releaseYear, fullPosterPath);
+                MovieRated ratedMovie = new MovieRated(id, rating, title, releaseYear, fullPosterPath, pagesTotal);
                 ratedMovies.add(ratedMovie);
             }
             return ratedMovies;
@@ -196,6 +197,35 @@ public class Parser {
         return null;
     }
 
+
+    public static ArrayList<MovieWatchlisted> parseWatchlistedMoviesData(JSONObject response) {
+        try {
+            int pagesTotal = response.getInt("total_pages");
+            JSONArray resultsArray = response.getJSONArray("results");
+
+            ArrayList<MovieWatchlisted> watchlistedMovies = new ArrayList<>();
+            for (int i = 0; i < resultsArray.length(); i++) {
+                JSONObject result = resultsArray.getJSONObject(i);
+
+                int id = result.getInt("id");
+                String title = result.getString("title");
+                String releaseDate = result.getString("release_date");
+                String releaseYear = releaseDate.substring(0, 4);
+                String posterPath = result.getString("poster_path");
+                String fullPosterPath = img500 + posterPath;
+
+                Log.d("FlickListApp", "Parsing movie: " + title + ", with ID: " + id);
+
+                MovieWatchlisted watchlistedMovie = new MovieWatchlisted(id, title, releaseYear, fullPosterPath, pagesTotal);
+                watchlistedMovies.add(watchlistedMovie);
+            }
+            return watchlistedMovies;
+        } catch (JSONException e) {
+            Log.d("FlickListApp", "account details parsing error");
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static Movie parseMovieData(JSONObject response) {
         try {

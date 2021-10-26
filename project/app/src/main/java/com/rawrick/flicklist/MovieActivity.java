@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.util.MovieManager;
 
-public class MovieActivity extends AppCompatActivity implements MovieManager.MovieDetailsManagerListener, MovieManager.TrendingMoviesManagerListener, MovieManager.RatedMoviesManagerListener {
+public class MovieActivity extends AppCompatActivity implements MovieManager.MovieDetailsManagerListener, MovieManager.TrendingMoviesManagerListener, MovieManager.RatedMoviesManagerListener, MovieManager.WatchlistedMoviesManagerListener {
 
     private MovieManager movieManager;
 
@@ -39,7 +39,7 @@ public class MovieActivity extends AppCompatActivity implements MovieManager.Mov
     }
 
     private void initData() {
-        movieManager = new MovieManager(this, this, this, this);
+        movieManager = new MovieManager(this, this, this, this, this);
         movieManager.getMovieDetailsFromAPI();
     }
 
@@ -78,5 +78,10 @@ public class MovieActivity extends AppCompatActivity implements MovieManager.Mov
 
     @Override
     public void onRatedMoviesUpdated() {
+    }
+
+    @Override
+    public void onWatchlistedMoviesUpdated() {
+
     }
 }

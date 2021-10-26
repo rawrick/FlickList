@@ -13,12 +13,12 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rawrick.flicklist.R;
 import com.rawrick.flicklist.SettingsActivity;
-import com.rawrick.flicklist.databinding.FragmentDashboardBinding;
+import com.rawrick.flicklist.databinding.FragmentProfileBinding;
 
 public class ProfileFragment extends Fragment {
 
     private ProfileViewModel dashboardViewModel;
-    private FragmentDashboardBinding binding;
+    private FragmentProfileBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 

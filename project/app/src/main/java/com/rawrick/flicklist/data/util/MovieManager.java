@@ -3,29 +3,33 @@ package com.rawrick.flicklist.data.util;
 import android.content.Context;
 import android.util.Log;
 
-import static com.rawrick.flicklist.data.tools.SettingsManager.getAccountID;
-import static com.rawrick.flicklist.data.util.APIRequest.accountID;
+import static com.rawrick.flicklist.data.util.APIRequest.currentPageRatedMovies;
 
 import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
+import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 
 import java.util.ArrayList;
 
 public class MovieManager {
 
+
     private ArrayList<MovieTrending> moviesTrending;
     private ArrayList<MovieRated> ratedMovies;
+    private ArrayList<MovieWatchlisted> watchlistedMovies;
     private Movie movie;
     private final Context context;
     private final TrendingMoviesManagerListener listenerTrendingMovies;
     private final RatedMoviesManagerListener listenerRatedMovies;
+    private final WatchlistedMoviesManagerListener listenerWatchlistedMovies;
     private final MovieDetailsManagerListener listenerMovieDetails;
 
-    public MovieManager(Context context, TrendingMoviesManagerListener listenerTrendingMovies, RatedMoviesManagerListener listenerRatedMovies, MovieDetailsManagerListener listenerMovieDetails) {
+    public MovieManager(Context context, TrendingMoviesManagerListener listenerTrendingMovies, RatedMoviesManagerListener listenerRatedMovies, WatchlistedMoviesManagerListener listenerWatchlistedMovies, MovieDetailsManagerListener listenerMovieDetails) {
         this.context = context;
         this.listenerTrendingMovies = listenerTrendingMovies;
         this.listenerRatedMovies = listenerRatedMovies;
+        this.listenerWatchlistedMovies = listenerWatchlistedMovies;
         this.listenerMovieDetails = listenerMovieDetails;
     }
 
@@ -49,7 +53,7 @@ public class MovieManager {
     }
 
     /**
-     * RATED/WATCHED MOVIES
+     * Rated Movies
      */
 
     public void getRatedMoviesFromAPI() {
@@ -57,7 +61,11 @@ public class MovieManager {
         provider.getDataForRatedMovies(new MovieProvider.RatedMoviesDataListener() {
             @Override
             public void onRatedMoviesDataAvailable(ArrayList<MovieRated> data) {
-                ratedMovies = data;
+                if (ratedMovies == null) {
+                    ratedMovies = data;
+                } else {
+                    ratedMovies.addAll(data);
+                }
                 listenerRatedMovies.onRatedMoviesUpdated();
             }
         });
@@ -71,6 +79,33 @@ public class MovieManager {
         void onRatedMoviesUpdated();
     }
 
+
+    /**
+     * Watchlisted Movies
+     */
+
+    public void getWatchlistedMoviesFromAPI() {
+        MovieProvider provider = new MovieProvider(context);
+        provider.getDataForWatchlistedMovies(new MovieProvider.WatchlistedMoviesDataListener() {
+            @Override
+            public void onWatchlistedMoviesDataAvailable(ArrayList<MovieWatchlisted> data) {
+                if (watchlistedMovies == null) {
+                    watchlistedMovies = data;
+                } else {
+                    watchlistedMovies.addAll(data);
+                }
+                listenerWatchlistedMovies.onWatchlistedMoviesUpdated();
+            }
+        });
+    }
+
+    public ArrayList<MovieWatchlisted> getWatchlistedMovies() {
+        return watchlistedMovies;
+    }
+
+    public interface WatchlistedMoviesManagerListener {
+        void onWatchlistedMoviesUpdated();
+    }
 
     /**
      * MOVIE DETAILS

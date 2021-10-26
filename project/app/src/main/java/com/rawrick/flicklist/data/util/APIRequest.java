@@ -25,6 +25,8 @@ public class APIRequest {
     public static String sessionID;
     public static String accountID;
     public static String movieID;
+    public static String currentPageRatedMovies;
+    public static String currentPageWatchlistedMovies;
     //BuildConfig.ApiKey;
 
 

@@ -2,6 +2,7 @@ package com.rawrick.flicklist.ui.movies;
 
 import static androidx.recyclerview.widget.RecyclerView.VERTICAL;
 
+import static com.rawrick.flicklist.data.util.APIRequest.currentPageRatedMovies;
 import static com.rawrick.flicklist.data.util.APIRequest.movieID;
 
 import android.content.Intent;
@@ -24,15 +25,21 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.rawrick.flicklist.MainActivity;
 import com.rawrick.flicklist.MovieActivity;
 import com.rawrick.flicklist.R;
+import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.util.MovieManager;
+import com.rawrick.flicklist.data.util.MovieProvider;
 import com.rawrick.flicklist.databinding.FragmentMoviesBinding;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public class MoviesFragment extends Fragment implements MovieManager.RatedMoviesManagerListener, MovieListItemViewHolder.ViewHolderListener, MovieManager.TrendingMoviesManagerListener, MovieManager.MovieDetailsManagerListener {
+public class MoviesFragment extends Fragment implements MovieManager.RatedMoviesManagerListener, MovieListItemViewHolder.ViewHolderListener, MovieManager.TrendingMoviesManagerListener, MovieManager.MovieDetailsManagerListener, MovieManager.WatchlistedMoviesManagerListener {
 
     private FragmentMoviesBinding binding;
+
+    private int i = 2;
+    private int pagesTotal;
 
     private SwipeRefreshLayout swipeRefreshLayout;
     // series data & adapter
@@ -66,7 +73,9 @@ public class MoviesFragment extends Fragment implements MovieManager.RatedMovies
     }
 
     private void initData() {
-        movieManager = new MovieManager(getActivity(), this, this, this);
+        movieManager = new MovieManager(getActivity(), this, this, this, this);
+        // gets first page TODO check if rated movies exist
+        currentPageRatedMovies = "1";
         movieManager.getRatedMoviesFromAPI();
     }
 
@@ -99,16 +108,26 @@ public class MoviesFragment extends Fragment implements MovieManager.RatedMovies
 
     @Override
     public void onRatedMoviesUpdated() {
-        movieListAdapter.setRatedMovies(movieManager.getRatedMovies());
+        // saves total pages that have to be fetched
+        pagesTotal = movieManager.getRatedMovies().get(0).getPagesTotal();
+        while (i <= pagesTotal) {
+            // changes page number on API request URL
+            currentPageRatedMovies = String.valueOf(i);
+            movieManager.getRatedMoviesFromAPI();
+            i++;
+        }
+        // sets adapter once all pages have been fetched
+        if (i - 1 == pagesTotal) {
+            movieListAdapter.setRatedMovies(movieManager.getRatedMovies());
+        }
     }
 
     @Override
     public void onMovieListItemClicked(int position) {
         // go to movie detail activity
-        Log.d("list_dick", "clicked " + position);
         Intent intent = new Intent(this.getActivity(), MovieActivity.class);
         movieID = String.valueOf(movieManager.getRatedMovies().get(position).getId());
-        intent.putExtra("id", movieManager.getRatedMovies().get(position).getId());
+        intent.putExtra("id", movieID);
         startActivity(intent);
     }
 
@@ -119,6 +138,11 @@ public class MoviesFragment extends Fragment implements MovieManager.RatedMovies
 
     @Override
     public void onMovieDetailsUpdated() {
+
+    }
+
+    @Override
+    public void onWatchlistedMoviesUpdated() {
 
     }
 }

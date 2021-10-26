@@ -6,8 +6,10 @@ import static com.rawrick.flicklist.data.tools.URL.accountURL;
 import static com.rawrick.flicklist.data.tools.URL.movieURL;
 import static com.rawrick.flicklist.data.tools.URL.trendingMoviesWeekURL;
 import static com.rawrick.flicklist.data.util.APIRequest.accountID;
+import static com.rawrick.flicklist.data.util.APIRequest.currentPageWatchlistedMovies;
 import static com.rawrick.flicklist.data.util.APIRequest.key;
 import static com.rawrick.flicklist.data.util.APIRequest.movieID;
+import static com.rawrick.flicklist.data.util.APIRequest.currentPageRatedMovies;
 import static com.rawrick.flicklist.data.util.APIRequest.sessionID;
 
 import android.content.Context;
@@ -17,6 +19,7 @@ import com.rawrick.flicklist.BuildConfig;
 import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
+import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 
 import org.json.JSONObject;
 
@@ -29,6 +32,7 @@ public class MovieProvider {
 
     private ArrayList<MovieTrending> trendingMovieData;
     private ArrayList<MovieRated> ratedMovieData;
+    private ArrayList<MovieWatchlisted> watchlistedMovieData;
     private Movie movieData;
 
     public MovieProvider(Context context) {
@@ -67,6 +71,10 @@ public class MovieProvider {
         void onTrendingMovieDataAvailable(ArrayList<MovieTrending> data);
     }
 
+    /**
+     * Rated Movies
+     */
+
     public void getDataForRatedMovies(RatedMoviesDataListener listener) {
         if (ratedMovieData == null) {
             updateRatedMoviesData(new APIRequest.ResponseListener() {
@@ -92,12 +100,49 @@ public class MovieProvider {
             key = BuildConfig.ApiKey;
         }
         accountID = getAccountID(context);
-        APIRequest request = new APIRequest(accountURL + "/" + accountID + "/rated/movies?api_key=" + key + "&language=en-US&&session_id=" + sessionID + "&sort_by=created_at.asc&page=1", context);
+        APIRequest request = new APIRequest(accountURL + "/" + accountID + "/rated/movies?api_key=" + key + "&language=en-US&&session_id=" + sessionID + "&sort_by=created_at.asc&page=" + currentPageRatedMovies, context);
         request.send(listener);
     }
 
     public interface RatedMoviesDataListener {
         void onRatedMoviesDataAvailable(ArrayList<MovieRated> data);
+    }
+
+    /**
+     * Watchlisted Movies
+     */
+
+    public void getDataForWatchlistedMovies(WatchlistedMoviesDataListener listener) {
+        if (watchlistedMovieData == null) {
+            updateWatchlistedMoviesData(new APIRequest.ResponseListener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    watchlistedMovieData = Parser.parseWatchlistedMoviesData(response);
+                    listener.onWatchlistedMoviesDataAvailable(watchlistedMovieData);
+                }
+
+                @Override
+                public void onError() {
+                    Log.d("FlickListApp", "No Connection");
+                }
+            });
+        } else {
+            listener.onWatchlistedMoviesDataAvailable(watchlistedMovieData);
+        }
+    }
+
+    private void updateWatchlistedMoviesData(APIRequest.ResponseListener listener) {
+        key = getPreferenceAPIkey(context);
+        if (!key.equals(BuildConfig.ApiKey)) {
+            key = BuildConfig.ApiKey;
+        }
+        accountID = getAccountID(context);
+        APIRequest request = new APIRequest(accountURL + "/" + accountID + "/watchlist/movies?api_key=" + key + "&language=en-US&&session_id=" + sessionID + "&sort_by=created_at.asc&page=" + currentPageWatchlistedMovies, context);
+        request.send(listener);
+    }
+
+    public interface WatchlistedMoviesDataListener {
+        void onWatchlistedMoviesDataAvailable(ArrayList<MovieWatchlisted> data);
     }
 
     /**

@@ -38,7 +38,14 @@ public class MovieListItemViewHolder extends RecyclerView.ViewHolder {
                 .into(thumbnail);
 
         title.setText(movie.getTitle());
-        rating.setText(String.valueOf(movie.getRating()));
+        String getRating = String.valueOf(movie.getRating());
+        String ratingFormatted;
+        if (getRating.endsWith(".0")) {
+            ratingFormatted = getRating.substring(0, getRating.length() - 2);
+        } else {
+            ratingFormatted = getRating;
+        }
+        rating.setText(ratingFormatted);
         releaseYear.setText(movie.getReleaseYear());
 
         itemView.setOnClickListener(new View.OnClickListener() {

@@ -64,7 +64,7 @@ public class MovieProvider {
             key = BuildConfig.ApiKey;
         }
         APIRequest request = new APIRequest(trendingMoviesWeekURL + "?api_key=" + key, context);
-        request.send(listener);
+        request.get(listener);
     }
 
     public interface DataListener {
@@ -101,7 +101,7 @@ public class MovieProvider {
         }
         accountID = getAccountID(context);
         APIRequest request = new APIRequest(accountURL + "/" + accountID + "/rated/movies?api_key=" + key + "&language=en-US&&session_id=" + sessionID + "&sort_by=created_at.asc&page=" + currentPageRatedMovies, context);
-        request.send(listener);
+        request.get(listener);
     }
 
     public interface RatedMoviesDataListener {
@@ -138,7 +138,7 @@ public class MovieProvider {
         }
         accountID = getAccountID(context);
         APIRequest request = new APIRequest(accountURL + "/" + accountID + "/watchlist/movies?api_key=" + key + "&language=en-US&&session_id=" + sessionID + "&sort_by=created_at.asc&page=" + currentPageWatchlistedMovies, context);
-        request.send(listener);
+        request.get(listener);
     }
 
     public interface WatchlistedMoviesDataListener {
@@ -175,7 +175,7 @@ public class MovieProvider {
         }
         accountID = getAccountID(context);
         APIRequest request = new APIRequest(movieURL + movieID + "?api_key=" + key + "&language=en-US", context);
-        request.send(listener);
+        request.get(listener);
     }
 
     public interface MovieDataListener {

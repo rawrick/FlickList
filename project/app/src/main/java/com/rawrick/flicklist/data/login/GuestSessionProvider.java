@@ -48,7 +48,7 @@ public class GuestSessionProvider {
             key = BuildConfig.ApiKey;
         }
         APIRequest request = new APIRequest(authenticationSessionGuestNew + "?api_key=" + key, context);
-        request.send(listener);
+        request.get(listener);
     }
 
     public interface DataListener {

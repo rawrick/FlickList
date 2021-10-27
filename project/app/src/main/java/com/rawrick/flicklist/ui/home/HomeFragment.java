@@ -69,8 +69,6 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
     TextView userName;
 
 
-    ArrayList<MovieRated> rM;
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();

@@ -54,6 +54,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/movie_backdrop_layout" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/movie_edit_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/movie_runtime"
+        app:layout_constraintStart_toEndOf="@id/movie_release"
+        style="@style/homeFAB"
+        tools:ignore="ContentDescription" />
+
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/movie_poster"
         android:layout_width="0dp"

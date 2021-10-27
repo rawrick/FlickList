@@ -2,7 +2,6 @@ package com.rawrick.flicklist.data.login;
 
 import static com.rawrick.flicklist.data.tools.SettingsManager.getPreferenceAPIkey;
 import static com.rawrick.flicklist.data.util.APIRequest.key;
-import static com.rawrick.flicklist.data.util.APIRequest.token;
 
 import android.content.Context;
 import android.util.Log;
@@ -49,7 +48,7 @@ public class SessionProvider {
             key = BuildConfig.ApiKey;
         }
         APIRequest request = new APIRequest("", context);
-        request.send(listener);
+        request.get(listener);
     }
 
     public interface DataListener {

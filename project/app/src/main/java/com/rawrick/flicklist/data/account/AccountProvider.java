@@ -15,18 +15,7 @@ import com.rawrick.flicklist.data.util.Parser;
 import org.json.JSONObject;
 
 
-import static com.rawrick.flicklist.data.tools.SettingsManager.getPreferenceAPIkey;
-import static com.rawrick.flicklist.data.util.APIRequest.key;
 import static com.rawrick.flicklist.data.util.APIRequest.sessionID;
-
-import android.content.Context;
-import android.util.Log;
-
-import com.rawrick.flicklist.BuildConfig;
-import com.rawrick.flicklist.data.util.APIRequest;
-import com.rawrick.flicklist.data.util.Parser;
-
-import org.json.JSONObject;
 
 public class AccountProvider {
 
@@ -64,7 +53,7 @@ public class AccountProvider {
         }
         sessionID = getSessionID(context);
         APIRequest request = new APIRequest(accountURL + "?api_key=" + key + "&session_id=" + sessionID, context);
-        request.send(listener);
+        request.get(listener);
     }
 
     public interface DataListener {

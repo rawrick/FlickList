@@ -13,6 +13,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class APIRequest {
@@ -39,7 +40,7 @@ public class APIRequest {
     }
 
 
-    public void send(ResponseListener listener) {
+    public void get(ResponseListener listener) {
         RequestQueue queue = Volley.newRequestQueue(context);
         VolleyLog.DEBUG = true;
         String request = destination;
@@ -51,6 +52,34 @@ public class APIRequest {
                     @Override
                     public void onResponse(JSONObject response) {
                         token = null;
+                        listener.onResponse(response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.onError();
+                Log.d("FlickListApp", "No Connection");
+                error.printStackTrace();
+            }
+        });
+        queue.add(stringRequest);
+    }
+
+    public void post(ResponseListener listener) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        VolleyLog.DEBUG = true;
+        // creates request body
+        JSONObject object = new JSONObject();
+        try {
+            object.put("value", 5.0);
+        } catch (JSONException error) {
+            error.printStackTrace();
+        }
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, destination, object,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
                         listener.onResponse(response);
                     }
                 }, new Response.ErrorListener() {

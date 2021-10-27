@@ -47,7 +47,7 @@ public class TokenProvider {
             key = BuildConfig.ApiKey;
         }
         APIRequest request = new APIRequest(authenticationTokenNew + "?api_key=" + key, context);
-        request.send(listener);
+        request.get(listener);
     }
 
     public interface DataListener {

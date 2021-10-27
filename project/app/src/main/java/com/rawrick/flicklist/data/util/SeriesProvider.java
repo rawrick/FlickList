@@ -45,7 +45,7 @@ public class SeriesProvider {
 
     private void updateSeriesTrendingData(APIRequest.ResponseListener listener) {
         APIRequest request = new APIRequest(trendingSeriesWeekURL + "?api_key=" + key, context);
-        request.send(listener);
+        request.get(listener);
     }
 
     public interface DataListener {

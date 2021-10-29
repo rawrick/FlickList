@@ -1,34 +1,20 @@
 package com.rawrick.flicklist;
 
-import static com.rawrick.flicklist.data.tools.SettingsManager.getLoginStatus;
-import static com.rawrick.flicklist.data.tools.SettingsManager.setAccountID;
-
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.rawrick.flicklist.data.account.AccountManager;
 import com.rawrick.flicklist.ui.home.HomeFragment;
 import com.rawrick.flicklist.ui.movies.MoviesFragment;
 import com.rawrick.flicklist.ui.profile.ProfileFragment;

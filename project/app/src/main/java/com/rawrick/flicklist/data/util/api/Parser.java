@@ -1,4 +1,4 @@
-package com.rawrick.flicklist.data.util;
+package com.rawrick.flicklist.data.util.api;
 
 import static com.rawrick.flicklist.data.util.Formatter.runtimeFormatter;
 

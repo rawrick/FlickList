@@ -1,4 +1,4 @@
-package com.rawrick.flicklist.data.tools;
+package com.rawrick.flicklist.data.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;

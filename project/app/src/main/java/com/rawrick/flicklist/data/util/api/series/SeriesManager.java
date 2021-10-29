@@ -1,4 +1,4 @@
-package com.rawrick.flicklist.data.util;
+package com.rawrick.flicklist.data.util.api.series;
 
 import android.content.Context;
 

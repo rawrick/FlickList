@@ -1,41 +1,30 @@
 package com.rawrick.flicklist.ui.movies;
 
 import static androidx.recyclerview.widget.RecyclerView.VERTICAL;
-
-import static com.rawrick.flicklist.data.util.APIRequest.currentPageRatedMovies;
-import static com.rawrick.flicklist.data.util.APIRequest.movieID;
+import static com.rawrick.flicklist.data.util.api.APIRequest.movieID;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.rawrick.flicklist.MainActivity;
 import com.rawrick.flicklist.MovieActivity;
 import com.rawrick.flicklist.R;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
-import com.rawrick.flicklist.data.util.MovieManager;
-import com.rawrick.flicklist.data.util.MovieProvider;
 import com.rawrick.flicklist.databinding.FragmentMoviesBinding;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 public class MoviesFragment extends Fragment implements MovieListItemViewHolder.ViewHolderListener {
 
@@ -120,6 +109,7 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
             @Override
             public void onRefresh() {
                 initData();
+                movieListAdapter.setRatedMovies(moviesRated);
                 swipeRefreshLayout.setRefreshing(false);
             }
         });

@@ -1,14 +1,14 @@
 package com.rawrick.flicklist.data.login;
 
-import static com.rawrick.flicklist.data.tools.SettingsManager.getPreferenceAPIkey;
-import static com.rawrick.flicklist.data.util.APIRequest.key;
+import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
+import static com.rawrick.flicklist.data.util.api.APIRequest.key;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.rawrick.flicklist.BuildConfig;
-import com.rawrick.flicklist.data.util.APIRequest;
-import com.rawrick.flicklist.data.util.Parser;
+import com.rawrick.flicklist.data.util.api.APIRequest;
+import com.rawrick.flicklist.data.util.api.Parser;
 
 import org.json.JSONObject;
 

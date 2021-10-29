@@ -1,53 +1,39 @@
 package com.rawrick.flicklist;
 
-import static com.rawrick.flicklist.data.tools.SettingsManager.clearTempRating;
-import static com.rawrick.flicklist.data.tools.SettingsManager.getTempRating;
-import static com.rawrick.flicklist.data.tools.SettingsManager.setTempRating;
-import static com.rawrick.flicklist.data.util.APIRequest.movieID;
+import static com.rawrick.flicklist.data.util.api.APIRequest.movieID;
 import static com.rawrick.flicklist.data.util.Formatter.runtimeFormatter;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.bumptech.glide.Glide;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.rawrick.flicklist.data.movie.Movie;
-import com.rawrick.flicklist.data.util.MovieManager;
-import com.rawrick.flicklist.data.util.rating.RatingManager;
-import com.rawrick.flicklist.ui.home.HomeFragment;
+import com.rawrick.flicklist.data.util.api.movies.MovieDetailsManager;
+import com.rawrick.flicklist.data.util.api.rating.RatingManager;
 import com.rawrick.flicklist.ui.moviedetails.MovieAboutFragment;
 import com.rawrick.flicklist.ui.moviedetails.MovieCastFragment;
-import com.rawrick.flicklist.ui.movies.MoviesFragment;
-import com.rawrick.flicklist.ui.profile.ProfileFragment;
-import com.rawrick.flicklist.ui.series.SeriesFragment;
-import com.rawrick.flicklist.ui.watchlist.WatchlistFragment;
 
-public class MovieActivity extends FragmentActivity implements MovieManager.MovieDetailsManagerListener, MovieManager.TrendingMoviesManagerListener, MovieManager.RatedMoviesManagerListener, MovieManager.WatchlistedMoviesManagerListener, MovieManager.MovieCastManagerListener {
+public class MovieActivity extends FragmentActivity implements MovieDetailsManager.MovieDetailsManagerListener, MovieDetailsManager.MovieCastManagerListener {
 
-    private MovieManager movieManager;
+    private MovieDetailsManager movieDetailsManager;
     private RatingManager ratingManager;
 
     private TextView movieTitle;
@@ -80,8 +66,8 @@ public class MovieActivity extends FragmentActivity implements MovieManager.Movi
     }
 
     private void initData() {
-        movieManager = new MovieManager(this, this, this, this, this, this);
-        movieManager.getMovieDetailsFromAPI();
+        movieDetailsManager = new MovieDetailsManager(this, this, this);
+        movieDetailsManager.getMovieDetailsFromAPI();
         ratingManager = new RatingManager(this);
     }
 
@@ -141,7 +127,7 @@ public class MovieActivity extends FragmentActivity implements MovieManager.Movi
 
     @Override
     public void onMovieDetailsUpdated() {
-        Movie movie = movieManager.getMovieDetails();
+        Movie movie = movieDetailsManager.getMovieDetails();
         movieID = String.valueOf(movie.getId());
         movieTitle.setText(movie.getTitle());
         movieReleaseYear.setText(movie.getReleaseDate().substring(0, 4));
@@ -172,6 +158,11 @@ public class MovieActivity extends FragmentActivity implements MovieManager.Movi
                     else tab.setText("default");
                 }
         ).attach();
+    }
+
+    @Override
+    public void onMovieCastUpdated() {
+
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStateAdapter {
@@ -212,24 +203,5 @@ public class MovieActivity extends FragmentActivity implements MovieManager.Movi
             winParams.flags &= ~bits;
         }
         win.setAttributes(winParams);
-    }
-
-
-    @Override
-    public void onTrendingMoviesUpdated() {
-    }
-
-    @Override
-    public void onRatedMoviesUpdated() {
-    }
-
-    @Override
-    public void onWatchlistedMoviesUpdated() {
-
-    }
-
-    @Override
-    public void onMovieCastUpdated() {
-
     }
 }

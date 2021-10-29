@@ -1,15 +1,14 @@
 package com.rawrick.flicklist;
 
-import static com.rawrick.flicklist.data.tools.SettingsManager.getLoginStatus;
-import static com.rawrick.flicklist.data.tools.SettingsManager.setAccountID;
-import static com.rawrick.flicklist.data.util.APIRequest.currentPageRatedMovies;
+import static com.rawrick.flicklist.data.util.SettingsManager.getLoginStatus;
+import static com.rawrick.flicklist.data.util.SettingsManager.setAccountID;
+import static com.rawrick.flicklist.data.util.api.APIRequest.currentPageRatedMovies;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -18,11 +17,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.rawrick.flicklist.data.account.AccountManager;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
-import com.rawrick.flicklist.data.util.MovieManager;
+import com.rawrick.flicklist.data.util.api.movies.MovieManager;
 
 import java.util.ArrayList;
 
-public class SplashScreenActivity extends AppCompatActivity implements AccountManager.AccountManagerListener, MovieManager.MovieDetailsManagerListener, MovieManager.TrendingMoviesManagerListener, MovieManager.RatedMoviesManagerListener, MovieManager.WatchlistedMoviesManagerListener, MovieManager.MovieCastManagerListener {
+public class SplashScreenActivity extends AppCompatActivity implements
+        AccountManager.AccountManagerListener,
+        MovieManager.TrendingMoviesManagerListener,
+        MovieManager.RatedMoviesManagerListener,
+        MovieManager.WatchlistedMoviesManagerListener {
 
     private FLDatabaseHelper db;
 
@@ -78,7 +81,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AccountMa
     }
 
     private void initRatedMoviesData() {
-        movieManager = new MovieManager(this, this, this, this, this, this);
+        movieManager = new MovieManager(this, this, this, this);
         currentPageRatedMovies = "1";
         movieManager.getRatedMoviesFromAPI();
     }
@@ -108,7 +111,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AccountMa
         // save to db once all pages have been fetched
         if (i - 1 == pagesTotal) {
             ArrayList<MovieRated> movies = movieManager.getRatedMovies();
-            for (MovieRated movieRated : movies ) {
+            for (MovieRated movieRated : movies) {
                 db.addOrUpdateMovieRated(movieRated);
             }
             startActivty();
@@ -119,16 +122,6 @@ public class SplashScreenActivity extends AppCompatActivity implements AccountMa
 
     @Override
     public void onWatchlistedMoviesUpdated() {
-
-    }
-
-    @Override
-    public void onMovieDetailsUpdated() {
-
-    }
-
-    @Override
-    public void onMovieCastUpdated() {
 
     }
 

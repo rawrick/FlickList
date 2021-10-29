@@ -1,6 +1,6 @@
-package com.rawrick.flicklist.data.util;
+package com.rawrick.flicklist.data.util.api;
 
-import static com.rawrick.flicklist.data.tools.URL.authenticationSessionNew;
+import static com.rawrick.flicklist.data.util.api.URL.authenticationSessionNew;
 
 import android.content.Context;
 import android.util.Log;

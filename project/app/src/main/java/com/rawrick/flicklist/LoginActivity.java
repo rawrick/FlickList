@@ -9,10 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import static com.rawrick.flicklist.data.tools.SettingsManager.setLoginProgress;
-import static com.rawrick.flicklist.data.tools.SettingsManager.setLoginStatus;
-import static com.rawrick.flicklist.data.tools.SettingsManager.setSessionID;
-import static com.rawrick.flicklist.data.util.APIRequest.token;
+import static com.rawrick.flicklist.data.util.SettingsManager.setLoginProgress;
+import static com.rawrick.flicklist.data.util.SettingsManager.setLoginStatus;
+import static com.rawrick.flicklist.data.util.SettingsManager.setSessionID;
+import static com.rawrick.flicklist.data.util.api.APIRequest.token;
 
 import com.rawrick.flicklist.data.login.LoginManager;
 

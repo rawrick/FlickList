@@ -2,11 +2,6 @@ package com.rawrick.flicklist.data.account;
 
 import android.content.Context;
 
-import com.rawrick.flicklist.data.movie.MovieTrending;
-import com.rawrick.flicklist.data.util.MovieProvider;
-
-import java.util.ArrayList;
-
 public class AccountManager {
 
     private Account accountData;

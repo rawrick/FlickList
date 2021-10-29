@@ -15,17 +15,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rawrick.flicklist.R;
-import com.rawrick.flicklist.data.util.MovieManager;
+import com.rawrick.flicklist.data.util.api.movies.MovieDetailsManager;
 import com.rawrick.flicklist.databinding.FragmentMovieCastBinding;
 
 
-public class MovieCastFragment extends Fragment implements MovieManager.MovieDetailsManagerListener, MovieManager.TrendingMoviesManagerListener, MovieManager.RatedMoviesManagerListener, MovieManager.WatchlistedMoviesManagerListener, MovieManager.MovieCastManagerListener, MovieCastViewHolder.ViewHolderListener {
+public class MovieCastFragment extends Fragment implements MovieDetailsManager.MovieDetailsManagerListener, MovieDetailsManager.MovieCastManagerListener, MovieCastViewHolder.ViewHolderListener {
 
     private FragmentMovieCastBinding binding;
 
-
-
-    private MovieManager movieManager;
+    private MovieDetailsManager movieDetailsManager;
     private RecyclerView movieCastRecyclerView;
     private MovieCastAdapter movieCastAdapter;
 
@@ -48,8 +46,8 @@ public class MovieCastFragment extends Fragment implements MovieManager.MovieDet
     }
 
     private void initData() {
-        movieManager = new MovieManager(getActivity(), this, this, this, this, this);
-        movieManager.getMovieCastFromAPI();
+        movieDetailsManager = new MovieDetailsManager(getActivity(), this, this);
+        movieDetailsManager.getMovieCastFromAPI();
     }
 
     private void initUI(View view) {
@@ -72,24 +70,11 @@ public class MovieCastFragment extends Fragment implements MovieManager.MovieDet
 
     @Override
     public void onMovieCastUpdated() {
-        movieCastAdapter.setMovieCast(movieManager.getMovieCast());
+        movieCastAdapter.setMovieCast(movieDetailsManager.getMovieCast());
 
     }
 
-    @Override
-    public void onTrendingMoviesUpdated() {
 
-    }
-
-    @Override
-    public void onRatedMoviesUpdated() {
-
-    }
-
-    @Override
-    public void onWatchlistedMoviesUpdated() {
-
-    }
 
     @Override
     public void onMovieDetailsUpdated() {

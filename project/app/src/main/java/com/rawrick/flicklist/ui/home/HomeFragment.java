@@ -2,8 +2,7 @@ package com.rawrick.flicklist.ui.home;
 
 import static androidx.recyclerview.widget.RecyclerView.HORIZONTAL;
 
-import static com.rawrick.flicklist.data.tools.SettingsManager.setAccountID;
-import static com.rawrick.flicklist.data.util.APIRequest.movieID;
+import static com.rawrick.flicklist.data.util.api.APIRequest.movieID;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,18 +25,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.rawrick.flicklist.MovieActivity;
 import com.rawrick.flicklist.R;
-import com.rawrick.flicklist.data.account.AccountManager;
-import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 import com.rawrick.flicklist.data.series.SeriesTrending;
-import com.rawrick.flicklist.data.tools.SettingsManager;
-import com.rawrick.flicklist.data.util.MovieManager;
-import com.rawrick.flicklist.data.util.SeriesManager;
+import com.rawrick.flicklist.data.util.SettingsManager;
+import com.rawrick.flicklist.data.util.api.movies.MovieManager;
+import com.rawrick.flicklist.data.util.api.series.SeriesManager;
 import com.rawrick.flicklist.databinding.FragmentHomeBinding;
 
-import java.util.ArrayList;
-
-public class HomeFragment extends Fragment implements MovieManager.TrendingMoviesManagerListener, TrendingMoviesViewHolder.ViewHolderListener, SeriesManager.SeriesManagerListener, TrendingSeriesViewHolder.ViewHolderListener, MovieManager.RatedMoviesManagerListener, MovieManager.MovieDetailsManagerListener, MovieManager.WatchlistedMoviesManagerListener, MovieManager.MovieCastManagerListener {
+public class HomeFragment extends Fragment implements MovieManager.TrendingMoviesManagerListener, TrendingMoviesViewHolder.ViewHolderListener, SeriesManager.SeriesManagerListener, TrendingSeriesViewHolder.ViewHolderListener, MovieManager.RatedMoviesManagerListener, MovieManager.WatchlistedMoviesManagerListener {
 
     private FragmentHomeBinding binding;
 
@@ -99,7 +93,7 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
 
     private void initData() {
         Log.d("FlickListApp", SettingsManager.getSessionID(this.getActivity()));
-        movieManager = new MovieManager(getActivity(), this, this, this, this, this);
+        movieManager = new MovieManager(getActivity(), this, this, this);
         seriesManager = new SeriesManager(getActivity(), this);
         getTrendingData();
 
@@ -275,18 +269,10 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
     public void onRatedMoviesUpdated() {
     }
 
-    @Override
-    public void onMovieDetailsUpdated() {
-
-    }
 
     @Override
     public void onWatchlistedMoviesUpdated() {
 
     }
 
-    @Override
-    public void onMovieCastUpdated() {
-
-    }
 }

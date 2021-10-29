@@ -1,34 +1,28 @@
 package com.rawrick.flicklist.ui.watchlist;
 
 import static androidx.recyclerview.widget.RecyclerView.VERTICAL;
-import static com.rawrick.flicklist.data.util.APIRequest.currentPageRatedMovies;
-import static com.rawrick.flicklist.data.util.APIRequest.currentPageWatchlistedMovies;
-import static com.rawrick.flicklist.data.util.APIRequest.movieID;
+import static com.rawrick.flicklist.data.util.api.APIRequest.currentPageWatchlistedMovies;
+import static com.rawrick.flicklist.data.util.api.APIRequest.movieID;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.rawrick.flicklist.MovieActivity;
 import com.rawrick.flicklist.R;
-import com.rawrick.flicklist.data.util.MovieManager;
-import com.rawrick.flicklist.databinding.FragmentMoviesBinding;
+import com.rawrick.flicklist.data.util.api.movies.MovieManager;
 import com.rawrick.flicklist.databinding.FragmentWatchlistBinding;
-import com.rawrick.flicklist.ui.movies.MovieListAdapter;
 
-public class WatchlistFragment extends Fragment implements MovieManager.WatchlistedMoviesManagerListener, MovieManager.RatedMoviesManagerListener, MovieManager.TrendingMoviesManagerListener, MovieManager.MovieDetailsManagerListener, MovieWatchlistItemViewHolder.ViewHolderListener, MovieManager.MovieCastManagerListener {
+public class WatchlistFragment extends Fragment implements MovieManager.WatchlistedMoviesManagerListener, MovieManager.RatedMoviesManagerListener, MovieManager.TrendingMoviesManagerListener, MovieWatchlistItemViewHolder.ViewHolderListener {
 
     private FragmentWatchlistBinding binding;
 
@@ -61,7 +55,7 @@ public class WatchlistFragment extends Fragment implements MovieManager.Watchlis
     }
 
     private void initData() {
-        movieManager = new MovieManager(getActivity(), this, this, this, this, this);
+        movieManager = new MovieManager(getActivity(), this, this, this);
         // gets first page TODO check if rated movies exist
         currentPageWatchlistedMovies = "1";
         movieManager.getWatchlistedMoviesFromAPI();
@@ -123,14 +117,4 @@ public class WatchlistFragment extends Fragment implements MovieManager.Watchlis
 
     }
 
-    @Override
-    public void onMovieDetailsUpdated() {
-
-    }
-
-
-    @Override
-    public void onMovieCastUpdated() {
-
-    }
 }

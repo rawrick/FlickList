@@ -1,7 +1,7 @@
 package com.rawrick.flicklist.ui.settings;
 
 
-import static com.rawrick.flicklist.data.tools.SettingsManager.setLoginStatus;
+import static com.rawrick.flicklist.data.util.SettingsManager.setLoginStatus;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,9 +12,6 @@ import android.os.Bundle;
 import androidx.fragment.app.DialogFragment;
 
 import com.rawrick.flicklist.LoginActivity;
-import com.rawrick.flicklist.MainActivity;
-import com.rawrick.flicklist.R;
-import com.rawrick.flicklist.data.tools.SettingsManager;
 
 
 // Fragment that asks for confirmation when user tries to reset saved data

@@ -36,15 +36,15 @@ public class MovieCastFragment extends Fragment implements MovieManager.MovieDet
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initData();
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initUI(view);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
     }
 
     private void initData() {
@@ -73,6 +73,7 @@ public class MovieCastFragment extends Fragment implements MovieManager.MovieDet
     @Override
     public void onMovieCastUpdated() {
         movieCastAdapter.setMovieCast(movieManager.getMovieCast());
+
     }
 
     @Override

@@ -5,6 +5,7 @@ import static com.rawrick.flicklist.data.tools.URL.movieURL;
 import static com.rawrick.flicklist.data.util.APIRequest.key;
 import static com.rawrick.flicklist.data.util.APIRequest.movieID;
 import static com.rawrick.flicklist.data.util.APIRequest.sessionID;
+import static com.rawrick.flicklist.data.util.APIRequest.rating;
 
 import android.content.Context;
 import android.util.Log;
@@ -22,7 +23,8 @@ public class RatingManager {
         this.context = context;
     }
 
-    public void postRating() {
+    public void postRating(float value) {
+        rating = value * 2;
         updateRating(new APIRequest.ResponseListener() {
             @Override
             public void onResponse(JSONObject response) {

@@ -1,6 +1,8 @@
 package com.rawrick.flicklist;
 
+import static com.rawrick.flicklist.data.tools.SettingsManager.clearTempRating;
 import static com.rawrick.flicklist.data.tools.SettingsManager.getTempRating;
+import static com.rawrick.flicklist.data.tools.SettingsManager.setTempRating;
 import static com.rawrick.flicklist.data.util.APIRequest.movieID;
 import static com.rawrick.flicklist.data.util.Formatter.runtimeFormatter;
 
@@ -55,6 +57,8 @@ public class MovieActivity extends FragmentActivity implements MovieManager.Movi
     private ImageView movieBackdrop;
     private FloatingActionButton movieRateFAB;
 
+    private RatingBar ratingBar;
+
     private static final int NUM_PAGES = 5;
     private ViewPager2 viewPager;
     private FragmentStateAdapter pagerAdapter;
@@ -98,17 +102,20 @@ public class MovieActivity extends FragmentActivity implements MovieManager.Movi
     }
 
     private void showRatingDialog() {
-        float tempRating = getTempRating(this);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final View customLayout = getLayoutInflater().inflate(R.layout.rating_dialog, null);
+        ratingBar = customLayout.findViewById(R.id.rating_bar);
+
         builder.setView(customLayout)
-                .setTitle("")
+                .setTitle(" ")
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        RatingBar ratingBar = customLayout.findViewById(R.id.rating_bar);
-                        ratingBar.setRating(tempRating);
-                        makeToast(String.valueOf(ratingBar.getRating()));
+                        float rating = ratingBar.getRating();
+
+                        ratingManager.postRating(rating);
+                        makeToast(String.valueOf(rating * 2) + "/10");
                     }
                 })
                 .setNeutralButton("Delete Rating", new DialogInterface.OnClickListener() {

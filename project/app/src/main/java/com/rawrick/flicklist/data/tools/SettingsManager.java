@@ -2,6 +2,7 @@ package com.rawrick.flicklist.data.tools;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.preference.PreferenceManager;
 
@@ -69,7 +70,7 @@ public class SettingsManager {
 
     public static float getTempRating(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        float tempRating = sharedPreferences.getFloat("temprating", 0f);
+        float tempRating = sharedPreferences.getFloat("temprating", -1f);
         return tempRating;
     }
 
@@ -85,5 +86,6 @@ public class SettingsManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove("temprating");
         editor.apply();
+        Log.d("FlickListApp", "Rating cleared.");
     }
 }

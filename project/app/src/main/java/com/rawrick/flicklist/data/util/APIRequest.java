@@ -28,6 +28,9 @@ public class APIRequest {
     public static String movieID;
     public static String currentPageRatedMovies;
     public static String currentPageWatchlistedMovies;
+
+    // post values
+    public static float rating;
     //BuildConfig.ApiKey;
 
 
@@ -71,7 +74,7 @@ public class APIRequest {
         // creates request body
         JSONObject object = new JSONObject();
         try {
-            object.put("value", 5.0);
+            object.put("value", rating);
         } catch (JSONException error) {
             error.printStackTrace();
         }

@@ -1,4 +1,4 @@
-package com.rawrick.flicklist.data.util.api;
+package com.rawrick.flicklist.data.api;
 
 public class URL {
 

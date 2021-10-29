@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rawrick.flicklist.R;
-import com.rawrick.flicklist.data.util.api.movies.MovieDetailsManager;
+import com.rawrick.flicklist.data.api.movies.MovieDetailsManager;
 import com.rawrick.flicklist.databinding.FragmentMovieCastBinding;
 
 

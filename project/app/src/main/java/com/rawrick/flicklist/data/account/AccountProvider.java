@@ -2,20 +2,20 @@ package com.rawrick.flicklist.data.account;
 
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
 import static com.rawrick.flicklist.data.util.SettingsManager.getSessionID;
-import static com.rawrick.flicklist.data.util.api.URL.accountURL;
-import static com.rawrick.flicklist.data.util.api.APIRequest.key;
+import static com.rawrick.flicklist.data.api.URL.accountURL;
+import static com.rawrick.flicklist.data.api.APIRequest.key;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.rawrick.flicklist.BuildConfig;
-import com.rawrick.flicklist.data.util.api.APIRequest;
-import com.rawrick.flicklist.data.util.api.Parser;
+import com.rawrick.flicklist.data.api.APIRequest;
+import com.rawrick.flicklist.data.api.Parser;
 
 import org.json.JSONObject;
 
 
-import static com.rawrick.flicklist.data.util.api.APIRequest.sessionID;
+import static com.rawrick.flicklist.data.api.APIRequest.sessionID;
 
 public class AccountProvider {
 

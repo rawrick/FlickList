@@ -26,6 +26,9 @@ public interface MovieRatedDAO {
     @Query("SELECT * from moviesRated WHERE id= :id")
     MovieRated getMovieForID(int id);
 
+    @Query("SELECT * from moviesRated WHERE rating> :rating")
+    List<MovieRated> getMoviesForRating(double rating);
+
     @Query("SELECT * from moviesRated")
     List<MovieRated> getAllMoviesRated();
 

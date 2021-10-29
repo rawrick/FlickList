@@ -1,6 +1,6 @@
 package com.rawrick.flicklist;
 
-import static com.rawrick.flicklist.data.util.api.APIRequest.movieID;
+import static com.rawrick.flicklist.data.api.APIRequest.movieID;
 import static com.rawrick.flicklist.data.util.Formatter.runtimeFormatter;
 
 import android.app.Activity;
@@ -25,9 +25,9 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.rawrick.flicklist.data.api.movies.MovieDetailsManager;
 import com.rawrick.flicklist.data.movie.Movie;
-import com.rawrick.flicklist.data.util.api.movies.MovieDetailsManager;
-import com.rawrick.flicklist.data.util.api.rating.RatingManager;
+import com.rawrick.flicklist.data.api.rating.RatingManager;
 import com.rawrick.flicklist.ui.moviedetails.MovieAboutFragment;
 import com.rawrick.flicklist.ui.moviedetails.MovieCastFragment;
 

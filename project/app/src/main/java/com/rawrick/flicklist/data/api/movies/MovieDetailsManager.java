@@ -1,4 +1,4 @@
-package com.rawrick.flicklist.data.util.api.movies;
+package com.rawrick.flicklist.data.api.movies;
 
 import android.content.Context;
 

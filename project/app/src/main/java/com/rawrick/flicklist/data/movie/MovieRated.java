@@ -20,6 +20,8 @@ public class MovieRated implements Comparable<MovieRated> {
     private final String releaseYear;
     @ColumnInfo(name = "posterPath")
     private final String posterPath;
+    @ColumnInfo(name = "backdropPath")
+    private final String backdropPath;
     @ColumnInfo(name = "pagesTotal")
     private final int pagesTotal;
     @ColumnInfo(name = "watchDate")
@@ -27,22 +29,24 @@ public class MovieRated implements Comparable<MovieRated> {
 
 
     @Ignore
-    public MovieRated(int id, double rating, String title, String releaseYear, String posterPath, int pagesTotal) {
+    public MovieRated(int id, double rating, String title, String releaseYear, String posterPath, String backdropPath, int pagesTotal) {
         this.id = id;
         this.rating = rating;
         this.title = title;
         this.releaseYear = releaseYear;
         this.posterPath = posterPath;
+        this.backdropPath = backdropPath;
         this.pagesTotal = pagesTotal;
     }
 
     // used for DB
-    public MovieRated(int id, double rating, String title, String releaseYear, String posterPath, int pagesTotal, String watchDate) {
+    public MovieRated(int id, double rating, String title, String releaseYear, String posterPath, String backdropPath, int pagesTotal, String watchDate) {
         this.id = id;
         this.rating = rating;
         this.title = title;
         this.releaseYear = releaseYear;
         this.posterPath = posterPath;
+        this.backdropPath = backdropPath;
         this.pagesTotal = pagesTotal;
         this.watchDate = watchDate;
     }
@@ -65,6 +69,10 @@ public class MovieRated implements Comparable<MovieRated> {
 
     public String getPosterPath() {
         return posterPath;
+    }
+
+    public String getBackdropPath() {
+        return backdropPath;
     }
 
     public int getPagesTotal() {

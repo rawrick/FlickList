@@ -25,9 +25,9 @@ public class MovieWatchlistItemViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         this.context = context;
         this.listener = listener;
-        title = itemView.findViewById(R.id.movie_list_item_title);
-        releaseYear = itemView.findViewById(R.id.movie_list_item_watch_date);
-        thumbnail = itemView.findViewById(R.id.movie_list_item_poster);
+        title = itemView.findViewById(R.id.movie_watchlist_item_title);
+        releaseYear = itemView.findViewById(R.id.movie_watchlist_item_release_date);
+        thumbnail = itemView.findViewById(R.id.movie_watchlist_item_poster);
     }
 
     public void bindView(MovieWatchlisted movie) {

@@ -1,9 +1,10 @@
 package com.rawrick.flicklist.ui.movies;
 
 import static androidx.recyclerview.widget.RecyclerView.VERTICAL;
-import static com.rawrick.flicklist.data.util.api.APIRequest.movieID;
+import static com.rawrick.flicklist.data.api.APIRequest.movieID;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,9 +98,18 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     }
 
     private void initUI(View view) {
-        // initialize rated movies adapter
+        final int spacing = getResources().getDimensionPixelSize(R.dimen.recycler_list_spacing) / 2;
         recyclerRatedMovies = view.findViewById(R.id.movie_list);
         recyclerRatedMovies.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, false));
+        recyclerRatedMovies.setPadding(spacing, spacing, spacing, spacing);
+        recyclerRatedMovies.setClipToPadding(false);
+        recyclerRatedMovies.setClipChildren(false);
+        recyclerRatedMovies.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                outRect.set(spacing, spacing, spacing, spacing);
+            }
+        });
         movieListAdapter = new MovieListAdapter(getActivity(), this);
         recyclerRatedMovies.setAdapter(movieListAdapter);
         movieListAdapter.setRatedMovies(moviesRated);
@@ -115,8 +125,6 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
         });
     }
 
-
-
     @Override
     public void onMovieListItemClicked(int position) {
         // go to movie detail activity
@@ -125,5 +133,4 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
         intent.putExtra("id", movieID);
         startActivity(intent);
     }
-
 }

@@ -1,10 +1,7 @@
-package com.rawrick.flicklist.data.util.api;
-
-import static com.rawrick.flicklist.data.util.Formatter.runtimeFormatter;
+package com.rawrick.flicklist.data.api;
 
 import android.util.Log;
 
-import com.google.gson.JsonArray;
 import com.rawrick.flicklist.data.account.Account;
 import com.rawrick.flicklist.data.credits.Cast;
 import com.rawrick.flicklist.data.movie.Movie;
@@ -18,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Parser {
 
@@ -187,10 +183,13 @@ public class Parser {
                 String releaseYear = releaseDate.substring(0, 4);
                 String posterPath = result.getString("poster_path");
                 String fullPosterPath = img500 + posterPath;
+                String backdropPath = result.getString("backdrop_path");
+                String fullBackdropPath = img500 + backdropPath;
+
 
                 Log.d("FlickListApp", "Parsing movie: " + title + ", with ID: " + id);
 
-                MovieRated ratedMovie = new MovieRated(id, rating, title, releaseYear, fullPosterPath, pagesTotal);
+                MovieRated ratedMovie = new MovieRated(id, rating, title, releaseYear, fullPosterPath, fullBackdropPath, pagesTotal);
                 ratedMovies.add(ratedMovie);
             }
             return ratedMovies;

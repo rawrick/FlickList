@@ -1,20 +1,20 @@
-package com.rawrick.flicklist.data.util.api.series;
+package com.rawrick.flicklist.data.api.series;
 
 
-import static com.rawrick.flicklist.data.util.api.URL.trendingSeriesWeekURL;
+import static com.rawrick.flicklist.data.api.URL.trendingSeriesWeekURL;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.rawrick.flicklist.data.series.SeriesTrending;
-import com.rawrick.flicklist.data.util.api.APIRequest;
-import com.rawrick.flicklist.data.util.api.Parser;
+import com.rawrick.flicklist.data.api.APIRequest;
+import com.rawrick.flicklist.data.api.Parser;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.rawrick.flicklist.data.util.api.APIRequest.key;
+import static com.rawrick.flicklist.data.api.APIRequest.key;
 
 
 public class SeriesProvider {

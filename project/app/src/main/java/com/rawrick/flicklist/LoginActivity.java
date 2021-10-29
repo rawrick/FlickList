@@ -12,7 +12,7 @@ import android.widget.Button;
 import static com.rawrick.flicklist.data.util.SettingsManager.setLoginProgress;
 import static com.rawrick.flicklist.data.util.SettingsManager.setLoginStatus;
 import static com.rawrick.flicklist.data.util.SettingsManager.setSessionID;
-import static com.rawrick.flicklist.data.util.api.APIRequest.token;
+import static com.rawrick.flicklist.data.api.APIRequest.token;
 
 import com.rawrick.flicklist.data.login.LoginManager;
 
@@ -36,7 +36,6 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
         if (token != null) {
             loginManager.getSessionIDFromAPI();
         }
-
         super.onResume();
     }
 
@@ -57,6 +56,18 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
             @Override
             public void onClick(View view) {
                 loginManager.getGuestSessionFromAPI();
+            }
+        });
+        Button devLogin = findViewById(R.id.login_build_data);
+        Intent intent = new Intent(this, MainActivity.class);
+        devLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setSessionID(getApplicationContext(), "d6dccfebe0d1bf087a8fd90f3113d1b7383947b0");
+                setLoginProgress(getApplicationContext(), false);
+                setLoginStatus(getApplicationContext(), true);
+                startActivity(intent);
+                finish();
             }
         });
     }

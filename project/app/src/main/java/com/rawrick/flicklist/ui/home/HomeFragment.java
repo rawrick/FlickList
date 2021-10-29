@@ -2,7 +2,7 @@ package com.rawrick.flicklist.ui.home;
 
 import static androidx.recyclerview.widget.RecyclerView.HORIZONTAL;
 
-import static com.rawrick.flicklist.data.util.api.APIRequest.movieID;
+import static com.rawrick.flicklist.data.api.APIRequest.movieID;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,21 +25,32 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.rawrick.flicklist.MovieActivity;
 import com.rawrick.flicklist.R;
+import com.rawrick.flicklist.data.api.trends.TrendingManager;
+import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
+import com.rawrick.flicklist.data.movie.MovieWatchlisted;
+import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.data.series.SeriesTrending;
 import com.rawrick.flicklist.data.util.SettingsManager;
-import com.rawrick.flicklist.data.util.api.movies.MovieManager;
-import com.rawrick.flicklist.data.util.api.series.SeriesManager;
+import com.rawrick.flicklist.data.api.movies.MovieManager;
+import com.rawrick.flicklist.data.api.series.SeriesManager;
 import com.rawrick.flicklist.databinding.FragmentHomeBinding;
 
-public class HomeFragment extends Fragment implements MovieManager.TrendingMoviesManagerListener, TrendingMoviesViewHolder.ViewHolderListener, SeriesManager.SeriesManagerListener, TrendingSeriesViewHolder.ViewHolderListener, MovieManager.RatedMoviesManagerListener, MovieManager.WatchlistedMoviesManagerListener {
+import java.util.ArrayList;
+import java.util.Random;
+
+public class HomeFragment extends Fragment implements TrendingManager.TrendingMoviesManagerListener,
+        TrendingMoviesViewHolder.ViewHolderListener,
+        TrendingManager.TrendingSeriesManagerListener,
+        TrendingSeriesViewHolder.ViewHolderListener {
 
     private FragmentHomeBinding binding;
 
+    private FLDatabaseHelper db;
     private SwipeRefreshLayout swipeRefreshLayout;
     private View featuredMovie;
     // movie data & adapter
-    private MovieManager movieManager;
+    private TrendingManager trendingManager;
     private RecyclerView recyclerTrendingMovies;
     public TrendingMoviesAdapter trendingMoviesAdapter;
     // series data & adapter
@@ -59,6 +70,7 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
     ImageView featuredSeriesPoster;
     ImageView featuredSeriesBackdrop;
     // Views for banner
+    ImageView banner;
     ShapeableImageView userAvatar;
     TextView userName;
 
@@ -92,17 +104,12 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
      */
 
     private void initData() {
-        Log.d("FlickListApp", SettingsManager.getSessionID(this.getActivity()));
-        movieManager = new MovieManager(getActivity(), this, this, this);
-        seriesManager = new SeriesManager(getActivity(), this);
-        getTrendingData();
-
+        db = new FLDatabaseHelper(getActivity().getApplicationContext());
+        trendingManager = new TrendingManager(getActivity(), this, this);
+        trendingManager.getTrendingMoviesFromAPI();
+        trendingManager.getTrendingSeriesFromAPI();
     }
 
-    private void getTrendingData() {
-        movieManager.getTrendingMoviesFromAPI();
-        seriesManager.getTrendingSeriesFromAPI();
-    }
 
     /**
      * UI
@@ -124,6 +131,15 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
                 .load(avatar)
                 .centerCrop()
                 .into(userAvatar);
+        banner = view.findViewById(R.id.home_header_image);
+        Random random = new Random();
+        ArrayList<MovieRated> moviesRatedHighRating = (ArrayList<MovieRated>) db.getMoviesRatedForRating(8.0);
+        String backdropPath = moviesRatedHighRating.get(random.nextInt(moviesRatedHighRating.size())).getBackdropPath();
+        Glide.with(this)
+                .load(backdropPath)
+                .centerCrop()
+                .into(banner);
+
         /**
          * MOVIES
          **/
@@ -158,7 +174,6 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getTrendingData();
                 onTrendingMoviesUpdated();
                 onTrendingSeriesUpdated();
                 trendingMoviesAdapter.notifyDataSetChanged();
@@ -179,7 +194,7 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
 
     @Override
     public void onTrendingMoviesUpdated() {
-        trendingMoviesAdapter.setMoviesTrending(movieManager.getMoviesTrending());
+        trendingMoviesAdapter.setMoviesTrending(trendingManager.getMoviesTrending());
         // sets default featured movie
         setFeaturedMovieDetails(0);
     }
@@ -191,7 +206,7 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
 
     // provides details for featured view of a movie
     private void setFeaturedMovieDetails(int position) {
-        MovieTrending selectedMovie = movieManager.getMoviesTrending().get(position);
+        MovieTrending selectedMovie = trendingManager.getMoviesTrending().get(position);
         // sets title
         featuredTitle.setText(selectedMovie.getTitle());
         // sets overview
@@ -218,17 +233,16 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
         featuredMovie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                movieID = String.valueOf(movieManager.getMoviesTrending().get(position).getId());
+                movieID = String.valueOf(trendingManager.getMoviesTrending().get(position).getId());
                 intent.putExtra("id", movieID);
                 startActivity(intent);
             }
         });
-
     }
 
     @Override
     public void onTrendingSeriesUpdated() {
-        trendingSeriesAdapter.setSeriesTrending(seriesManager.getTrendingSeries());
+        trendingSeriesAdapter.setSeriesTrending(trendingManager.getTrendingSeries());
         // sets default featured series
         setFeaturedSeriesDetails(0);
     }
@@ -240,7 +254,7 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
 
     // provides details for featured view of a series
     private void setFeaturedSeriesDetails(int position) {
-        SeriesTrending selectedSeries = seriesManager.getTrendingSeries().get(position);
+        SeriesTrending selectedSeries = trendingManager.getTrendingSeries().get(position);
         // sets title
         featuredSeriesTitle.setText(selectedSeries.getTitle());
         // sets overview
@@ -263,16 +277,4 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
                 .centerCrop()
                 .into(featuredSeriesBackdrop);
     }
-
-
-    @Override
-    public void onRatedMoviesUpdated() {
-    }
-
-
-    @Override
-    public void onWatchlistedMoviesUpdated() {
-
-    }
-
 }

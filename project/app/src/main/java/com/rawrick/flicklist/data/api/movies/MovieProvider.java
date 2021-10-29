@@ -1,16 +1,16 @@
-package com.rawrick.flicklist.data.util.api.movies;
+package com.rawrick.flicklist.data.api.movies;
 
 import static com.rawrick.flicklist.data.util.SettingsManager.getAccountID;
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
-import static com.rawrick.flicklist.data.util.api.URL.accountURL;
-import static com.rawrick.flicklist.data.util.api.URL.movieURL;
-import static com.rawrick.flicklist.data.util.api.URL.trendingMoviesWeekURL;
-import static com.rawrick.flicklist.data.util.api.APIRequest.accountID;
-import static com.rawrick.flicklist.data.util.api.APIRequest.currentPageWatchlistedMovies;
-import static com.rawrick.flicklist.data.util.api.APIRequest.key;
-import static com.rawrick.flicklist.data.util.api.APIRequest.movieID;
-import static com.rawrick.flicklist.data.util.api.APIRequest.currentPageRatedMovies;
-import static com.rawrick.flicklist.data.util.api.APIRequest.sessionID;
+import static com.rawrick.flicklist.data.api.URL.accountURL;
+import static com.rawrick.flicklist.data.api.URL.movieURL;
+import static com.rawrick.flicklist.data.api.URL.trendingMoviesWeekURL;
+import static com.rawrick.flicklist.data.api.APIRequest.accountID;
+import static com.rawrick.flicklist.data.api.APIRequest.currentPageWatchlistedMovies;
+import static com.rawrick.flicklist.data.api.APIRequest.key;
+import static com.rawrick.flicklist.data.api.APIRequest.movieID;
+import static com.rawrick.flicklist.data.api.APIRequest.currentPageRatedMovies;
+import static com.rawrick.flicklist.data.api.APIRequest.sessionID;
 
 import android.content.Context;
 import android.util.Log;
@@ -21,8 +21,8 @@ import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 import com.rawrick.flicklist.data.movie.MovieWatchlisted;
-import com.rawrick.flicklist.data.util.api.APIRequest;
-import com.rawrick.flicklist.data.util.api.Parser;
+import com.rawrick.flicklist.data.api.APIRequest;
+import com.rawrick.flicklist.data.api.Parser;
 
 import org.json.JSONObject;
 

@@ -1,10 +1,11 @@
 package com.rawrick.flicklist.ui.watchlist;
 
 import static androidx.recyclerview.widget.RecyclerView.VERTICAL;
-import static com.rawrick.flicklist.data.util.api.APIRequest.currentPageWatchlistedMovies;
-import static com.rawrick.flicklist.data.util.api.APIRequest.movieID;
+import static com.rawrick.flicklist.data.api.APIRequest.currentPageWatchlistedMovies;
+import static com.rawrick.flicklist.data.api.APIRequest.movieID;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,16 +20,24 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.rawrick.flicklist.MovieActivity;
 import com.rawrick.flicklist.R;
-import com.rawrick.flicklist.data.util.api.movies.MovieManager;
+import com.rawrick.flicklist.data.api.movies.MovieManager;
+import com.rawrick.flicklist.data.movie.MovieRated;
+import com.rawrick.flicklist.data.movie.MovieWatchlisted;
+import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.databinding.FragmentWatchlistBinding;
 
-public class WatchlistFragment extends Fragment implements MovieManager.WatchlistedMoviesManagerListener, MovieManager.RatedMoviesManagerListener, MovieManager.TrendingMoviesManagerListener, MovieWatchlistItemViewHolder.ViewHolderListener {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+public class WatchlistFragment extends Fragment implements MovieManager.WatchlistedMoviesManagerListener,
+        MovieManager.RatedMoviesManagerListener,
+        MovieWatchlistItemViewHolder.ViewHolderListener {
 
     private FragmentWatchlistBinding binding;
 
-    private MovieManager movieManager;
-    private int i = 2;
-    private int pagesTotal;
+    private FLDatabaseHelper db;
+    private ArrayList<MovieWatchlisted> moviesWatchlisted;
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -55,19 +64,55 @@ public class WatchlistFragment extends Fragment implements MovieManager.Watchlis
     }
 
     private void initData() {
-        movieManager = new MovieManager(getActivity(), this, this, this);
-        // gets first page TODO check if rated movies exist
-        currentPageWatchlistedMovies = "1";
-        movieManager.getWatchlistedMoviesFromAPI();
-
+        db = new FLDatabaseHelper(getActivity().getApplicationContext());
+        moviesWatchlisted = (ArrayList<MovieWatchlisted>) db.getAllMoviesWatchlisted();
+        sortDefault();
     }
+
+
+    private void sortDefault() {
+        Collections.sort(moviesWatchlisted, CompDefault);
+    }
+
+    Comparator<MovieWatchlisted> CompDefault = (M1, M2) -> {
+        String T1 = M1.getTitle();
+        String T2 = M2.getTitle();
+        String t1 = ignoreArticles(T1);
+        String t2 = ignoreArticles(T2);
+        return t1.compareTo(t2);
+    };
+
+    private String ignoreArticles(String input) {
+        if (input.startsWith("The ")) {
+            return input.substring(4);
+        } else if (input.startsWith("A ")) {
+            return input.substring(2);
+        } else {
+            return input;
+        }
+    }
+
+    /**
+     * UI
+     */
 
     private void initUI(View view) {
         // initialize rated movies adapter
+        final int spacing = getResources().getDimensionPixelSize(R.dimen.recycler_list_spacing) / 2;
         recyclerWatchlistedMovies = view.findViewById(R.id.watchlist_movies);
         recyclerWatchlistedMovies.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, false));
+        recyclerWatchlistedMovies.setPadding(spacing, spacing, spacing, spacing);
+        recyclerWatchlistedMovies.setClipToPadding(false);
+        recyclerWatchlistedMovies.setClipChildren(false);
+        recyclerWatchlistedMovies.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                outRect.set(spacing, spacing, spacing, spacing);
+            }
+        });
         movieWatchlistAdapter = new MovieWatchlistAdapter(getActivity(), this);
         recyclerWatchlistedMovies.setAdapter(movieWatchlistAdapter);
+        movieWatchlistAdapter.setWatchlistedMovies(moviesWatchlisted);
 
         swipeRefreshLayout = view.findViewById(R.id.watchlist_movies_swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -82,25 +127,14 @@ public class WatchlistFragment extends Fragment implements MovieManager.Watchlis
 
     @Override
     public void onWatchlistedMoviesUpdated() {
-        // saves total pages that have to be fetched
-        pagesTotal = movieManager.getWatchlistedMovies().get(0).getPagesTotal();
-        while (i <= pagesTotal) {
-            // changes page number on API request URL
-            currentPageWatchlistedMovies = String.valueOf(i);
-            movieManager.getRatedMoviesFromAPI();
-            i++;
-        }
-        // sets adapter once all pages have been fetched
-        if (i - 1 == pagesTotal) {
-            movieWatchlistAdapter.setWatchlistedMovies(movieManager.getWatchlistedMovies());
-        }
+
     }
 
     @Override
     public void onMovieWatchlistItemClicked(int position) {
         // go to movie detail activity
         Intent intent = new Intent(this.getActivity(), MovieActivity.class);
-        movieID = String.valueOf(movieManager.getWatchlistedMovies().get(position).getId());
+        movieID = String.valueOf(moviesWatchlisted.get(position).getId());
         intent.putExtra("id", movieID);
         startActivity(intent);
     }
@@ -109,12 +143,6 @@ public class WatchlistFragment extends Fragment implements MovieManager.Watchlis
 
     @Override
     public void onRatedMoviesUpdated() {
-
-    }
-
-    @Override
-    public void onTrendingMoviesUpdated() {
-
     }
 
 }

@@ -1,17 +1,17 @@
-package com.rawrick.flicklist.data.util.api.rating;
+package com.rawrick.flicklist.data.api.rating;
 
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
-import static com.rawrick.flicklist.data.util.api.URL.movieURL;
-import static com.rawrick.flicklist.data.util.api.APIRequest.key;
-import static com.rawrick.flicklist.data.util.api.APIRequest.movieID;
-import static com.rawrick.flicklist.data.util.api.APIRequest.sessionID;
-import static com.rawrick.flicklist.data.util.api.APIRequest.rating;
+import static com.rawrick.flicklist.data.api.URL.movieURL;
+import static com.rawrick.flicklist.data.api.APIRequest.key;
+import static com.rawrick.flicklist.data.api.APIRequest.movieID;
+import static com.rawrick.flicklist.data.api.APIRequest.sessionID;
+import static com.rawrick.flicklist.data.api.APIRequest.rating;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.rawrick.flicklist.BuildConfig;
-import com.rawrick.flicklist.data.util.api.APIRequest;
+import com.rawrick.flicklist.data.api.APIRequest;
 
 import org.json.JSONObject;
 

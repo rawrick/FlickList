@@ -11,7 +11,7 @@
         android:background="@color/variation1BackgroundDark">
 
         <ImageView
-            android:id="@+id/movie_list_item_poster"
+            android:id="@+id/movie_watchlist_item_poster"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:adjustViewBounds="true"
@@ -29,7 +29,7 @@
             app:layout_constraintGuide_percent="0.25" />
 
         <TextView
-            android:id="@+id/movie_list_item_title"
+            android:id="@+id/movie_watchlist_item_title"
             style="@style/Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -39,12 +39,12 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Title"
-            app:layout_constraintEnd_toStartOf="@id/movie_list_item_edit"
+            app:layout_constraintEnd_toStartOf="@id/movie_watchlist_item_edit"
             app:layout_constraintStart_toEndOf="@id/imageGuideline"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/movie_list_item_watch_date"
+            android:id="@+id/movie_watchlist_item_release_date"
             style="@style/Subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,30 +53,10 @@
             android:layout_marginEnd="10dp"
             android:text="ReleaseDate"
             app:layout_constraintStart_toEndOf="@id/imageGuideline"
-            app:layout_constraintTop_toBottomOf="@id/movie_list_item_title" />
-
-        <ImageView
-            android:id="@+id/movie_list_item_star"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/ic_rating"
-            app:layout_constraintBottom_toBottomOf="@id/movie_list_item_rating"
-            app:layout_constraintStart_toEndOf="@id/imageGuideline"
-            app:layout_constraintTop_toTopOf="@id/movie_list_item_rating" />
-
-        <TextView
-            android:id="@+id/movie_list_item_rating"
-            style="@style/Subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:padding="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/movie_list_item_star" />
+            app:layout_constraintTop_toBottomOf="@id/movie_watchlist_item_title" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/movie_list_item_edit"
+            android:id="@+id/movie_watchlist_item_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="0dp"
@@ -86,7 +66,7 @@
             app:elevation="0dp"
             app:fabSize="mini"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/movie_list_item_title"
+            app:layout_constraintStart_toEndOf="@id/movie_watchlist_item_title"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/colorPrimary"
             tools:ignore="ContentDescription" />

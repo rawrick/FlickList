@@ -34,36 +34,13 @@ public class MovieWatchlistAdapter extends RecyclerView.Adapter<MovieWatchlistIt
 
     public void setWatchlistedMovies(ArrayList<MovieWatchlisted> moviesWatchlisted) {
         this.moviesWatchlisted = moviesWatchlisted;
-        sortMovies();
         this.notifyDataSetChanged();
-    }
-
-    private void sortMovies() {
-        Collections.sort(moviesWatchlisted, CompDefault);
-    }
-
-    Comparator<MovieWatchlisted> CompDefault = (M1, M2) -> {
-        String T1 = M1.getTitle();
-        String T2 = M2.getTitle();
-        String t1 = ignoreArticles(T1);
-        String t2 = ignoreArticles(T2);
-        return t1.compareTo(t2);
-    };
-
-    private String ignoreArticles(String input) {
-        if (input.startsWith("The ")) {
-            return input.substring(4);
-        } else if (input.startsWith("A ")) {
-            return input.substring(2);
-        } else {
-            return input;
-        }
     }
 
     @NonNull
     @Override
     public MovieWatchlistItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_list_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_watchlist_item, parent, false);
         return new MovieWatchlistItemViewHolder(context, v, listener);
     }
 

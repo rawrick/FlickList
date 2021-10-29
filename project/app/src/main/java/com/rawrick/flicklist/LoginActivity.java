@@ -3,17 +3,22 @@ package com.rawrick.flicklist;
 import static com.rawrick.flicklist.data.api.APIRequest.guestSessionID;
 import static com.rawrick.flicklist.data.api.APIRequest.sessionID;
 import static com.rawrick.flicklist.data.api.APIRequest.token;
+import static com.rawrick.flicklist.data.util.SettingsManager.getSessionID;
 import static com.rawrick.flicklist.data.util.SettingsManager.getToken;
 import static com.rawrick.flicklist.data.util.SettingsManager.setLoginStatus;
+import static com.rawrick.flicklist.data.util.SettingsManager.setPreferenceAPIkey;
 import static com.rawrick.flicklist.data.util.SettingsManager.setSessionID;
 import static com.rawrick.flicklist.data.util.SettingsManager.setToken;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -65,10 +70,42 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
         devLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setSessionID(getApplicationContext(), "d6dccfebe0d1bf087a8fd90f3113d1b7383947b0");
+                setSessionID(getApplicationContext(), getSessionID(getApplicationContext()));
                 setLoginStatus(getApplicationContext(), true);
                 startActivity(intent);
                 finish();
+            }
+        });
+        EditText apiEditText = findViewById(R.id.api_edit_text);
+        apiEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setPreferenceAPIkey(getApplicationContext(), s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        EditText sessionidEditText = findViewById(R.id.sessionid_edit_text);
+        sessionidEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setSessionID(getApplicationContext(), s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
             }
         });
     }

@@ -66,7 +66,12 @@ public class SettingsManager {
         return key;
     }
 
-
+    public static void setPreferenceAPIkey(Context context, String key) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("api_key", key);
+        editor.apply();
+    }
 
     public static float getTempRating(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);

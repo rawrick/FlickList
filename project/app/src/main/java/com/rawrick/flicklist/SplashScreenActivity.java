@@ -6,10 +6,10 @@ import static com.rawrick.flicklist.data.util.SettingsManager.setAccountID;
 import static com.rawrick.flicklist.data.api.APIRequest.currentPageRatedMovies;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -36,8 +36,8 @@ public class SplashScreenActivity extends AppCompatActivity implements
     private SeriesManager seriesManager;
     private Intent intent;
 
-    private boolean isRatedMoviesUpdated = false,
-            isWatchlistedMoviesUpdated = false;
+    private int currentLoadingProgress = 0;
+    private final int totalLoadingProgress = 2;
     private int x = 2;
     private int y = 2;
     private int pagesTotal;
@@ -51,6 +51,7 @@ public class SplashScreenActivity extends AppCompatActivity implements
         // data
         if (getLoginStatus(this.getApplicationContext())) {
             initData();
+            startMainActivity();
         } else {
             intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -69,8 +70,9 @@ public class SplashScreenActivity extends AppCompatActivity implements
         win.setAttributes(winParams);
     }
 
-    private void startActivty() {
-        if (isRatedMoviesUpdated && isWatchlistedMoviesUpdated) {
+    private void startMainActivity() {
+        if (currentLoadingProgress == totalLoadingProgress) {
+            Log.d("FlickListApp", "Starting MainActivity...");
             intent = new Intent(SplashScreenActivity.this, MainActivity.class);
             intent.putExtra("name", accountManager.getAccountData().getName());
             intent.putExtra("avatar", accountManager.getAccountData().getAvatar());
@@ -122,9 +124,9 @@ public class SplashScreenActivity extends AppCompatActivity implements
             for (MovieRated movieRated : movies) {
                 db.addOrUpdateMovieRated(movieRated);
             }
-            isRatedMoviesUpdated = true;
-            startActivty();
+            currentLoadingProgress++;
         }
+        startMainActivity();
     }
 
     @Override
@@ -143,8 +145,8 @@ public class SplashScreenActivity extends AppCompatActivity implements
             for (MovieWatchlisted movieWatchlisted : movies) {
                 db.addOrUpdateMovieWatchlisted(movieWatchlisted);
             }
-            isWatchlistedMoviesUpdated = true;
-            startActivty();
+            currentLoadingProgress++;
         }
+        startMainActivity();
     }
 }

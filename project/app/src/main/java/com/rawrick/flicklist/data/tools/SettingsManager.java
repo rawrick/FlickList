@@ -66,4 +66,24 @@ public class SettingsManager {
     }
 
 
+
+    public static float getTempRating(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        float tempRating = sharedPreferences.getFloat("temprating", 0f);
+        return tempRating;
+    }
+
+    public static void setTempRating(Context context, float tempRating) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putFloat("temprating", tempRating);
+        editor.apply();
+    }
+
+    public static void clearTempRating(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("temprating");
+        editor.apply();
+    }
 }

@@ -51,9 +51,9 @@ public class MovieWatchlistAdapter extends RecyclerView.Adapter<MovieWatchlistIt
     };
 
     private String ignoreArticles(String input) {
-        if (input.startsWith("The")) {
+        if (input.startsWith("The ")) {
             return input.substring(4);
-        } else if (input.startsWith("A")) {
+        } else if (input.startsWith("A ")) {
             return input.substring(2);
         } else {
             return input;

@@ -16,6 +16,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.rawrick.flicklist.BuildConfig;
+import com.rawrick.flicklist.data.credits.Cast;
 import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
@@ -34,6 +35,7 @@ public class MovieProvider {
     private ArrayList<MovieRated> ratedMovieData;
     private ArrayList<MovieWatchlisted> watchlistedMovieData;
     private Movie movieData;
+    private ArrayList<Cast> movieCastData;
 
     public MovieProvider(Context context) {
         this.context = context;
@@ -180,5 +182,42 @@ public class MovieProvider {
 
     public interface MovieDataListener {
         void onMovieDataAvailable(Movie data);
+    }
+
+    /**
+     * MOVIE CREDITS
+     **/
+
+    public void getCastForMovie(MovieCastDataListener listener) {
+        if (movieCastData == null) {
+            updateMovieCastData(new APIRequest.ResponseListener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    movieCastData = Parser.parseMovieCastData(response);
+                    listener.onMovieCastDataAvailable(movieCastData);
+                }
+
+                @Override
+                public void onError() {
+                    Log.d("FlickListApp", "No Connection");
+                }
+            });
+        } else {
+            listener.onMovieCastDataAvailable(movieCastData);
+        }
+    }
+
+    private void updateMovieCastData(APIRequest.ResponseListener listener) {
+        key = getPreferenceAPIkey(context);
+        if (!key.equals(BuildConfig.ApiKey)) {
+            key = BuildConfig.ApiKey;
+        }
+        accountID = getAccountID(context);
+        APIRequest request = new APIRequest(movieURL + movieID + "/credits?api_key=" + key + "&language=en-US", context);
+        request.get(listener);
+    }
+
+    public interface MovieCastDataListener {
+        void onMovieCastDataAvailable(ArrayList<Cast> data);
     }
 }

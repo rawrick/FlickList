@@ -5,6 +5,7 @@ import android.util.Log;
 
 import static com.rawrick.flicklist.data.util.APIRequest.currentPageRatedMovies;
 
+import com.rawrick.flicklist.data.credits.Cast;
 import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
@@ -19,18 +20,21 @@ public class MovieManager {
     private ArrayList<MovieRated> ratedMovies;
     private ArrayList<MovieWatchlisted> watchlistedMovies;
     private Movie movie;
+    private ArrayList<Cast> cast;
     private final Context context;
     private final TrendingMoviesManagerListener listenerTrendingMovies;
     private final RatedMoviesManagerListener listenerRatedMovies;
     private final WatchlistedMoviesManagerListener listenerWatchlistedMovies;
     private final MovieDetailsManagerListener listenerMovieDetails;
+    private final MovieCastManagerListener listenerMovieCast;
 
-    public MovieManager(Context context, TrendingMoviesManagerListener listenerTrendingMovies, RatedMoviesManagerListener listenerRatedMovies, WatchlistedMoviesManagerListener listenerWatchlistedMovies, MovieDetailsManagerListener listenerMovieDetails) {
+    public MovieManager(Context context, TrendingMoviesManagerListener listenerTrendingMovies, RatedMoviesManagerListener listenerRatedMovies, WatchlistedMoviesManagerListener listenerWatchlistedMovies, MovieDetailsManagerListener listenerMovieDetails, MovieCastManagerListener listenerMovieCast) {
         this.context = context;
         this.listenerTrendingMovies = listenerTrendingMovies;
         this.listenerRatedMovies = listenerRatedMovies;
         this.listenerWatchlistedMovies = listenerWatchlistedMovies;
         this.listenerMovieDetails = listenerMovieDetails;
+        this.listenerMovieCast = listenerMovieCast;
     }
 
     public void getTrendingMoviesFromAPI() {
@@ -128,5 +132,25 @@ public class MovieManager {
 
     public interface MovieDetailsManagerListener {
         void onMovieDetailsUpdated();
+    }
+
+
+    public void getMovieCastFromAPI() {
+        MovieProvider provider = new MovieProvider(context);
+        provider.getCastForMovie(new MovieProvider.MovieCastDataListener() {
+            @Override
+            public void onMovieCastDataAvailable(ArrayList<Cast> data) {
+                cast = data;
+                listenerMovieCast.onMovieCastUpdated();
+            }
+        });
+    }
+
+    public ArrayList<Cast> getMovieCast() {
+        return cast;
+    }
+
+    public interface MovieCastManagerListener {
+        void onMovieCastUpdated();
     }
 }

@@ -38,7 +38,7 @@ import com.rawrick.flicklist.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
 
-public class HomeFragment extends Fragment implements MovieManager.TrendingMoviesManagerListener, TrendingMoviesViewHolder.ViewHolderListener, SeriesManager.SeriesManagerListener, TrendingSeriesViewHolder.ViewHolderListener, MovieManager.RatedMoviesManagerListener, MovieManager.MovieDetailsManagerListener, MovieManager.WatchlistedMoviesManagerListener {
+public class HomeFragment extends Fragment implements MovieManager.TrendingMoviesManagerListener, TrendingMoviesViewHolder.ViewHolderListener, SeriesManager.SeriesManagerListener, TrendingSeriesViewHolder.ViewHolderListener, MovieManager.RatedMoviesManagerListener, MovieManager.MovieDetailsManagerListener, MovieManager.WatchlistedMoviesManagerListener, MovieManager.MovieCastManagerListener {
 
     private FragmentHomeBinding binding;
 
@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
 
     private void initData() {
         Log.d("FlickListApp", SettingsManager.getSessionID(this.getActivity()));
-        movieManager = new MovieManager(getActivity(), this, this, this, this);
+        movieManager = new MovieManager(getActivity(), this, this, this, this, this);
         seriesManager = new SeriesManager(getActivity(), this);
         getTrendingData();
 
@@ -282,6 +282,11 @@ public class HomeFragment extends Fragment implements MovieManager.TrendingMovie
 
     @Override
     public void onWatchlistedMoviesUpdated() {
+
+    }
+
+    @Override
+    public void onMovieCastUpdated() {
 
     }
 }

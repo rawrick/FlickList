@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.rawrick.flicklist.data.account.Account;
+import com.rawrick.flicklist.data.credits.Cast;
 import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
@@ -17,11 +18,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Parser {
 
     private final static String img300 = "https://image.tmdb.org/t/p/w300";
-    private final static String img500 = "https://image.tmdb.org/t/p/w500/";
+    private final static String img500 = "https://image.tmdb.org/t/p/w500";
 
     public static String parseLoginToken(JSONObject response) {
         try {
@@ -247,6 +249,41 @@ public class Parser {
             return movie;
         } catch (JSONException e) {
             Log.d("FlickListApp", "movie details parse error");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static ArrayList<Cast> parseMovieCastData(JSONObject response) {
+        try {
+            JSONArray castArray = response.getJSONArray("cast");
+
+            ArrayList<Cast> cast = new ArrayList<>();
+            for (int i = 0; i < castArray.length(); i++) {
+                JSONObject result = castArray.getJSONObject(i);
+
+                boolean adult = result.getBoolean("adult");
+                int gender = result.getInt("gender");
+                int id = result.getInt("id");
+                String knownForDepartment = result.getString("known_for_department");
+                String name = result.getString("name");
+                String originalName = result.getString("original_name");
+                double popularity = result.getDouble("popularity");
+                String profilePath = result.getString("profile_path");
+                int castID = result.getInt("cast_id");
+                String character = result.getString("character");
+                String creditID = result.getString("credit_id");
+                int order = result.getInt("order");
+
+                String fullProfilePath = img500 + profilePath;
+                //Log.d("FlickListApp", "path for " + name + ": " + fullProfilePath);
+
+                Cast movieCastMember = new Cast(adult, gender, id, knownForDepartment, name, originalName, popularity, fullProfilePath, castID, character, creditID, order);
+                cast.add(movieCastMember);
+            }
+            return cast;
+        } catch (JSONException e) {
+            Log.d("FlickListApp", "movie cast parse error");
             e.printStackTrace();
         }
         return null;

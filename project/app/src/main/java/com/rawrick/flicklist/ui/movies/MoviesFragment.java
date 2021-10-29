@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public class MoviesFragment extends Fragment implements MovieManager.RatedMoviesManagerListener, MovieListItemViewHolder.ViewHolderListener, MovieManager.TrendingMoviesManagerListener, MovieManager.MovieDetailsManagerListener, MovieManager.WatchlistedMoviesManagerListener {
+public class MoviesFragment extends Fragment implements MovieManager.RatedMoviesManagerListener, MovieListItemViewHolder.ViewHolderListener, MovieManager.TrendingMoviesManagerListener, MovieManager.MovieDetailsManagerListener, MovieManager.WatchlistedMoviesManagerListener, MovieManager.MovieCastManagerListener {
 
     private FragmentMoviesBinding binding;
 
@@ -73,7 +73,7 @@ public class MoviesFragment extends Fragment implements MovieManager.RatedMovies
     }
 
     private void initData() {
-        movieManager = new MovieManager(getActivity(), this, this, this, this);
+        movieManager = new MovieManager(getActivity(), this, this, this, this, this);
         // gets first page TODO check if rated movies exist
         currentPageRatedMovies = "1";
         movieManager.getRatedMoviesFromAPI();
@@ -143,6 +143,11 @@ public class MoviesFragment extends Fragment implements MovieManager.RatedMovies
 
     @Override
     public void onWatchlistedMoviesUpdated() {
+
+    }
+
+    @Override
+    public void onMovieCastUpdated() {
 
     }
 }

@@ -4,4 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <!-- custom dimensions -->
     <dimen name="default_rounded_corners">5dp</dimen>
+    <dimen name="recycler_list_spacing">8dp</dimen>
 </resources>

@@ -31,12 +31,13 @@ import com.rawrick.flicklist.data.util.MovieManager;
 import com.rawrick.flicklist.data.util.rating.RatingManager;
 import com.rawrick.flicklist.ui.home.HomeFragment;
 import com.rawrick.flicklist.ui.moviedetails.MovieAboutFragment;
+import com.rawrick.flicklist.ui.moviedetails.MovieCastFragment;
 import com.rawrick.flicklist.ui.movies.MoviesFragment;
 import com.rawrick.flicklist.ui.profile.ProfileFragment;
 import com.rawrick.flicklist.ui.series.SeriesFragment;
 import com.rawrick.flicklist.ui.watchlist.WatchlistFragment;
 
-public class MovieActivity extends FragmentActivity implements MovieManager.MovieDetailsManagerListener, MovieManager.TrendingMoviesManagerListener, MovieManager.RatedMoviesManagerListener, MovieManager.WatchlistedMoviesManagerListener {
+public class MovieActivity extends FragmentActivity implements MovieManager.MovieDetailsManagerListener, MovieManager.TrendingMoviesManagerListener, MovieManager.RatedMoviesManagerListener, MovieManager.WatchlistedMoviesManagerListener, MovieManager.MovieCastManagerListener {
 
     private MovieManager movieManager;
     private RatingManager ratingManager;
@@ -78,7 +79,7 @@ public class MovieActivity extends FragmentActivity implements MovieManager.Movi
     }
 
     private void initData() {
-        movieManager = new MovieManager(this, this, this, this, this);
+        movieManager = new MovieManager(this, this, this, this, this, this);
         movieManager.getMovieDetailsFromAPI();
         ratingManager = new RatingManager(this);
     }
@@ -101,6 +102,11 @@ public class MovieActivity extends FragmentActivity implements MovieManager.Movi
         ).attach();
     }
 
+    @Override
+    public void onMovieCastUpdated() {
+
+    }
+
     private class ScreenSlidePagerAdapter extends FragmentStateAdapter {
         public ScreenSlidePagerAdapter(FragmentActivity fa) {
             super(fa);
@@ -112,7 +118,7 @@ public class MovieActivity extends FragmentActivity implements MovieManager.Movi
                 case 0:
                     return new MovieAboutFragment();
                 case 1:
-                    return new MovieAboutFragment();
+                    return new MovieCastFragment();
                 case 2:
                     return new MovieAboutFragment();
                 case 3:

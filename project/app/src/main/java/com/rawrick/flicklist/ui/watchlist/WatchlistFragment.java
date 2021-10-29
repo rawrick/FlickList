@@ -28,7 +28,7 @@ import com.rawrick.flicklist.databinding.FragmentMoviesBinding;
 import com.rawrick.flicklist.databinding.FragmentWatchlistBinding;
 import com.rawrick.flicklist.ui.movies.MovieListAdapter;
 
-public class WatchlistFragment extends Fragment implements MovieManager.WatchlistedMoviesManagerListener, MovieManager.RatedMoviesManagerListener, MovieManager.TrendingMoviesManagerListener, MovieManager.MovieDetailsManagerListener, MovieWatchlistItemViewHolder.ViewHolderListener {
+public class WatchlistFragment extends Fragment implements MovieManager.WatchlistedMoviesManagerListener, MovieManager.RatedMoviesManagerListener, MovieManager.TrendingMoviesManagerListener, MovieManager.MovieDetailsManagerListener, MovieWatchlistItemViewHolder.ViewHolderListener, MovieManager.MovieCastManagerListener {
 
     private FragmentWatchlistBinding binding;
 
@@ -61,7 +61,7 @@ public class WatchlistFragment extends Fragment implements MovieManager.Watchlis
     }
 
     private void initData() {
-        movieManager = new MovieManager(getActivity(), this, this, this, this);
+        movieManager = new MovieManager(getActivity(), this, this, this, this, this);
         // gets first page TODO check if rated movies exist
         currentPageWatchlistedMovies = "1";
         movieManager.getWatchlistedMoviesFromAPI();
@@ -129,4 +129,8 @@ public class WatchlistFragment extends Fragment implements MovieManager.Watchlis
     }
 
 
+    @Override
+    public void onMovieCastUpdated() {
+
+    }
 }

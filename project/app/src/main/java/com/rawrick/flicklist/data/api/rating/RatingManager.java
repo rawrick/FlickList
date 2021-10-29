@@ -13,6 +13,7 @@ import android.util.Log;
 import com.rawrick.flicklist.BuildConfig;
 import com.rawrick.flicklist.data.api.APIRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class RatingManager {
@@ -43,7 +44,14 @@ public class RatingManager {
         if (!key.equals(BuildConfig.ApiKey)) {
             key = BuildConfig.ApiKey;
         }
+        // creates request body
+        JSONObject object = new JSONObject();
+        try {
+            object.put("value", rating);
+        } catch (JSONException error) {
+            error.printStackTrace();
+        }
         APIRequest request = new APIRequest(movieURL + movieID + "/rating?api_key=" + key + "&session_id=" + sessionID, context);
-        request.post(listener);
+        request.post(listener, object);
     }
 }

@@ -69,17 +69,10 @@ public class APIRequest {
         queue.add(stringRequest);
     }
 
-    public void post(ResponseListener listener) {
+    public void post(ResponseListener listener, JSONObject requestBody) {
         RequestQueue queue = Volley.newRequestQueue(context);
         VolleyLog.DEBUG = true;
-        // creates request body
-        JSONObject object = new JSONObject();
-        try {
-            object.put("value", rating);
-        } catch (JSONException error) {
-            error.printStackTrace();
-        }
-
+        JSONObject object = requestBody;
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, destination, object,
                 new Response.Listener<JSONObject>() {
                     @Override

@@ -21,16 +21,16 @@ public class SettingsManager {
         editor.apply();
     }
 
-    public static boolean getLoginProgress(Context context) {
+    public static String getToken(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean isLoggedIn = sharedPreferences.getBoolean("loginprogress", false);
-        return isLoggedIn;
+        String token = sharedPreferences.getString("token", "null");
+        return token;
     }
 
-    public static void setLoginProgress(Context context, boolean isInProgress) {
+    public static void setToken(Context context, String token) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("loginprogress", isInProgress);
+        editor.putString("token", token);
         editor.apply();
     }
 

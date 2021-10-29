@@ -36,7 +36,8 @@ public class SplashScreenActivity extends AppCompatActivity implements
     private SeriesManager seriesManager;
     private Intent intent;
 
-    private boolean isRatedMoviesLoaded, isTrendingMoviesLoaded, isTrendingSeriesLoaded, isWatchlistedMoviesLoaded;
+    private boolean isRatedMoviesUpdated = false,
+            isWatchlistedMoviesUpdated = false;
     private int x = 2;
     private int y = 2;
     private int pagesTotal;
@@ -69,18 +70,19 @@ public class SplashScreenActivity extends AppCompatActivity implements
     }
 
     private void startActivty() {
-        intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-        intent.putExtra("name", accountManager.getAccountData().getName());
-        intent.putExtra("avatar", accountManager.getAccountData().getAvatar());
-        startActivity(intent);
-        finish();
+        if (isRatedMoviesUpdated && isWatchlistedMoviesUpdated) {
+            intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+            intent.putExtra("name", accountManager.getAccountData().getName());
+            intent.putExtra("avatar", accountManager.getAccountData().getAvatar());
+            startActivity(intent);
+            finish();
+        }
     }
 
     private void initData() {
         db = new FLDatabaseHelper(getApplicationContext());
         accountManager = new AccountManager(this, this);
         accountManager.getAccountDataFromAPI();
-
     }
 
     private void initMovieData() {
@@ -120,6 +122,7 @@ public class SplashScreenActivity extends AppCompatActivity implements
             for (MovieRated movieRated : movies) {
                 db.addOrUpdateMovieRated(movieRated);
             }
+            isRatedMoviesUpdated = true;
             startActivty();
         }
     }
@@ -140,6 +143,8 @@ public class SplashScreenActivity extends AppCompatActivity implements
             for (MovieWatchlisted movieWatchlisted : movies) {
                 db.addOrUpdateMovieWatchlisted(movieWatchlisted);
             }
+            isWatchlistedMoviesUpdated = true;
+            startActivty();
         }
     }
 }

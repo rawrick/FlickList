@@ -1,6 +1,12 @@
 package com.rawrick.flicklist;
 
-import androidx.appcompat.app.AppCompatActivity;
+import static com.rawrick.flicklist.data.api.APIRequest.guestSessionID;
+import static com.rawrick.flicklist.data.api.APIRequest.sessionID;
+import static com.rawrick.flicklist.data.api.APIRequest.token;
+import static com.rawrick.flicklist.data.util.SettingsManager.getToken;
+import static com.rawrick.flicklist.data.util.SettingsManager.setLoginStatus;
+import static com.rawrick.flicklist.data.util.SettingsManager.setSessionID;
+import static com.rawrick.flicklist.data.util.SettingsManager.setToken;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -9,17 +15,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import static com.rawrick.flicklist.data.util.SettingsManager.setLoginProgress;
-import static com.rawrick.flicklist.data.util.SettingsManager.setLoginStatus;
-import static com.rawrick.flicklist.data.util.SettingsManager.setSessionID;
-import static com.rawrick.flicklist.data.api.APIRequest.token;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.rawrick.flicklist.data.login.LoginManager;
 
 public class LoginActivity extends AppCompatActivity implements LoginManager.LoginTokenListener, LoginManager.LoginSessionListener, LoginManager.LoginGuestSessionListener {
 
     private LoginManager loginManager;
-    private String guestSessionID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +33,9 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
 
     @Override
     protected void onResume() {
-        //token = loginManager.getToken();
+        token = getToken(this);
         Log.d("FlickListApp", "login token: " + token);
-        if (token != null) {
+        if (!token.equals("null")) {
             loginManager.getSessionIDFromAPI();
         }
         super.onResume();
@@ -59,12 +61,11 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
             }
         });
         Button devLogin = findViewById(R.id.login_build_data);
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, SplashScreenActivity.class);
         devLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setSessionID(getApplicationContext(), "d6dccfebe0d1bf087a8fd90f3113d1b7383947b0");
-                setLoginProgress(getApplicationContext(), false);
                 setLoginStatus(getApplicationContext(), true);
                 startActivity(intent);
                 finish();
@@ -75,8 +76,7 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
     @Override
     public void onTokenCreated() {
         token = loginManager.getToken();
-        Log.d("FlickListApp", "token: " + loginManager.getToken());
-        setLoginProgress(this, true);
+        setToken(this, token);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(loginManager.getAuthenticationURL(token)));
         startActivity(intent);
@@ -84,20 +84,18 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
 
     @Override
     public void onSessionCreated() {
-        Log.d("FlickListApp", "sessionId: " + loginManager.getSessionID());
-        setSessionID(this, loginManager.getSessionID());
-        setLoginProgress(this, false);
+        sessionID = loginManager.getSessionID();
+        setSessionID(this, sessionID);
         setLoginStatus(this, true);
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, SplashScreenActivity.class);
         startActivity(intent);
         finish();
     }
 
     @Override
     public void onGuestSessionCreated() {
-        // TODO check if creation successful
-        Log.d("FlickListApp", "guest sessionID: " + loginManager.getGuestSessionID());
-        setSessionID(this, loginManager.getGuestSessionID());
+        guestSessionID = loginManager.getGuestSessionID();
+        setSessionID(this, guestSessionID);
         setLoginStatus(this, true);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

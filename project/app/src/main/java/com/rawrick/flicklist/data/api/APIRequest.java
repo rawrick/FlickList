@@ -24,6 +24,7 @@ public class APIRequest {
     public static String key;
     public static String token;
     public static String sessionID;
+    public static String guestSessionID;
     public static String accountID;
     public static String movieID;
     public static String currentPageRatedMovies;

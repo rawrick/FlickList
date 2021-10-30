@@ -1,6 +1,6 @@
 package com.rawrick.flicklist.data.api.movies;
 
-import static com.rawrick.flicklist.data.util.SettingsManager.getAccountID;
+import static com.rawrick.flicklist.data.account.AccountManager.getAccountID;
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
 import static com.rawrick.flicklist.data.api.URL.accountURL;
 import static com.rawrick.flicklist.data.api.URL.movieURL;
@@ -16,6 +16,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.rawrick.flicklist.BuildConfig;
+import com.rawrick.flicklist.SplashScreenActivity;
 import com.rawrick.flicklist.data.credits.Cast;
 import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieRated;
@@ -23,6 +24,7 @@ import com.rawrick.flicklist.data.movie.MovieTrending;
 import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 import com.rawrick.flicklist.data.api.APIRequest;
 import com.rawrick.flicklist.data.api.Parser;
+import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 
 import org.json.JSONObject;
 
@@ -33,6 +35,8 @@ public class MovieProvider {
 
     private final Context context;
 
+    private FLDatabaseHelper db;
+
     private ArrayList<MovieTrending> trendingMovieData;
     private ArrayList<MovieRated> ratedMovieData;
     private ArrayList<MovieWatchlisted> watchlistedMovieData;
@@ -41,6 +45,7 @@ public class MovieProvider {
 
     public MovieProvider(Context context) {
         this.context = context;
+        db = new FLDatabaseHelper(context);
     }
 
     public void getDataForMoviesTrending(DataListener listener) {
@@ -90,6 +95,14 @@ public class MovieProvider {
 
                 @Override
                 public void onError() {
+                    ratedMovieData = (ArrayList<MovieRated>) db.getAllMoviesRated();
+                    if (ratedMovieData.size() != 0) {
+                        if (ratedMovieData.get(0).getPagesTotal() != 0) {
+                            SplashScreenActivity.x = ratedMovieData.get(0).getPagesTotal() + 1;
+                        } else {
+                            SplashScreenActivity.x = 1; // TODO check what happens when user has no rated movies
+                        }
+                    }
                     Log.d("FlickListApp", "No Connection");
                 }
             });
@@ -127,6 +140,14 @@ public class MovieProvider {
 
                 @Override
                 public void onError() {
+                    watchlistedMovieData = (ArrayList<MovieWatchlisted>) db.getAllMoviesWatchlisted();
+                    if (watchlistedMovieData.size() != 0) {
+                        if (watchlistedMovieData.get(0).getPagesTotal() != 0) {
+                            SplashScreenActivity.y = watchlistedMovieData.get(0).getPagesTotal() + 1;
+                        } else {
+                            SplashScreenActivity.y = 1; // TODO check what happens when user has no watchlisted movies
+                        }
+                    }
                     Log.d("FlickListApp", "No Connection");
                 }
             });

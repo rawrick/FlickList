@@ -2,10 +2,12 @@ package com.rawrick.flicklist.data.room;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.room.Room;
 
 
+import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 
@@ -96,6 +98,37 @@ public class FLDatabaseHelper {
     public List<MovieWatchlisted> getAllMoviesWatchlisted() {
         return db.movieWatchlistedDAO().getAllMoviesWatchlisted();
     }
+
+    /**
+     * Movie Deatils
+     */
+
+    public void addOrUpdateMovieDetails(Movie movie) {
+        Movie movieFromDB = db.movieDetailsDAO().getMovieForID(movie.id);
+        if (movieFromDB == null) {
+            db.movieDetailsDAO().addMovie(movie);
+        } else {
+            db.movieDetailsDAO().updateMovie(movie);
+        }
+    }
+
+    // deletes movie
+    public void deleteMovieDetails(Movie movie) {
+        Movie movieFromDB = db.movieDetailsDAO().getMovieForID(movie.id);
+        if (movieFromDB != null) {
+            db.movieDetailsDAO().deleteMovie(movie);
+        }
+    }
+
+    public void clearMovieDetailsTable() {
+        db.movieDetailsDAO().delete();
+    }
+
+    // gets movie deatils for id
+    public Movie getMovieDetailsForID(int id) {
+        return db.movieDetailsDAO().getMovieForID(id);
+    }
+
 
     // used in reset data
     public void clearAllTables() {

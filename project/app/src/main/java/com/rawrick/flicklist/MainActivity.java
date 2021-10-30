@@ -15,6 +15,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.ui.home.HomeFragment;
 import com.rawrick.flicklist.ui.movies.MoviesFragment;
 import com.rawrick.flicklist.ui.profile.ProfileFragment;

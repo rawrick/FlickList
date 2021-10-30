@@ -21,6 +21,7 @@ import com.rawrick.flicklist.MovieActivity;
 import com.rawrick.flicklist.R;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
+import com.rawrick.flicklist.data.util.ActivitySelector;
 import com.rawrick.flicklist.databinding.FragmentMoviesBinding;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     private FragmentMoviesBinding binding;
 
     private FLDatabaseHelper db;
+    private ActivitySelector activitySelector;
     ArrayList<MovieRated> moviesRated;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -58,7 +60,12 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
         binding = null;
     }
 
+    /**
+     * DATA
+     */
+
     private void initData() {
+        activitySelector = new ActivitySelector(getActivity());
         db = new FLDatabaseHelper(getActivity().getApplicationContext());
         moviesRated = (ArrayList<MovieRated>) db.getAllMoviesRated();
         sortDefault();
@@ -97,6 +104,10 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
         }
     }
 
+    /**
+     * UI
+     */
+
     private void initUI(View view) {
         final int spacing = getResources().getDimensionPixelSize(R.dimen.recycler_list_spacing) / 2;
         recyclerRatedMovies = view.findViewById(R.id.movie_list);
@@ -128,9 +139,7 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     @Override
     public void onMovieListItemClicked(int position) {
         // go to movie detail activity
-        Intent intent = new Intent(this.getActivity(), MovieActivity.class);
         movieID = String.valueOf(moviesRated.get(position).getId());
-        intent.putExtra("id", movieID);
-        startActivity(intent);
+        activitySelector.startMovieActivity(movieID);
     }
 }

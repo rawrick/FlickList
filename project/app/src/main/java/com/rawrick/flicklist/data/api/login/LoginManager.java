@@ -1,4 +1,4 @@
-package com.rawrick.flicklist.data.login;
+package com.rawrick.flicklist.data.api.login;
 
 import android.content.Context;
 

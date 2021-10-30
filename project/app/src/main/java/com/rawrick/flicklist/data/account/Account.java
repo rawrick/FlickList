@@ -6,15 +6,16 @@ public class Account {
             name,
             username,
             avatar,
-            hash,
-            adult;
+            hash;
+
+    private final boolean adult;
 
     public Account(String id,
                    String name,
                    String username,
                    String avatar,
                    String hash,
-                   String adult) {
+                   boolean adult) {
         this.id = id;
         this.name = name;
         this.username = username;
@@ -43,7 +44,7 @@ public class Account {
         return hash;
     }
 
-    public String getAdult() {
+    public boolean getAdult() {
         return adult;
     }
 }

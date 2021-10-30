@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -25,15 +26,18 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.rawrick.flicklist.data.api.APIRequest;
 import com.rawrick.flicklist.data.api.movies.MovieDetailsManager;
 import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.api.rating.RatingManager;
+import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.ui.moviedetails.MovieAboutFragment;
 import com.rawrick.flicklist.ui.moviedetails.MovieCastFragment;
 
-public class MovieActivity extends FragmentActivity implements MovieDetailsManager.MovieDetailsManagerListener, MovieDetailsManager.MovieCastManagerListener {
+public class MovieActivity extends FragmentActivity {
 
-    private MovieDetailsManager movieDetailsManager;
+    private FLDatabaseHelper db;
+    private Movie movie;
     private RatingManager ratingManager;
 
     private TextView movieTitle;
@@ -66,8 +70,8 @@ public class MovieActivity extends FragmentActivity implements MovieDetailsManag
     }
 
     private void initData() {
-        movieDetailsManager = new MovieDetailsManager(this, this, this);
-        movieDetailsManager.getMovieDetailsFromAPI();
+        db = new FLDatabaseHelper(this);
+        movie = db.getMovieDetailsForID(Integer.parseInt(movieID));
         ratingManager = new RatingManager(this);
     }
 
@@ -85,6 +89,18 @@ public class MovieActivity extends FragmentActivity implements MovieDetailsManag
                 showRatingDialog();
             }
         });
+
+        movieTitle.setText(movie.getTitle());
+        movieReleaseYear.setText(movie.getReleaseDate().substring(0, 4));
+        movieRuntime.setText(runtimeFormatter(movie.getRuntime()));
+        Glide.with(this)
+                .load(movie.getPosterPath())
+                .centerCrop()
+                .into(moviePoster);
+        Glide.with(this)
+                .load(movie.getBackdropPath())
+                .centerCrop()
+                .into(movieBackdrop);
     }
 
     private void showRatingDialog() {
@@ -125,23 +141,6 @@ public class MovieActivity extends FragmentActivity implements MovieDetailsManag
                 .show();
     }
 
-    @Override
-    public void onMovieDetailsUpdated() {
-        Movie movie = movieDetailsManager.getMovieDetails();
-        movieID = String.valueOf(movie.getId());
-        movieTitle.setText(movie.getTitle());
-        movieReleaseYear.setText(movie.getReleaseDate().substring(0, 4));
-        movieRuntime.setText(runtimeFormatter(movie.getRuntime()));
-        Glide.with(this)
-                .load(movie.getPosterPath())
-                .centerCrop()
-                .into(moviePoster);
-        Glide.with(this)
-                .load(movie.getBackdropPath())
-                .centerCrop()
-                .into(movieBackdrop);
-    }
-
     private void initializeNavigation() {
         // Instantiate a ViewPager2 and a PagerAdapter.
         viewPager = findViewById(R.id.movie_details_pager);
@@ -155,14 +154,12 @@ public class MovieActivity extends FragmentActivity implements MovieDetailsManag
                 (tab, position) -> {
                     if (position == 0) tab.setText("About");
                     else if (position == 1) tab.setText("Cast");
+                    else if (position == 2) tab.setText("Reviews");
+                    else if (position == 3) tab.setText("Media");
+                    else if (position == 4) tab.setText("Recommendations");
                     else tab.setText("default");
                 }
         ).attach();
-    }
-
-    @Override
-    public void onMovieCastUpdated() {
-
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStateAdapter {

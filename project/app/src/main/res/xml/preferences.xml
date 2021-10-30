@@ -9,11 +9,16 @@
         android:title="API Key"
         app:icon="@drawable/ic_home_fab_social" />
 
+    <EditTextPreference
+        android:dialogTitle="Enter your Session ID below"
+        android:key="sessionid"
+        android:summary=""
+        android:title="Session ID"
+        app:icon="@drawable/ic_home_fab_social" />
+
     <Preference
-        android:title="Log Out"
         android:icon="@drawable/ic_home_fab_explore"
         android:key="log_out"
-        />
-
+        android:title="Log Out" />
 
 </PreferenceScreen>

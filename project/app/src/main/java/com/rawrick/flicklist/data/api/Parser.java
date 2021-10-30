@@ -1,5 +1,11 @@
 package com.rawrick.flicklist.data.api;
 
+import static com.rawrick.flicklist.data.api.URL.backdrop1280;
+import static com.rawrick.flicklist.data.api.URL.backdrop700;
+import static com.rawrick.flicklist.data.api.URL.poster500;
+import static com.rawrick.flicklist.data.api.URL.profile45;
+import static com.rawrick.flicklist.data.api.URL.profile632;
+
 import android.util.Log;
 
 import com.rawrick.flicklist.data.account.Account;
@@ -18,8 +24,9 @@ import java.util.ArrayList;
 
 public class Parser {
 
-    private final static String img300 = "https://image.tmdb.org/t/p/w300";
-    private final static String img500 = "https://image.tmdb.org/t/p/w500";
+    /**
+     * Login & Account
+     */
 
     public static String parseLoginToken(JSONObject response) {
         try {
@@ -71,6 +78,10 @@ public class Parser {
         return null;
     }
 
+    /**
+     * Movies
+     */
+
     public static ArrayList<MovieTrending> parseTrendingMovies(JSONObject response) {
         try {
             JSONArray jsonArray = response.getJSONArray("results");
@@ -99,8 +110,8 @@ public class Parser {
                 int popularity = result.getInt("popularity");
                 String media_type = result.getString("media_type");
 
-                String fullPosterPath = img500 + posterPath;
-                String fullBackdropPath = img500 + backdropPath;
+                String fullPosterPath = poster500 + posterPath;
+                String fullBackdropPath = backdrop1280 + backdropPath;
                 movieArrayList.add(new MovieTrending(fullBackdropPath, index, isSelected, isAdult, id, overview, fullPosterPath, releaseDate, title, voteAverage));
             }
             return movieArrayList;
@@ -129,8 +140,8 @@ public class Parser {
                 boolean isSelected;
                 isSelected = i == 0;
 
-                String fullPosterPath = img500 + posterPath;
-                String fullBackdropPath = img500 + backdropPath;
+                String fullPosterPath = poster500 + posterPath;
+                String fullBackdropPath = backdrop1280 + backdropPath;
                 seriesArrayList.add(new SeriesTrending(fullBackdropPath, index, isSelected, id, overview, fullPosterPath, releaseDate, title, voteAverage));
             }
             return seriesArrayList;
@@ -147,7 +158,7 @@ public class Parser {
 
             JSONObject tmdb = avatar.getJSONObject("tmdb");
             String avatarPath = tmdb.getString("avatar_path");
-            String avatarPathFull = img300 + avatarPath;
+            String avatarPathFull = profile632 + avatarPath;
 
             JSONObject gravatar = avatar.getJSONObject("gravatar");
             String hash = gravatar.getString("hash");
@@ -156,7 +167,7 @@ public class Parser {
             Log.d("FlickListApp", "account id:" + id);
             String name = response.getString("name");
             String username = response.getString("username");
-            String adult = String.valueOf(response.getBoolean("include_adult"));
+            boolean adult = response.getBoolean("include_adult");
 
             Account accountDetails = new Account(id, name, username, avatarPathFull, hash, adult);
             return accountDetails;
@@ -182,12 +193,12 @@ public class Parser {
                 String releaseDate = result.getString("release_date");
                 String releaseYear = releaseDate.substring(0, 4);
                 String posterPath = result.getString("poster_path");
-                String fullPosterPath = img500 + posterPath;
+                String fullPosterPath = poster500 + posterPath;
                 String backdropPath = result.getString("backdrop_path");
-                String fullBackdropPath = img500 + backdropPath;
+                String fullBackdropPath = backdrop1280 + backdropPath;
 
 
-                Log.d("FlickListApp", "Parsing movie: " + title + ", with ID: " + id);
+                //Log.d("FlickListApp", "Parsing movie: " + title + ", with ID: " + id);
 
                 MovieRated ratedMovie = new MovieRated(id, rating, title, releaseYear, fullPosterPath, fullBackdropPath, pagesTotal);
                 ratedMovies.add(ratedMovie);
@@ -199,7 +210,6 @@ public class Parser {
         }
         return null;
     }
-
 
     public static ArrayList<MovieWatchlisted> parseWatchlistedMoviesData(JSONObject response) {
         try {
@@ -215,9 +225,9 @@ public class Parser {
                 String releaseDate = result.getString("release_date");
                 String releaseYear = releaseDate.substring(0, 4);
                 String posterPath = result.getString("poster_path");
-                String fullPosterPath = img500 + posterPath;
+                String fullPosterPath = poster500 + posterPath;
 
-                Log.d("FlickListApp", "Parsing movie: " + title + ", with ID: " + id);
+                //Log.d("FlickListApp", "Parsing movie: " + title + ", with ID: " + id);
 
                 MovieWatchlisted watchlistedMovie = new MovieWatchlisted(id, title, releaseYear, fullPosterPath, pagesTotal);
                 watchlistedMovies.add(watchlistedMovie);
@@ -241,10 +251,11 @@ public class Parser {
             String title = response.getString("title");
             double voteAverage = response.getDouble("vote_average");
             int runtime = response.getInt("runtime");
+            String tagline = response.getString("tagline");
 
-            String fullPosterPath = img500 + posterPath;
-            String fullBackdropPath = img500 + backdropPath;
-            Movie movie = new Movie(isAdult, id, overview, fullPosterPath, fullBackdropPath, releaseDate, runtime, title, voteAverage);
+            String fullPosterPath = poster500 + posterPath;
+            String fullBackdropPath = backdrop1280 + backdropPath;
+            Movie movie = new Movie(isAdult, id, overview, tagline, fullPosterPath, fullBackdropPath, releaseDate, runtime, title, voteAverage);
             return movie;
         } catch (JSONException e) {
             Log.d("FlickListApp", "movie details parse error");
@@ -274,7 +285,7 @@ public class Parser {
                 String creditID = result.getString("credit_id");
                 int order = result.getInt("order");
 
-                String fullProfilePath = img500 + profilePath;
+                String fullProfilePath = profile632 + profilePath;
                 //Log.d("FlickListApp", "path for " + name + ": " + fullProfilePath);
 
                 Cast movieCastMember = new Cast(adult, gender, id, knownForDepartment, name, originalName, popularity, fullProfilePath, castID, character, creditID, order);
@@ -287,5 +298,9 @@ public class Parser {
         }
         return null;
     }
+
+    /**
+     * Series
+     */
 
 }

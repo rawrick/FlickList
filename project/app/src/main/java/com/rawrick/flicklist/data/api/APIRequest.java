@@ -5,6 +5,7 @@ import static com.rawrick.flicklist.data.api.URL.authenticationSessionNew;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.volley.NetworkError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -35,7 +36,6 @@ public class APIRequest {
     //BuildConfig.ApiKey;
 
 
-
     private static final String ratedMoviesURL = "";
 
     public APIRequest(String destination, Context context) {
@@ -61,6 +61,9 @@ public class APIRequest {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (error instanceof NetworkError) {
+                    Log.d("FlickListApp", "Cannot connect to Internet...Please check your connection!");
+                }
                 listener.onError();
                 Log.d("FlickListApp", "No Connection");
                 error.printStackTrace();

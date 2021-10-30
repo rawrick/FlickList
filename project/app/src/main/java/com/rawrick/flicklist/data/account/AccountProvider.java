@@ -1,5 +1,7 @@
 package com.rawrick.flicklist.data.account;
 
+import static com.rawrick.flicklist.data.account.AccountManager.getAccountID;
+import static com.rawrick.flicklist.data.account.AccountManager.getAccountName;
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
 import static com.rawrick.flicklist.data.util.SettingsManager.getSessionID;
 import static com.rawrick.flicklist.data.api.URL.accountURL;
@@ -38,7 +40,9 @@ public class AccountProvider {
 
                 @Override
                 public void onError() {
-                    Log.d("FlickListApp", "No Connection. Token Creation failed.");
+                    Log.d("FlickListApp", "No Connection.");
+                    details = new Account(getAccountID(context), getAccountName(context), getAccountName(context), null, null, false);
+                    listener.onAccountDataAvailable(details);
                 }
             });
         } else {

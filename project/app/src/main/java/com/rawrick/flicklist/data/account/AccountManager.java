@@ -1,6 +1,9 @@
 package com.rawrick.flicklist.data.account;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+
+import androidx.preference.PreferenceManager;
 
 public class AccountManager {
 
@@ -32,4 +35,31 @@ public class AccountManager {
         void onAccountDataUpdated();
     }
 
+    /**
+     * Shared Preferences
+     */
+
+    public static String getAccountID(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getString("accountid", "");
+    }
+
+    public static void setAccountID(Context context, String accountID) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("accountid", accountID);
+        editor.apply();
+    }
+
+    public static String getAccountName(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getString("accountname", "");
+    }
+
+    public static void setAccountName(Context context, String accountName) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("accountname", accountName);
+        editor.apply();
+    }
 }

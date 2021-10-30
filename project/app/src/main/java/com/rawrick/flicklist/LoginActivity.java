@@ -22,7 +22,8 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.rawrick.flicklist.data.login.LoginManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.rawrick.flicklist.data.api.login.LoginManager;
 
 public class LoginActivity extends AppCompatActivity implements LoginManager.LoginTokenListener, LoginManager.LoginSessionListener, LoginManager.LoginGuestSessionListener {
 
@@ -40,8 +41,9 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
     protected void onResume() {
         token = getToken(this);
         Log.d("FlickListApp", "login token: " + token);
-        if (!token.equals("null")) {
-            loginManager.getSessionIDFromAPI();
+        if (!token.equals("")) {
+            Log.d("FlickListApp", "getSessionID");
+            //loginManager.getSessionIDFromAPI();
         }
         super.onResume();
     }
@@ -51,61 +53,41 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
     }
 
     private void initUI() {
+        setupFAB();
         Button sessionCreation = findViewById(R.id.login_generate_request_token);
         sessionCreation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loginManager.getTokenFromAPI();
+                //loginManager.getTokenFromAPI();
             }
         });
         Button guestSessionCreation = findViewById(R.id.login_generate_guest_session);
         guestSessionCreation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loginManager.getGuestSessionFromAPI();
+                //loginManager.getGuestSessionFromAPI();
             }
         });
         Button devLogin = findViewById(R.id.login_build_data);
-        Intent intent = new Intent(this, SplashScreenActivity.class);
+        Intent intentDev = new Intent(LoginActivity.this, SplashScreenActivity.class);
         devLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setSessionID(getApplicationContext(), getSessionID(getApplicationContext()));
                 setLoginStatus(getApplicationContext(), true);
-                startActivity(intent);
+                startActivity(intentDev);
                 finish();
             }
         });
-        EditText apiEditText = findViewById(R.id.api_edit_text);
-        apiEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
 
-            }
-
+    private void setupFAB() {
+        FloatingActionButton shopButton = findViewById(R.id.login_settings);
+        shopButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                setPreferenceAPIkey(getApplicationContext(), s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-        EditText sessionidEditText = findViewById(R.id.sessionid_edit_text);
-        sessionidEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                setSessionID(getApplicationContext(), s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, SettingsActivity.class);
+                intent.putExtra("activity_title", "Settings");
+                startActivity(intent);
             }
         });
     }

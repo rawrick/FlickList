@@ -1,4 +1,4 @@
-package com.rawrick.flicklist.data.login;
+package com.rawrick.flicklist.data.api.login;
 
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
 import static com.rawrick.flicklist.data.api.URL.authenticationTokenNew;

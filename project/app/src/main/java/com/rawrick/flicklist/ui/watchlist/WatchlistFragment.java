@@ -24,19 +24,19 @@ import com.rawrick.flicklist.data.api.movies.MovieManager;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
+import com.rawrick.flicklist.data.util.ActivitySelector;
 import com.rawrick.flicklist.databinding.FragmentWatchlistBinding;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class WatchlistFragment extends Fragment implements MovieManager.WatchlistedMoviesManagerListener,
-        MovieManager.RatedMoviesManagerListener,
-        MovieWatchlistItemViewHolder.ViewHolderListener {
+public class WatchlistFragment extends Fragment implements MovieWatchlistItemViewHolder.ViewHolderListener {
 
     private FragmentWatchlistBinding binding;
 
     private FLDatabaseHelper db;
+    private ActivitySelector activitySelector;
     private ArrayList<MovieWatchlisted> moviesWatchlisted;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -63,12 +63,16 @@ public class WatchlistFragment extends Fragment implements MovieManager.Watchlis
         binding = null;
     }
 
+    /**
+     * DATA
+     */
+
     private void initData() {
+        activitySelector = new ActivitySelector(getActivity());
         db = new FLDatabaseHelper(getActivity().getApplicationContext());
         moviesWatchlisted = (ArrayList<MovieWatchlisted>) db.getAllMoviesWatchlisted();
         sortDefault();
     }
-
 
     private void sortDefault() {
         Collections.sort(moviesWatchlisted, CompDefault);
@@ -118,7 +122,6 @@ public class WatchlistFragment extends Fragment implements MovieManager.Watchlis
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                onRatedMoviesUpdated();
                 movieWatchlistAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -126,23 +129,9 @@ public class WatchlistFragment extends Fragment implements MovieManager.Watchlis
     }
 
     @Override
-    public void onWatchlistedMoviesUpdated() {
-
-    }
-
-    @Override
     public void onMovieWatchlistItemClicked(int position) {
         // go to movie detail activity
-        Intent intent = new Intent(this.getActivity(), MovieActivity.class);
         movieID = String.valueOf(moviesWatchlisted.get(position).getId());
-        intent.putExtra("id", movieID);
-        startActivity(intent);
+        activitySelector.startMovieActivity(movieID);
     }
-
-    //
-
-    @Override
-    public void onRatedMoviesUpdated() {
-    }
-
 }

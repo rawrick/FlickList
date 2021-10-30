@@ -1,13 +1,16 @@
 package com.rawrick.flicklist;
 
+import static com.rawrick.flicklist.data.account.AccountManager.setAccountID;
+import static com.rawrick.flicklist.data.account.AccountManager.setAccountName;
 import static com.rawrick.flicklist.data.api.APIRequest.currentPageWatchlistedMovies;
 import static com.rawrick.flicklist.data.util.SettingsManager.getLoginStatus;
-import static com.rawrick.flicklist.data.util.SettingsManager.setAccountID;
 import static com.rawrick.flicklist.data.api.APIRequest.currentPageRatedMovies;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
@@ -22,6 +25,8 @@ import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.data.api.movies.MovieManager;
 
+import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 public class SplashScreenActivity extends AppCompatActivity implements
@@ -38,9 +43,15 @@ public class SplashScreenActivity extends AppCompatActivity implements
 
     private int currentLoadingProgress = 0;
     private final int totalLoadingProgress = 2;
-    private int x = 2;
-    private int y = 2;
-    private int pagesTotal;
+    public static int x = 2;
+    public static int y = 2;
+    private int moviesRatedPagesTotal;
+    private int moviesWatchlistedPagesTotal;
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +61,13 @@ public class SplashScreenActivity extends AppCompatActivity implements
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         // data
         if (getLoginStatus(this.getApplicationContext())) {
-            initData();
-            startMainActivity();
+            if (isNetworkConnected()) {
+                initData();
+            } else {
+                intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -74,8 +90,6 @@ public class SplashScreenActivity extends AppCompatActivity implements
         if (currentLoadingProgress == totalLoadingProgress) {
             Log.d("FlickListApp", "Starting MainActivity...");
             intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-            intent.putExtra("name", accountManager.getAccountData().getName());
-            intent.putExtra("avatar", accountManager.getAccountData().getAvatar());
             startActivity(intent);
             finish();
         }
@@ -83,6 +97,7 @@ public class SplashScreenActivity extends AppCompatActivity implements
 
     private void initData() {
         db = new FLDatabaseHelper(getApplicationContext());
+        db.clearMovieDetailsTable();
         accountManager = new AccountManager(this, this);
         accountManager.getAccountDataFromAPI();
     }
@@ -103,7 +118,10 @@ public class SplashScreenActivity extends AppCompatActivity implements
     @Override
     public void onAccountDataUpdated() {
         String id = accountManager.getAccountData().getId();
+        String name = accountManager.getAccountData().getName();
         setAccountID(this.getApplicationContext(), id);
+        setAccountName(this.getApplicationContext(), name);
+        Log.d("FlickListApp", "Account Data Updated");
         initMovieData();
         initSeriesData();
     }
@@ -111,15 +129,15 @@ public class SplashScreenActivity extends AppCompatActivity implements
     @Override
     public void onRatedMoviesUpdated() {
         // saves total pages that have to be fetched
-        pagesTotal = movieManager.getRatedMovies().get(0).getPagesTotal();
-        while (x <= pagesTotal) {
+        moviesRatedPagesTotal = movieManager.getRatedMovies().get(0).getPagesTotal();
+        while (x <= moviesRatedPagesTotal) {
             // changes page number on API request URL
             currentPageRatedMovies = String.valueOf(x);
             movieManager.getRatedMoviesFromAPI();
             x++;
         }
         // save to db once all pages have been fetched
-        if (x - 1 == pagesTotal) {
+        if (x - 1 == moviesRatedPagesTotal) {
             ArrayList<MovieRated> movies = movieManager.getRatedMovies();
             for (MovieRated movieRated : movies) {
                 db.addOrUpdateMovieRated(movieRated);
@@ -132,15 +150,15 @@ public class SplashScreenActivity extends AppCompatActivity implements
     @Override
     public void onWatchlistedMoviesUpdated() {
         // saves total pages that have to be fetched
-        pagesTotal = movieManager.getWatchlistedMovies().get(0).getPagesTotal();
-        while (y <= pagesTotal) {
+        moviesWatchlistedPagesTotal = movieManager.getWatchlistedMovies().get(0).getPagesTotal();
+        while (y <= moviesWatchlistedPagesTotal) {
             // changes page number on API request URL
             currentPageWatchlistedMovies = String.valueOf(y);
             movieManager.getRatedMoviesFromAPI();
             y++;
         }
         // sets adapter once all pages have been fetched
-        if (y - 1 == pagesTotal) {
+        if (y - 1 == moviesWatchlistedPagesTotal) {
             ArrayList<MovieWatchlisted> movies = movieManager.getWatchlistedMovies();
             for (MovieWatchlisted movieWatchlisted : movies) {
                 db.addOrUpdateMovieWatchlisted(movieWatchlisted);

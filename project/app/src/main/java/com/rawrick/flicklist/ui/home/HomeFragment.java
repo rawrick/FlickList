@@ -2,6 +2,7 @@ package com.rawrick.flicklist.ui.home;
 
 import static androidx.recyclerview.widget.RecyclerView.HORIZONTAL;
 
+import static com.rawrick.flicklist.data.account.AccountManager.getAccountName;
 import static com.rawrick.flicklist.data.api.APIRequest.movieID;
 
 import android.content.Intent;
@@ -31,6 +32,7 @@ import com.rawrick.flicklist.data.movie.MovieTrending;
 import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.data.series.SeriesTrending;
+import com.rawrick.flicklist.data.util.ActivitySelector;
 import com.rawrick.flicklist.data.util.SettingsManager;
 import com.rawrick.flicklist.data.api.movies.MovieManager;
 import com.rawrick.flicklist.data.api.series.SeriesManager;
@@ -47,6 +49,7 @@ public class HomeFragment extends Fragment implements TrendingManager.TrendingMo
     private FragmentHomeBinding binding;
 
     private FLDatabaseHelper db;
+    private ActivitySelector activitySelector;
     private SwipeRefreshLayout swipeRefreshLayout;
     private View featuredMovie;
     // movie data & adapter
@@ -105,6 +108,7 @@ public class HomeFragment extends Fragment implements TrendingManager.TrendingMo
 
     private void initData() {
         db = new FLDatabaseHelper(getActivity().getApplicationContext());
+        activitySelector = new ActivitySelector(getActivity());
         trendingManager = new TrendingManager(getActivity(), this, this);
         trendingManager.getTrendingMoviesFromAPI();
         trendingManager.getTrendingSeriesFromAPI();
@@ -120,9 +124,8 @@ public class HomeFragment extends Fragment implements TrendingManager.TrendingMo
          * BANNER
          */
 
-        Intent intent = this.getActivity().getIntent();
-        String name = intent.getStringExtra("name");
-        String avatar = intent.getStringExtra("avatar");
+        String name = getAccountName(this.getActivity());
+        String avatar = null;
         userName = view.findViewById(R.id.home_header_name);
         userAvatar = view.findViewById(R.id.home_header_avatar);
         String welcomeText = "Hello, " + name + ".";
@@ -134,7 +137,13 @@ public class HomeFragment extends Fragment implements TrendingManager.TrendingMo
         banner = view.findViewById(R.id.home_header_image);
         Random random = new Random();
         ArrayList<MovieRated> moviesRatedHighRating = (ArrayList<MovieRated>) db.getMoviesRatedForRating(8.0);
-        String backdropPath = moviesRatedHighRating.get(random.nextInt(moviesRatedHighRating.size())).getBackdropPath();
+        String backdropPath;
+        if (moviesRatedHighRating.size() != 0) {
+             backdropPath = moviesRatedHighRating.get(random.nextInt(moviesRatedHighRating.size())).getBackdropPath();
+        } else {
+            backdropPath = null;
+        }
+
         Glide.with(this)
                 .load(backdropPath)
                 .centerCrop()
@@ -235,7 +244,7 @@ public class HomeFragment extends Fragment implements TrendingManager.TrendingMo
             public void onClick(View v) {
                 movieID = String.valueOf(trendingManager.getMoviesTrending().get(position).getId());
                 intent.putExtra("id", movieID);
-                startActivity(intent);
+                activitySelector.startMovieActivity(movieID);
             }
         });
     }

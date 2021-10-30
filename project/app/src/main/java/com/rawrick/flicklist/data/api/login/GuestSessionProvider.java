@@ -1,6 +1,7 @@
-package com.rawrick.flicklist.data.login;
+package com.rawrick.flicklist.data.api.login;
 
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
+import static com.rawrick.flicklist.data.api.URL.authenticationSessionGuestNew;
 import static com.rawrick.flicklist.data.api.APIRequest.key;
 
 import android.content.Context;
@@ -12,33 +13,32 @@ import com.rawrick.flicklist.data.api.Parser;
 
 import org.json.JSONObject;
 
-public class SessionProvider {
+public class GuestSessionProvider {
 
     private final Context context;
-    private static String sessionID;
+    private static String session;
 
-
-    public SessionProvider(Context context) {
+    public GuestSessionProvider(Context context) {
         this.context = context;
     }
 
-    public void getSessionID(SessionProvider.DataListener listener) {
+    public void getGuestSessionID(GuestSessionProvider.DataListener listener) {
         // TODO check for existing session
-        if (sessionID == null) {
+        if (session == null) {
             sendSessionRequest(new APIRequest.ResponseListener() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    sessionID = Parser.parseLoginSession(response);
-                    listener.onSessionDataAvailable(sessionID);
+                    session = Parser.parseLoginGuestSession(response);
+                    listener.onGuestSessionDataAvailable(session);
                 }
 
                 @Override
                 public void onError() {
-                    Log.d("FlickListApp", "No Connection. Session Creation failed.");
+                    Log.d("FlickListApp", "No Connection. Guest Session Creation failed.");
                 }
             });
         } else {
-            listener.onSessionDataAvailable(sessionID);
+            listener.onGuestSessionDataAvailable(session);
         }
     }
 
@@ -47,11 +47,12 @@ public class SessionProvider {
         if (!key.equals(BuildConfig.ApiKey)) {
             key = BuildConfig.ApiKey;
         }
-        APIRequest request = new APIRequest("", context);
+        APIRequest request = new APIRequest(authenticationSessionGuestNew + "?api_key=" + key, context);
         request.get(listener);
     }
 
     public interface DataListener {
-        void onSessionDataAvailable(String data);
+        void onGuestSessionDataAvailable(String data);
     }
+
 }

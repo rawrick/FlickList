@@ -23,7 +23,7 @@ public class SettingsManager {
 
     public static String getToken(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String token = sharedPreferences.getString("token", "null");
+        String token = sharedPreferences.getString("token", "");
         return token;
     }
 
@@ -44,19 +44,6 @@ public class SettingsManager {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("sessionid", sessionID);
-        editor.apply();
-    }
-
-    public static String getAccountID(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String accountID = sharedPreferences.getString("accountid", "");
-        return accountID;
-    }
-
-    public static void setAccountID(Context context, String accountID) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("accountid", accountID);
         editor.apply();
     }
 

@@ -29,9 +29,11 @@ public class Movie {
     @ColumnInfo(name = "title")
     private final String title;
     @ColumnInfo(name = "voteAverage")
-    private final double voteAverage;
+    private final float voteAverage;
     @ColumnInfo(name = "userRating")
     private float userRating;
+    @ColumnInfo(name = "userFavoriteStatus")
+    private boolean userFavoriteStatus;
 
     @Ignore
     public Movie(boolean isAdult,
@@ -43,7 +45,7 @@ public class Movie {
                  String releaseDate,
                  int runtime,
                  String title,
-                 double voteAverage) {
+                 float voteAverage) {
         this.isAdult = isAdult;
         this.id = id;
         this.overview = overview;
@@ -56,6 +58,7 @@ public class Movie {
         this.voteAverage = voteAverage;
     }
 
+    // used by database
     public Movie(boolean isAdult,
                  int id,
                  String overview,
@@ -65,8 +68,9 @@ public class Movie {
                  String releaseDate,
                  int runtime,
                  String title,
-                 double voteAverage,
-                 float userRating) {
+                 float voteAverage,
+                 float userRating,
+                 boolean userFavoriteStatus) {
         this.isAdult = isAdult;
         this.id = id;
         this.overview = overview;
@@ -78,6 +82,7 @@ public class Movie {
         this.title = title;
         this.voteAverage = voteAverage;
         this.userRating = userRating;
+        this.userFavoriteStatus = userFavoriteStatus;
     }
 
     public String getPosterPath() {
@@ -108,7 +113,7 @@ public class Movie {
         return title;
     }
 
-    public double getVoteAverage() {
+    public float getVoteAverage() {
         return voteAverage;
     }
 
@@ -123,5 +128,8 @@ public class Movie {
     public String getTagline() {
         return tagline;
     }
-}
 
+    public boolean isUserFavoriteStatus() {
+        return userFavoriteStatus;
+    }
+}

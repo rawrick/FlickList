@@ -2,6 +2,7 @@ package com.rawrick.flicklist.data.api.movies;
 
 import android.content.Context;
 
+import com.rawrick.flicklist.data.movie.MovieFavorited;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 
@@ -11,14 +12,20 @@ public class MovieManager {
 
     private final Context context;
     private final RatedMoviesManagerListener listenerRatedMovies;
+    private final FavoritedMoviesManagerListener listenerFavoritedMovies;
     private final WatchlistedMoviesManagerListener listenerWatchlistedMovies;
 
     private ArrayList<MovieRated> ratedMovies;
+    private ArrayList<MovieFavorited> favoritedMovies;
     private ArrayList<MovieWatchlisted> watchlistedMovies;
 
-    public MovieManager(Context context, RatedMoviesManagerListener listenerRatedMovies, WatchlistedMoviesManagerListener listenerWatchlistedMovies) {
+    public MovieManager(Context context,
+                        RatedMoviesManagerListener listenerRatedMovies,
+                        FavoritedMoviesManagerListener listenerFavoritedMovies,
+                        WatchlistedMoviesManagerListener listenerWatchlistedMovies) {
         this.context = context;
         this.listenerRatedMovies = listenerRatedMovies;
+        this.listenerFavoritedMovies = listenerFavoritedMovies;
         this.listenerWatchlistedMovies = listenerWatchlistedMovies;
     }
 
@@ -47,6 +54,33 @@ public class MovieManager {
 
     public interface RatedMoviesManagerListener {
         void onRatedMoviesUpdated();
+    }
+
+    /**
+     * Favorited Movies
+     */
+
+    public void getFavoritedMoviesFromAPI() {
+        MovieProvider provider = new MovieProvider(context);
+        provider.getDataForFavoritedMovies(new MovieProvider.FavoritedMoviesDataListener() {
+            @Override
+            public void onFavoritedMoviesDataAvailable(ArrayList<MovieFavorited> data) {
+                if (favoritedMovies == null) {
+                    favoritedMovies = data;
+                } else {
+                    favoritedMovies.addAll(data);
+                }
+                listenerFavoritedMovies.onFavoritedMoviesUpdated();
+            }
+        });
+    }
+
+    public ArrayList<MovieFavorited> getFavoritedMovies() {
+        return favoritedMovies;
+    }
+
+    public interface FavoritedMoviesManagerListener {
+        void onFavoritedMoviesUpdated();
     }
 
     /**

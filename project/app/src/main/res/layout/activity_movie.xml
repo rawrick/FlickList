@@ -20,14 +20,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="false"
-            app:contentScrim="@color/defaultBackgroundDark"
+            app:contentScrim="@color/backgroundDefaultDark"
             app:expandedTitleTextAppearance="@android:color/transparent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/variation1BackgroundDark"
+                android:background="@color/backgroundVariationDark"
                 app:layout_collapseMode="parallax"
                 tools:context=".MovieActivity">
 
@@ -137,7 +137,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginHorizontal="16dp"
                     android:layout_marginVertical="8dp"
                     android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -146,8 +146,8 @@
                     app:layout_constraintTop_toBottomOf="@id/movie_poster">
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/movie_bookmark_fab"
-                        style="@style/homeFAB"
+                        android:id="@+id/movie_watchlist_fab"
+                        style="@style/movieFAB"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_nav_watchlist"
@@ -157,18 +157,18 @@
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/movie_favourite_fab"
-                        style="@style/homeFAB"
+                        style="@style/movieFAB"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_favorite"
-                        app:layout_constraintLeft_toRightOf="@id/movie_bookmark_fab"
+                        app:layout_constraintLeft_toRightOf="@id/movie_watchlist_fab"
                         app:layout_constraintRight_toLeftOf="@id/movie_rate_fab"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="ContentDescription" />
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/movie_rate_fab"
-                        style="@style/homeFAB"
+                        style="@style/movieFAB"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_rating"

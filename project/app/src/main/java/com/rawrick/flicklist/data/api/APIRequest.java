@@ -14,7 +14,6 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class APIRequest {
@@ -22,40 +21,34 @@ public class APIRequest {
     private final String destination;
     private final Context context;
 
-    public static String key;
-    public static String token;
-    public static String sessionID;
-    public static String guestSessionID;
-    public static String accountID;
-    public static String movieID;
-    public static String currentPageRatedMovies;
-    public static String currentPageWatchlistedMovies;
-
-    // post values
-    public static float rating;
-    //BuildConfig.ApiKey;
-
-
-    private static final String ratedMoviesURL = "";
+    public static String keyAPI;
+    public static String tokenAPI;
+    public static String APIsessionID;
+    public static String APIguestSessionID;
+    public static String APIaccountID;
+    public static String APImovieID;
+    public static String APIcurrentPageRatedMovies;
+    public static String APIcurrentPageWatchlistedMovies;
+    public static String APIcurrentPageFavouritedMovies;
+    public static float APIrating;
 
     public APIRequest(String destination, Context context) {
         this.destination = destination;
         this.context = context.getApplicationContext();
     }
 
-
     public void get(ResponseListener listener) {
         RequestQueue queue = Volley.newRequestQueue(context);
         VolleyLog.DEBUG = true;
         String request = destination;
-        if (token != null) {
-            request = authenticationSessionNew + "?api_key=" + key + "&request_token=" + token;
+        if (tokenAPI != null) {
+            request = authenticationSessionNew + "?api_key=" + keyAPI + "&request_token=" + tokenAPI;
         }
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, request, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        token = null;
+                        tokenAPI = null;
                         listener.onResponse(response);
                     }
                 }, new Response.ErrorListener() {
@@ -75,8 +68,7 @@ public class APIRequest {
     public void post(ResponseListener listener, JSONObject requestBody) {
         RequestQueue queue = Volley.newRequestQueue(context);
         VolleyLog.DEBUG = true;
-        JSONObject object = requestBody;
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, destination, object,
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, destination, requestBody,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

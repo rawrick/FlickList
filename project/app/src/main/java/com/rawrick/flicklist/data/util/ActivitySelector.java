@@ -1,7 +1,5 @@
 package com.rawrick.flicklist.data.util;
 
-import static com.rawrick.flicklist.data.api.APIRequest.movieID;
-
 import android.content.Context;
 import android.content.Intent;
 
@@ -24,7 +22,7 @@ public class ActivitySelector implements MovieDetailsManager.MovieDetailsManager
 
     public void startMovieActivity(String movieID) {
         intent = new Intent(context, MovieActivity.class);
-        APIRequest.movieID = movieID;
+        APIRequest.APImovieID = movieID;
         db = new FLDatabaseHelper(context);
         movieDetailsManager = new MovieDetailsManager(context, this, this);
         movieDetailsManager.getMovieDetailsFromAPI();

@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +45,7 @@ public class MovieAboutFragment extends Fragment {
     }
 
     private void initUI(View view) {
-        movie = db.getMovieDetailsForID(Integer.parseInt(APIRequest.movieID));
+        movie = db.getMovieDetailsForID(Integer.parseInt(APIRequest.APImovieID));
         movieTagline = view.findViewById(R.id.movie_about_tagline);
         movieOverview = view.findViewById(R.id.movie_about_overview);
         if (!movie.getTagline().equals("")) {

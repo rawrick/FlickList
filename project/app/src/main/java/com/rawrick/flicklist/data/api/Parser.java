@@ -11,6 +11,7 @@ import android.util.Log;
 import com.rawrick.flicklist.data.account.Account;
 import com.rawrick.flicklist.data.credits.Cast;
 import com.rawrick.flicklist.data.movie.Movie;
+import com.rawrick.flicklist.data.movie.MovieFavorited;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 import com.rawrick.flicklist.data.movie.MovieWatchlisted;
@@ -27,6 +28,32 @@ public class Parser {
     /**
      * Login & Account
      */
+
+    public static Account parseAccountData(JSONObject response) {
+        try {
+            JSONObject avatar = response.getJSONObject("avatar");
+
+            JSONObject tmdb = avatar.getJSONObject("tmdb");
+            String avatarPath = tmdb.getString("avatar_path");
+            String avatarPathFull = profile632 + avatarPath;
+
+            JSONObject gravatar = avatar.getJSONObject("gravatar");
+            String hash = gravatar.getString("hash");
+
+            String id = String.valueOf(response.getInt("id"));
+            Log.d("FlickListApp", "account id:" + id);
+            String name = response.getString("name");
+            String username = response.getString("username");
+            boolean adult = response.getBoolean("include_adult");
+
+            Account accountDetails = new Account(id, name, username, avatarPathFull, hash, adult);
+            return accountDetails;
+        } catch (JSONException e) {
+            Log.d("FlickListApp", "account details parsing error");
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static String parseLoginToken(JSONObject response) {
         try {
@@ -122,62 +149,6 @@ public class Parser {
         return null;
     }
 
-    public static ArrayList<SeriesTrending> parseTrendingSeries(JSONObject response) {
-        try {
-            JSONArray jsonArray = response.getJSONArray("results");
-            ArrayList<SeriesTrending> seriesArrayList = new ArrayList<>();
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject result = jsonArray.getJSONObject(i);
-
-                String title = result.getString("name");
-                double voteAverage = result.getDouble("vote_average");
-                String overview = result.getString("overview");
-                String releaseDate = result.getString("first_air_date");
-                int id = result.getInt("id");
-                String backdropPath = result.getString("backdrop_path");
-                String posterPath = result.getString("poster_path");
-                int index = i;
-                boolean isSelected;
-                isSelected = i == 0;
-
-                String fullPosterPath = poster500 + posterPath;
-                String fullBackdropPath = backdrop1280 + backdropPath;
-                seriesArrayList.add(new SeriesTrending(fullBackdropPath, index, isSelected, id, overview, fullPosterPath, releaseDate, title, voteAverage));
-            }
-            return seriesArrayList;
-        } catch (JSONException e) {
-            Log.d("FlickListApp", "series trending parse error");
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static Account parseAccountData(JSONObject response) {
-        try {
-            JSONObject avatar = response.getJSONObject("avatar");
-
-            JSONObject tmdb = avatar.getJSONObject("tmdb");
-            String avatarPath = tmdb.getString("avatar_path");
-            String avatarPathFull = profile632 + avatarPath;
-
-            JSONObject gravatar = avatar.getJSONObject("gravatar");
-            String hash = gravatar.getString("hash");
-
-            String id = String.valueOf(response.getInt("id"));
-            Log.d("FlickListApp", "account id:" + id);
-            String name = response.getString("name");
-            String username = response.getString("username");
-            boolean adult = response.getBoolean("include_adult");
-
-            Account accountDetails = new Account(id, name, username, avatarPathFull, hash, adult);
-            return accountDetails;
-        } catch (JSONException e) {
-            Log.d("FlickListApp", "account details parsing error");
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public static ArrayList<MovieRated> parseRatedMoviesData(JSONObject response) {
         try {
             int pagesTotal = response.getInt("total_pages");
@@ -188,7 +159,7 @@ public class Parser {
                 JSONObject result = resultsArray.getJSONObject(i);
 
                 int id = result.getInt("id");
-                double rating = result.getDouble("rating");
+                float rating = (float) result.getDouble("rating");
                 String title = result.getString("title");
                 String releaseDate = result.getString("release_date");
                 String releaseYear = releaseDate.substring(0, 4);
@@ -206,6 +177,27 @@ public class Parser {
             return ratedMovies;
         } catch (JSONException e) {
             Log.d("FlickListApp", "account details parsing error");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static ArrayList<MovieFavorited> parseFavouritedMoviesData(JSONObject response) {
+        try {
+            int pagesTotal = response.getInt("total_pages");
+            JSONArray resultsArray = response.getJSONArray("results");
+
+            ArrayList<MovieFavorited> favoritedMovies = new ArrayList<>();
+            for (int i = 0; i < resultsArray.length(); i++) {
+                JSONObject result = resultsArray.getJSONObject(i);
+                int id = result.getInt("id");
+
+                MovieFavorited movieFavorited = new MovieFavorited(id, true, pagesTotal);
+                favoritedMovies.add(movieFavorited);
+            }
+            return favoritedMovies;
+        } catch (JSONException e) {
+            Log.d("FlickListApp", "favorited movies parsing error");
             e.printStackTrace();
         }
         return null;
@@ -249,7 +241,7 @@ public class Parser {
             String backdropPath = response.getString("backdrop_path");
             String releaseDate = response.getString("release_date");
             String title = response.getString("title");
-            double voteAverage = response.getDouble("vote_average");
+            float voteAverage = (float) response.getDouble("vote_average");
             int runtime = response.getInt("runtime");
             String tagline = response.getString("tagline");
 
@@ -303,4 +295,33 @@ public class Parser {
      * Series
      */
 
+    public static ArrayList<SeriesTrending> parseTrendingSeries(JSONObject response) {
+        try {
+            JSONArray jsonArray = response.getJSONArray("results");
+            ArrayList<SeriesTrending> seriesArrayList = new ArrayList<>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject result = jsonArray.getJSONObject(i);
+
+                String title = result.getString("name");
+                double voteAverage = result.getDouble("vote_average");
+                String overview = result.getString("overview");
+                String releaseDate = result.getString("first_air_date");
+                int id = result.getInt("id");
+                String backdropPath = result.getString("backdrop_path");
+                String posterPath = result.getString("poster_path");
+                int index = i;
+                boolean isSelected;
+                isSelected = i == 0;
+
+                String fullPosterPath = poster500 + posterPath;
+                String fullBackdropPath = backdrop1280 + backdropPath;
+                seriesArrayList.add(new SeriesTrending(fullBackdropPath, index, isSelected, id, overview, fullPosterPath, releaseDate, title, voteAverage));
+            }
+            return seriesArrayList;
+        } catch (JSONException e) {
+            Log.d("FlickListApp", "series trending parse error");
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

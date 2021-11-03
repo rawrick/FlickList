@@ -2,15 +2,16 @@ package com.rawrick.flicklist.data.api.rating;
 
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
 import static com.rawrick.flicklist.data.api.URL.movieURL;
-import static com.rawrick.flicklist.data.api.APIRequest.key;
-import static com.rawrick.flicklist.data.api.APIRequest.movieID;
-import static com.rawrick.flicklist.data.api.APIRequest.sessionID;
-import static com.rawrick.flicklist.data.api.APIRequest.rating;
+import static com.rawrick.flicklist.data.api.APIRequest.keyAPI;
+import static com.rawrick.flicklist.data.api.APIRequest.APImovieID;
+import static com.rawrick.flicklist.data.api.APIRequest.APIsessionID;
+import static com.rawrick.flicklist.data.api.APIRequest.APIrating;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
-import com.rawrick.flicklist.BuildConfig;
+import com.rawrick.flicklist.R;
 import com.rawrick.flicklist.data.api.APIRequest;
 
 import org.json.JSONException;
@@ -25,11 +26,19 @@ public class RatingManager {
     }
 
     public void postRating(float value) {
-        rating = value * 2;
+        APIrating = value;
         updateRating(new APIRequest.ResponseListener() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("FlickListApp", "response received, post status unknown");
+                try {
+                    if (response.getBoolean("success")) {
+                        Toast.makeText(context, R.string.rating_success, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, R.string.rating_failure, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -40,18 +49,15 @@ public class RatingManager {
     }
 
     private void updateRating(APIRequest.ResponseListener listener) {
-        key = getPreferenceAPIkey(context);
-        if (!key.equals(BuildConfig.ApiKey)) {
-            key = BuildConfig.ApiKey;
-        }
-        // creates request body
+        keyAPI = getPreferenceAPIkey(context);
+        // request body
         JSONObject object = new JSONObject();
         try {
-            object.put("value", rating);
+            object.put("value", APIrating);
         } catch (JSONException error) {
             error.printStackTrace();
         }
-        APIRequest request = new APIRequest(movieURL + movieID + "/rating?api_key=" + key + "&session_id=" + sessionID, context);
+        APIRequest request = new APIRequest(movieURL + APImovieID + "/rating?api_key=" + keyAPI + "&session_id=" + APIsessionID, context);
         request.post(listener, object);
     }
 }

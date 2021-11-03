@@ -1,6 +1,6 @@
 package com.rawrick.flicklist;
 
-import static com.rawrick.flicklist.data.api.APIRequest.movieID;
+import static com.rawrick.flicklist.data.api.APIRequest.APImovieID;
 import static com.rawrick.flicklist.data.util.Formatter.runtimeFormatter;
 
 import android.app.Activity;
@@ -8,14 +8,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -26,10 +23,9 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.rawrick.flicklist.data.api.APIRequest;
-import com.rawrick.flicklist.data.api.movies.MovieDetailsManager;
 import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.api.rating.RatingManager;
+import com.rawrick.flicklist.data.movie.MovieFavorited;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.ui.moviedetails.MovieAboutFragment;
 import com.rawrick.flicklist.ui.moviedetails.MovieCastFragment;
@@ -45,9 +41,17 @@ public class MovieActivity extends FragmentActivity {
     private TextView movieRuntime;
     private ImageView moviePoster;
     private ImageView movieBackdrop;
-    private FloatingActionButton movieRateFAB;
 
-    private RatingBar ratingBar;
+    private boolean isMovieRated;
+    private boolean isMovieFavorited;
+    private boolean isMovieWatchlisted;
+
+    private FloatingActionButton movieRateFAB;
+    private FloatingActionButton movieFavoriteFAB;
+    private FloatingActionButton movieWatchlistFAB;
+
+    private TextView ratingEditText;
+    private float ratingFromDB = 0f;
 
     private static final int NUM_PAGES = 5;
     private ViewPager2 viewPager;
@@ -71,7 +75,10 @@ public class MovieActivity extends FragmentActivity {
 
     private void initData() {
         db = new FLDatabaseHelper(this);
-        movie = db.getMovieDetailsForID(Integer.parseInt(movieID));
+        movie = db.getMovieDetailsForID(Integer.parseInt(APImovieID));
+        isMovieRated = db.isMovieRatedForID(movie.getId());
+        isMovieFavorited = db.isMovieFavoritedForID(movie.getId());
+        isMovieWatchlisted = db.isMovieWatchlistedForID(movie.getId());
         ratingManager = new RatingManager(this);
     }
 
@@ -83,10 +90,42 @@ public class MovieActivity extends FragmentActivity {
         movieReleaseYear = findViewById(R.id.movie_release);
         movieRuntime = findViewById(R.id.movie_runtime);
         movieRateFAB = findViewById(R.id.movie_rate_fab);
+        movieFavoriteFAB = findViewById(R.id.movie_favourite_fab);
+        movieWatchlistFAB = findViewById(R.id.movie_watchlist_fab);
+
+        if (isMovieRated) {
+            setFABIconColor(movieRateFAB, R.color.fabIsRated);
+        }
         movieRateFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showRatingDialog();
+            }
+        });
+        if (isMovieFavorited) {
+            setFABIconColor(movieFavoriteFAB, R.color.fabIsFavorited);
+        }
+        movieFavoriteFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isMovieFavorited) {
+                    setFABIconColor(movieFavoriteFAB, R.color.textDefaultDark);
+                    db.updateMovieFavoriteStatus(movie, false);
+                    isMovieFavorited = false;
+                } else {
+                    setFABIconColor(movieFavoriteFAB, R.color.fabIsFavorited);
+                    db.updateMovieFavoriteStatus(movie, true);
+                    isMovieFavorited = true;
+                }
+            }
+        });
+        if (isMovieWatchlisted) {
+            movieWatchlistFAB.setImageTintList(getResources().getColorStateList(R.color.fabIsWatchlisted, this.getTheme()));
+        }
+        movieWatchlistFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
@@ -104,20 +143,21 @@ public class MovieActivity extends FragmentActivity {
     }
 
     private void showRatingDialog() {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final View customLayout = getLayoutInflater().inflate(R.layout.rating_dialog, null);
-        ratingBar = customLayout.findViewById(R.id.rating_bar);
-
+        ratingEditText = customLayout.findViewById(R.id.rating_input);
+        if (isMovieRated) {
+            ratingFromDB = db.getMovieRatedForID(Integer.parseInt(APImovieID)).getRating();
+            db.updateMovieRating(movie, ratingFromDB);
+            ratingEditText.setText(String.valueOf((int) ratingFromDB), TextView.BufferType.EDITABLE);
+        }
         builder.setView(customLayout)
                 .setTitle(" ")
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        float rating = ratingBar.getRating();
-
+                        float rating = Float.parseFloat(ratingEditText.getText().toString());
                         ratingManager.postRating(rating);
-                        makeToast(String.valueOf(rating * 2) + "/10");
                     }
                 })
                 .setNeutralButton("Delete Rating", new DialogInterface.OnClickListener() {
@@ -136,9 +176,8 @@ public class MovieActivity extends FragmentActivity {
         dialog.show();
     }
 
-    private void makeToast(String data) {
-        Toast.makeText(this, data, Toast.LENGTH_SHORT)
-                .show();
+    private void setFABIconColor(FloatingActionButton fab, int colorID) {
+        fab.setImageTintList(getResources().getColorStateList(colorID, this.getTheme()));
     }
 
     private void initializeNavigation() {
@@ -149,7 +188,7 @@ public class MovieActivity extends FragmentActivity {
         viewPager.setAdapter(pagerAdapter);
         //viewPager.registerOnPageChangeCallback(pageChangeCallback);
         TabLayout tabLayout = findViewById(R.id.movie_tab_layout);
-        tabLayout.setBackgroundColor(getResources().getColor(R.color.variation1BackgroundDark));
+        tabLayout.setBackgroundColor(getResources().getColor(R.color.backgroundVariationDark));
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> {
                     if (position == 0) tab.setText("About");

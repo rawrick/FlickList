@@ -1,10 +1,8 @@
 package com.rawrick.flicklist.ui.watchlist;
 
 import static androidx.recyclerview.widget.RecyclerView.VERTICAL;
-import static com.rawrick.flicklist.data.api.APIRequest.currentPageWatchlistedMovies;
-import static com.rawrick.flicklist.data.api.APIRequest.movieID;
+import static com.rawrick.flicklist.data.api.APIRequest.APImovieID;
 
-import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,10 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.rawrick.flicklist.MovieActivity;
 import com.rawrick.flicklist.R;
-import com.rawrick.flicklist.data.api.movies.MovieManager;
-import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.data.util.ActivitySelector;
@@ -131,7 +126,7 @@ public class WatchlistFragment extends Fragment implements MovieWatchlistItemVie
     @Override
     public void onMovieWatchlistItemClicked(int position) {
         // go to movie detail activity
-        movieID = String.valueOf(moviesWatchlisted.get(position).getId());
-        activitySelector.startMovieActivity(movieID);
+        APImovieID = String.valueOf(moviesWatchlisted.get(position).getId());
+        activitySelector.startMovieActivity(APImovieID);
     }
 }

@@ -27,18 +27,25 @@
     </style>
 
     <style name="bottomNavigationView">
-        <item name="android:background">@color/variation1BackgroundDark</item>
+        <item name="android:background">@color/backgroundVariationDark</item>
     </style>
 
     <style name="defaultBackground">
-        <item name="android:background">@color/defaultBackgroundDark</item>
+        <item name="android:background">@color/backgroundDefaultDark</item>
     </style>
 
     <style name="homeFAB">
         <item name="tint">@color/colorPrimary</item>
         <item name="borderWidth">0dp</item>
         <item name="elevation">0dp</item>
-        <item name="backgroundTint">@color/defaultBackgroundDark</item>
+        <item name="backgroundTint">@color/backgroundDefaultDark</item>
+    </style>
+
+    <style name="movieFAB">
+        <item name="tint">@color/textDefaultDark</item>
+        <item name="borderWidth">0dp</item>
+        <item name="elevation">0dp</item>
+        <item name="backgroundTint">@color/backgroundVariationDark</item>
     </style>
 
     <style name="ImageViewRoundedCorners">
@@ -52,7 +59,7 @@
     </style>
 
     <style name="Toolbar">
-        <item name="android:background">@color/variation1BackgroundDark</item>
+        <item name="android:background">@color/backgroundVariationDark</item>
     </style>
 
     <!-- TEXT -->

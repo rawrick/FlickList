@@ -26,6 +26,9 @@ public interface MovieWatchlistedDAO {
     @Query("SELECT * from moviesWatchlisted WHERE id= :id")
     MovieWatchlisted getMovieForID(int id);
 
+    @Query("SELECT EXISTS(SELECT * FROM movieswatchlisted WHERE id = :id)")
+    boolean isWatchlisted(int id);
+
     @Query("SELECT * from moviesWatchlisted")
     List<MovieWatchlisted> getAllMoviesWatchlisted();
 }

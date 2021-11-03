@@ -1,8 +1,8 @@
 package com.rawrick.flicklist.data.api.rating;
 
-import static com.rawrick.flicklist.data.api.APIRequest.accountID;
-import static com.rawrick.flicklist.data.api.APIRequest.key;
-import static com.rawrick.flicklist.data.api.APIRequest.movieID;
+import static com.rawrick.flicklist.data.api.APIRequest.APIaccountID;
+import static com.rawrick.flicklist.data.api.APIRequest.keyAPI;
+import static com.rawrick.flicklist.data.api.APIRequest.APImovieID;
 import static com.rawrick.flicklist.data.api.URL.accountURL;
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
 
@@ -41,14 +41,14 @@ public class WatchlistManager {
     }
 
     private void updateWatchlistStatus(APIRequest.ResponseListener listener) {
-        key = getPreferenceAPIkey(context);
-        if (!key.equals(BuildConfig.ApiKey)) {
-            key = BuildConfig.ApiKey;
+        keyAPI = getPreferenceAPIkey(context);
+        if (!keyAPI.equals(BuildConfig.ApiKey)) {
+            keyAPI = BuildConfig.ApiKey;
         }
         // creates request body
         isWatchlisted = true;
         mediaType = "movie";
-        mediaID = Integer.parseInt(movieID);
+        mediaID = Integer.parseInt(APImovieID);
         JSONObject object = new JSONObject();
         try {
             object.put("media_type", mediaType); // TODO "movie" OR "tv"
@@ -57,7 +57,7 @@ public class WatchlistManager {
         } catch (JSONException error) {
             error.printStackTrace();
         }
-        APIRequest request = new APIRequest(accountURL + accountID + "/watchlist?api_key=" + key, context);
+        APIRequest request = new APIRequest(accountURL + APIaccountID + "/watchlist?api_key=" + keyAPI, context);
         request.post(listener, object);
     }
 }

@@ -49,7 +49,7 @@
         android:id="@+id/filler"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/variation1BackgroundDark"
+        android:background="@color/backgroundVariationDark"
         app:layout_constraintDimensionRatio="2:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

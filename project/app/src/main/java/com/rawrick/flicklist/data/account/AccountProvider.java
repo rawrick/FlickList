@@ -5,7 +5,7 @@ import static com.rawrick.flicklist.data.account.AccountManager.getAccountName;
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
 import static com.rawrick.flicklist.data.util.SettingsManager.getSessionID;
 import static com.rawrick.flicklist.data.api.URL.accountURL;
-import static com.rawrick.flicklist.data.api.APIRequest.key;
+import static com.rawrick.flicklist.data.api.APIRequest.keyAPI;
 
 import android.content.Context;
 import android.util.Log;
@@ -17,7 +17,7 @@ import com.rawrick.flicklist.data.api.Parser;
 import org.json.JSONObject;
 
 
-import static com.rawrick.flicklist.data.api.APIRequest.sessionID;
+import static com.rawrick.flicklist.data.api.APIRequest.APIsessionID;
 
 public class AccountProvider {
 
@@ -51,12 +51,12 @@ public class AccountProvider {
     }
 
     private void sendSessionRequest(APIRequest.ResponseListener listener) {
-        key = getPreferenceAPIkey(context);
-        if (!key.equals(BuildConfig.ApiKey)) {
-            key = BuildConfig.ApiKey;
+        keyAPI = getPreferenceAPIkey(context);
+        if (!keyAPI.equals(BuildConfig.ApiKey)) {
+            keyAPI = BuildConfig.ApiKey;
         }
-        sessionID = getSessionID(context);
-        APIRequest request = new APIRequest(accountURL + "?api_key=" + key + "&session_id=" + sessionID, context);
+        APIsessionID = getSessionID(context);
+        APIRequest request = new APIRequest(accountURL + "?api_key=" + keyAPI + "&session_id=" + APIsessionID, context);
         request.get(listener);
     }
 

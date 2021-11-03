@@ -8,6 +8,7 @@ import androidx.room.Room;
 
 
 import com.rawrick.flicklist.data.movie.Movie;
+import com.rawrick.flicklist.data.movie.MovieFavorited;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 
@@ -54,8 +55,13 @@ public class FLDatabaseHelper {
     }
 
     // gets rated movie for id
-    public MovieRated getMovieForID(int id) {
+    public MovieRated getMovieRatedForID(int id) {
         return db.movieRatedDAO().getMovieForID(id);
+    }
+
+    // checks whether movie is rated
+    public boolean isMovieRatedForID (int id) {
+        return db.movieRatedDAO().isRated(id);
     }
 
     // gets list of rated movies
@@ -67,6 +73,43 @@ public class FLDatabaseHelper {
     public List<MovieRated> getAllMoviesRated() {
         return db.movieRatedDAO().getAllMoviesRated();
     }
+
+    /**
+     * Favorited Movies
+     */
+
+    public void addOrUpdateMovieFavorited(MovieFavorited movieFavorited) {
+        MovieFavorited movieFromDB = db.movieFavoritedDAO().getMovieForID(movieFavorited.id);
+        if (movieFromDB == null) {
+            db.movieFavoritedDAO().addMovie(movieFavorited);
+        } else {
+            db.movieFavoritedDAO().updateMovie(movieFavorited);
+        }
+    }
+
+    // deletes movie
+    public void deleteMovieFavorited(MovieFavorited movieFavorited) {
+        MovieFavorited movieFromDB = db.movieFavoritedDAO().getMovieForID(movieFavorited.id);
+        if (movieFromDB != null) {
+            db.movieFavoritedDAO().deleteMovie(movieFavorited);
+        }
+    }
+
+    // gets favorited movie for id
+    public MovieFavorited getMovieFavoritedForID(int id) {
+        return db.movieFavoritedDAO().getMovieForID(id);
+    }
+
+    // checks whether movie is favorited
+    public boolean isMovieFavoritedForID (int id) {
+        return db.movieFavoritedDAO().isFavorited(id);
+    }
+
+    // gets list of favorited movies
+    public List<MovieFavorited> getAllMoviesFavorited() {
+        return db.movieFavoritedDAO().getAllMovies();
+    }
+
 
     /**
      * Watchlisted Movies
@@ -94,13 +137,18 @@ public class FLDatabaseHelper {
         return db.movieWatchlistedDAO().getMovieForID(id);
     }
 
+    // checks whether movie is watchlisted
+    public boolean isMovieWatchlistedForID (int id) {
+        return db.movieWatchlistedDAO().isWatchlisted(id);
+    }
+
     // gets list of rated movies
     public List<MovieWatchlisted> getAllMoviesWatchlisted() {
         return db.movieWatchlistedDAO().getAllMoviesWatchlisted();
     }
 
     /**
-     * Movie Deatils
+     * Movie Details
      */
 
     public void addOrUpdateMovieDetails(Movie movie) {
@@ -111,6 +159,15 @@ public class FLDatabaseHelper {
             db.movieDetailsDAO().updateMovie(movie);
         }
     }
+
+    public void updateMovieRating(Movie movie, Float rating) {
+        db.movieDetailsDAO().updateRating(movie.id, rating);
+    }
+
+    public void updateMovieFavoriteStatus(Movie movie, boolean isFavorite) {
+        db.movieDetailsDAO().updateFavoriteStatus(movie.id, isFavorite);
+    }
+
 
     // deletes movie
     public void deleteMovieDetails(Movie movie) {

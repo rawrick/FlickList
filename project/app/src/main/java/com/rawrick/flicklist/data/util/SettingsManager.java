@@ -6,6 +6,8 @@ import android.util.Log;
 
 import androidx.preference.PreferenceManager;
 
+import com.rawrick.flicklist.BuildConfig;
+
 public class SettingsManager {
 
     public static boolean getLoginStatus(Context context) {
@@ -49,7 +51,7 @@ public class SettingsManager {
 
     public static String getPreferenceAPIkey(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String key = sharedPreferences.getString("api_key", "");
+        String key = sharedPreferences.getString("api_key", BuildConfig.ApiKey);
         return key;
     }
 

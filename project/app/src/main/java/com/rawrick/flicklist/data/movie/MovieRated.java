@@ -13,7 +13,7 @@ public class MovieRated implements Comparable<MovieRated> {
     @NonNull
     public final int id;
     @ColumnInfo(name = "rating")
-    private final double rating;
+    private final float rating;
     @ColumnInfo(name = "title")
     private final String title;
     @ColumnInfo(name = "releaseYear")
@@ -29,7 +29,7 @@ public class MovieRated implements Comparable<MovieRated> {
 
 
     @Ignore
-    public MovieRated(int id, double rating, String title, String releaseYear, String posterPath, String backdropPath, int pagesTotal) {
+    public MovieRated(int id, float rating, String title, String releaseYear, String posterPath, String backdropPath, int pagesTotal) {
         this.id = id;
         this.rating = rating;
         this.title = title;
@@ -40,7 +40,7 @@ public class MovieRated implements Comparable<MovieRated> {
     }
 
     // used for DB
-    public MovieRated(int id, double rating, String title, String releaseYear, String posterPath, String backdropPath, int pagesTotal, String watchDate) {
+    public MovieRated(int id, float rating, String title, String releaseYear, String posterPath, String backdropPath, int pagesTotal, String watchDate) {
         this.id = id;
         this.rating = rating;
         this.title = title;
@@ -55,7 +55,7 @@ public class MovieRated implements Comparable<MovieRated> {
         return id;
     }
 
-    public double getRating() {
+    public float getRating() {
         return rating;
     }
 

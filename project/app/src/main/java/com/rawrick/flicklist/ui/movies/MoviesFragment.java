@@ -1,9 +1,10 @@
 package com.rawrick.flicklist.ui.movies;
 
 import static androidx.recyclerview.widget.RecyclerView.VERTICAL;
-import static com.rawrick.flicklist.data.api.APIRequest.movieID;
+import static com.rawrick.flicklist.SplashScreenActivity.moviesRatedPageCurrent;
+import static com.rawrick.flicklist.data.api.APIRequest.APIcurrentPageRatedMovies;
+import static com.rawrick.flicklist.data.api.APIRequest.APImovieID;
 
-import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,8 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.rawrick.flicklist.MovieActivity;
 import com.rawrick.flicklist.R;
+import com.rawrick.flicklist.data.api.movies.MovieManager;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.data.util.ActivitySelector;
@@ -28,13 +29,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class MoviesFragment extends Fragment implements MovieListItemViewHolder.ViewHolderListener {
+public class MoviesFragment extends Fragment implements MovieListItemViewHolder.ViewHolderListener,
+        MovieManager.RatedMoviesManagerListener,
+        MovieManager.WatchlistedMoviesManagerListener, MovieManager.FavoritedMoviesManagerListener {
 
     private FragmentMoviesBinding binding;
 
     private FLDatabaseHelper db;
+    private MovieManager movieManager;
     private ActivitySelector activitySelector;
     ArrayList<MovieRated> moviesRated;
+    private int moviesRatedPagesTotal;
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -71,9 +76,16 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
         sortDefault();
     }
 
+    private void refreshData() {
+        movieManager = new MovieManager(getActivity(), this, this, this);
+        APIcurrentPageRatedMovies = "1";
+        movieManager.getRatedMoviesFromAPI();
+    }
+
     private void sortDefault() {
         Collections.sort(moviesRated, CompDefault);
     }
+
     Comparator<MovieRated> CompDefault = (M1, M2) -> {
         double R1 = M1.getRating();
         double R2 = M2.getRating();
@@ -129,9 +141,7 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                initData();
-                movieListAdapter.setRatedMovies(moviesRated);
-                swipeRefreshLayout.setRefreshing(false);
+                refreshData();
             }
         });
     }
@@ -139,7 +149,38 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     @Override
     public void onMovieListItemClicked(int position) {
         // go to movie detail activity
-        movieID = String.valueOf(moviesRated.get(position).getId());
-        activitySelector.startMovieActivity(movieID);
+        APImovieID = String.valueOf(moviesRated.get(position).getId());
+        activitySelector.startMovieActivity(APImovieID);
+    }
+
+    @Override
+    public void onRatedMoviesUpdated() {
+        // saves total pages that have to be fetched
+        moviesRatedPagesTotal = movieManager.getRatedMovies().get(0).getPagesTotal();
+        while (moviesRatedPageCurrent <= moviesRatedPagesTotal) {
+            // changes page number on API request URL
+            APIcurrentPageRatedMovies = String.valueOf(moviesRatedPageCurrent);
+            movieManager.getRatedMoviesFromAPI();
+            moviesRatedPageCurrent++;
+        }
+        // save to db once all pages have been fetched
+        if (moviesRatedPageCurrent - 1 == moviesRatedPagesTotal) {
+            ArrayList<MovieRated> movies = movieManager.getRatedMovies();
+            for (MovieRated movieRated : movies) {
+                db.addOrUpdateMovieRated(movieRated);
+            }
+            movieListAdapter.setRatedMovies(moviesRated);
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void onWatchlistedMoviesUpdated() {
+
+    }
+
+    @Override
+    public void onFavoritedMoviesUpdated() {
+
     }
 }

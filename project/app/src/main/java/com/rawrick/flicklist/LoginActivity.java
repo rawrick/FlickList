@@ -1,24 +1,19 @@
 package com.rawrick.flicklist;
 
-import static com.rawrick.flicklist.data.api.APIRequest.guestSessionID;
-import static com.rawrick.flicklist.data.api.APIRequest.sessionID;
-import static com.rawrick.flicklist.data.api.APIRequest.token;
-import static com.rawrick.flicklist.data.util.SettingsManager.getSessionID;
+import static com.rawrick.flicklist.data.api.APIRequest.APIguestSessionID;
+import static com.rawrick.flicklist.data.api.APIRequest.APIsessionID;
+import static com.rawrick.flicklist.data.api.APIRequest.tokenAPI;
 import static com.rawrick.flicklist.data.util.SettingsManager.getToken;
 import static com.rawrick.flicklist.data.util.SettingsManager.setLoginStatus;
-import static com.rawrick.flicklist.data.util.SettingsManager.setPreferenceAPIkey;
 import static com.rawrick.flicklist.data.util.SettingsManager.setSessionID;
 import static com.rawrick.flicklist.data.util.SettingsManager.setToken;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -39,9 +34,9 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
 
     @Override
     protected void onResume() {
-        token = getToken(this);
-        Log.d("FlickListApp", "login token: " + token);
-        if (!token.equals("")) {
+        tokenAPI = getToken(this);
+        Log.d("FlickListApp", "login token: " + tokenAPI);
+        if (!tokenAPI.equals("")) {
             Log.d("FlickListApp", "getSessionID");
             //loginManager.getSessionIDFromAPI();
         }
@@ -94,17 +89,17 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
 
     @Override
     public void onTokenCreated() {
-        token = loginManager.getToken();
-        setToken(this, token);
+        tokenAPI = loginManager.getToken();
+        setToken(this, tokenAPI);
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(loginManager.getAuthenticationURL(token)));
+        intent.setData(Uri.parse(loginManager.getAuthenticationURL(tokenAPI)));
         startActivity(intent);
     }
 
     @Override
     public void onSessionCreated() {
-        sessionID = loginManager.getSessionID();
-        setSessionID(this, sessionID);
+        APIsessionID = loginManager.getSessionID();
+        setSessionID(this, APIsessionID);
         setLoginStatus(this, true);
         Intent intent = new Intent(this, SplashScreenActivity.class);
         startActivity(intent);
@@ -113,8 +108,8 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
 
     @Override
     public void onGuestSessionCreated() {
-        guestSessionID = loginManager.getGuestSessionID();
-        setSessionID(this, guestSessionID);
+        APIguestSessionID = loginManager.getGuestSessionID();
+        setSessionID(this, APIguestSessionID);
         setLoginStatus(this, true);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

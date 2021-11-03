@@ -1,16 +1,17 @@
 package com.rawrick.flicklist.data.api.movies;
 
 import static com.rawrick.flicklist.data.account.AccountManager.getAccountID;
+import static com.rawrick.flicklist.data.api.APIRequest.APIcurrentPageFavouritedMovies;
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
 import static com.rawrick.flicklist.data.api.URL.accountURL;
 import static com.rawrick.flicklist.data.api.URL.movieURL;
 import static com.rawrick.flicklist.data.api.URL.trendingMoviesWeekURL;
-import static com.rawrick.flicklist.data.api.APIRequest.accountID;
-import static com.rawrick.flicklist.data.api.APIRequest.currentPageWatchlistedMovies;
-import static com.rawrick.flicklist.data.api.APIRequest.key;
-import static com.rawrick.flicklist.data.api.APIRequest.movieID;
-import static com.rawrick.flicklist.data.api.APIRequest.currentPageRatedMovies;
-import static com.rawrick.flicklist.data.api.APIRequest.sessionID;
+import static com.rawrick.flicklist.data.api.APIRequest.APIaccountID;
+import static com.rawrick.flicklist.data.api.APIRequest.APIcurrentPageWatchlistedMovies;
+import static com.rawrick.flicklist.data.api.APIRequest.keyAPI;
+import static com.rawrick.flicklist.data.api.APIRequest.APImovieID;
+import static com.rawrick.flicklist.data.api.APIRequest.APIcurrentPageRatedMovies;
+import static com.rawrick.flicklist.data.api.APIRequest.APIsessionID;
 
 import android.content.Context;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.rawrick.flicklist.BuildConfig;
 import com.rawrick.flicklist.SplashScreenActivity;
 import com.rawrick.flicklist.data.credits.Cast;
 import com.rawrick.flicklist.data.movie.Movie;
+import com.rawrick.flicklist.data.movie.MovieFavorited;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 import com.rawrick.flicklist.data.movie.MovieWatchlisted;
@@ -39,6 +41,7 @@ public class MovieProvider {
 
     private ArrayList<MovieTrending> trendingMovieData;
     private ArrayList<MovieRated> ratedMovieData;
+    private ArrayList<MovieFavorited> favoritedMovieData;
     private ArrayList<MovieWatchlisted> watchlistedMovieData;
     private Movie movieData;
     private ArrayList<Cast> movieCastData;
@@ -68,11 +71,11 @@ public class MovieProvider {
     }
 
     private void updateMoviesTrendingData(APIRequest.ResponseListener listener) {
-        key = getPreferenceAPIkey(context);
-        if (!key.equals(BuildConfig.ApiKey)) {
-            key = BuildConfig.ApiKey;
+        keyAPI = getPreferenceAPIkey(context);
+        if (!keyAPI.equals(BuildConfig.ApiKey)) {
+            keyAPI = BuildConfig.ApiKey;
         }
-        APIRequest request = new APIRequest(trendingMoviesWeekURL + "?api_key=" + key, context);
+        APIRequest request = new APIRequest(trendingMoviesWeekURL + "?api_key=" + keyAPI, context);
         request.get(listener);
     }
 
@@ -98,9 +101,9 @@ public class MovieProvider {
                     ratedMovieData = (ArrayList<MovieRated>) db.getAllMoviesRated();
                     if (ratedMovieData.size() != 0) {
                         if (ratedMovieData.get(0).getPagesTotal() != 0) {
-                            SplashScreenActivity.x = ratedMovieData.get(0).getPagesTotal() + 1;
+                            SplashScreenActivity.moviesRatedPageCurrent = ratedMovieData.get(0).getPagesTotal() + 1;
                         } else {
-                            SplashScreenActivity.x = 1; // TODO check what happens when user has no rated movies
+                            SplashScreenActivity.moviesRatedPageCurrent = 1; // TODO check what happens when user has no rated movies
                         }
                     }
                     Log.d("FlickListApp", "No Connection");
@@ -112,17 +115,56 @@ public class MovieProvider {
     }
 
     private void updateRatedMoviesData(APIRequest.ResponseListener listener) {
-        key = getPreferenceAPIkey(context);
-        if (!key.equals(BuildConfig.ApiKey)) {
-            key = BuildConfig.ApiKey;
-        }
-        accountID = getAccountID(context);
-        APIRequest request = new APIRequest(accountURL + "/" + accountID + "/rated/movies?api_key=" + key + "&language=en-US&&session_id=" + sessionID + "&sort_by=created_at.asc&page=" + currentPageRatedMovies, context);
+        keyAPI = getPreferenceAPIkey(context);
+        APIaccountID = getAccountID(context);
+        APIRequest request = new APIRequest(accountURL + "/" + APIaccountID + "/rated/movies?api_key=" + keyAPI + "&language=en-US&session_id=" + APIsessionID + "&sort_by=created_at.asc&page=" + APIcurrentPageRatedMovies, context);
         request.get(listener);
     }
 
     public interface RatedMoviesDataListener {
         void onRatedMoviesDataAvailable(ArrayList<MovieRated> data);
+    }
+
+    /**
+     * Favorited Movies
+     */
+
+    public void getDataForFavoritedMovies(FavoritedMoviesDataListener listener) {
+        if (favoritedMovieData == null) {
+            updateFavoritedMoviesData(new APIRequest.ResponseListener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    favoritedMovieData = Parser.parseFavouritedMoviesData(response);
+                    listener.onFavoritedMoviesDataAvailable(favoritedMovieData);
+                }
+
+                @Override
+                public void onError() {
+                    favoritedMovieData = (ArrayList<MovieFavorited>) db.getAllMoviesFavorited();
+                    if (favoritedMovieData.size() != 0) {
+                        if (favoritedMovieData.get(0).getPagesTotal() != 0) {
+                            SplashScreenActivity.moviesRatedPageCurrent = favoritedMovieData.get(0).getPagesTotal() + 1;
+                        } else {
+                            SplashScreenActivity.moviesRatedPageCurrent = 1; // TODO check what happens when user has no rated movies
+                        }
+                    }
+                    Log.d("FlickListApp", "No Connection");
+                }
+            });
+        } else {
+            listener.onFavoritedMoviesDataAvailable(favoritedMovieData);
+        }
+    }
+
+    private void updateFavoritedMoviesData(APIRequest.ResponseListener listener) {
+        keyAPI = getPreferenceAPIkey(context);
+        APIaccountID = getAccountID(context);
+        APIRequest request = new APIRequest(accountURL + "/" + APIaccountID + "/favorite/movies?api_key=" + keyAPI + "&language=en-US&session_id=" + APIsessionID + "&sort_by=created_at.asc&page=" + APIcurrentPageFavouritedMovies, context);
+        request.get(listener);
+    }
+
+    public interface FavoritedMoviesDataListener {
+        void onFavoritedMoviesDataAvailable(ArrayList<MovieFavorited> data);
     }
 
     /**
@@ -143,9 +185,9 @@ public class MovieProvider {
                     watchlistedMovieData = (ArrayList<MovieWatchlisted>) db.getAllMoviesWatchlisted();
                     if (watchlistedMovieData.size() != 0) {
                         if (watchlistedMovieData.get(0).getPagesTotal() != 0) {
-                            SplashScreenActivity.y = watchlistedMovieData.get(0).getPagesTotal() + 1;
+                            SplashScreenActivity.moviesWatchlistedPageCurrent = watchlistedMovieData.get(0).getPagesTotal() + 1;
                         } else {
-                            SplashScreenActivity.y = 1; // TODO check what happens when user has no watchlisted movies
+                            SplashScreenActivity.moviesWatchlistedPageCurrent = 1; // TODO check what happens when user has no watchlisted movies
                         }
                     }
                     Log.d("FlickListApp", "No Connection");
@@ -157,12 +199,9 @@ public class MovieProvider {
     }
 
     private void updateWatchlistedMoviesData(APIRequest.ResponseListener listener) {
-        key = getPreferenceAPIkey(context);
-        if (!key.equals(BuildConfig.ApiKey)) {
-            key = BuildConfig.ApiKey;
-        }
-        accountID = getAccountID(context);
-        APIRequest request = new APIRequest(accountURL + "/" + accountID + "/watchlist/movies?api_key=" + key + "&language=en-US&&session_id=" + sessionID + "&sort_by=created_at.asc&page=" + currentPageWatchlistedMovies, context);
+        keyAPI = getPreferenceAPIkey(context);
+        APIaccountID = getAccountID(context);
+        APIRequest request = new APIRequest(accountURL + "/" + APIaccountID + "/watchlist/movies?api_key=" + keyAPI + "&language=en-US&&session_id=" + APIsessionID + "&sort_by=created_at.asc&page=" + APIcurrentPageWatchlistedMovies, context);
         request.get(listener);
     }
 
@@ -194,12 +233,9 @@ public class MovieProvider {
     }
 
     private void updateMovieData(APIRequest.ResponseListener listener) {
-        key = getPreferenceAPIkey(context);
-        if (!key.equals(BuildConfig.ApiKey)) {
-            key = BuildConfig.ApiKey;
-        }
-        accountID = getAccountID(context);
-        APIRequest request = new APIRequest(movieURL + movieID + "?api_key=" + key + "&language=en-US", context);
+        keyAPI = getPreferenceAPIkey(context);
+        APIaccountID = getAccountID(context);
+        APIRequest request = new APIRequest(movieURL + APImovieID + "?api_key=" + keyAPI + "&language=en-US", context);
         request.get(listener);
     }
 
@@ -231,12 +267,9 @@ public class MovieProvider {
     }
 
     private void updateMovieCastData(APIRequest.ResponseListener listener) {
-        key = getPreferenceAPIkey(context);
-        if (!key.equals(BuildConfig.ApiKey)) {
-            key = BuildConfig.ApiKey;
-        }
-        accountID = getAccountID(context);
-        APIRequest request = new APIRequest(movieURL + movieID + "/credits?api_key=" + key + "&language=en-US", context);
+        keyAPI = getPreferenceAPIkey(context);
+        APIaccountID = getAccountID(context);
+        APIRequest request = new APIRequest(movieURL + APImovieID + "/credits?api_key=" + keyAPI + "&language=en-US", context);
         request.get(listener);
     }
 

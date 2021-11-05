@@ -145,8 +145,8 @@ public class SplashScreenActivity extends AppCompatActivity implements
                 }
             }
             currentLoadingProgress++;
+            startMainActivity();
         }
-        startMainActivity();
     }
 
     @Override
@@ -172,8 +172,8 @@ public class SplashScreenActivity extends AppCompatActivity implements
                 }
             }
             currentLoadingProgress++;
+            startMainActivity();
         }
-        startMainActivity();
     }
 
     @Override
@@ -199,7 +199,7 @@ public class SplashScreenActivity extends AppCompatActivity implements
                 }
             }
             currentLoadingProgress++;
+            startMainActivity();
         }
-        startMainActivity();
     }
 }

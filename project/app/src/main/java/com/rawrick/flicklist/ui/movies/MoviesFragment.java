@@ -168,7 +168,6 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
         if (currentPage < moviesRatedPagesTotal) {
             // changes page number on API request URL
             movieManager.getRatedMoviesFromAPI(currentPage + 1);
-            //moviesRatedPageCurrent++;
         }
         // save to db once all pages have been fetched
         if (currentPage == moviesRatedPagesTotal) {
@@ -216,6 +215,7 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
             moviesFavourited = (ArrayList<MovieFavorited>) db.getAllMoviesFavorited();
             for (MovieFavorited movie : moviesFavourited) {
                 if (db.isMovieRatedForID(movie.getId())) {
+                    Log.d("updateDebug", "marking as favourite: " + db.getMovieRatedForID(movie.getId()).getTitle());
                     db.updateRatedMovieFavoriteStatus(db.getMovieRatedForID(movie.getId()), true);
                 }
             }

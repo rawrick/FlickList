@@ -18,23 +18,23 @@ public class MovieListItemViewHolder extends RecyclerView.ViewHolder {
 
     private final Context context;
     private final ViewHolderListener listener;
+    private final FLDatabaseHelper db;
     private final TextView title;
     private final TextView rating;
     private final TextView releaseYear;
     private final ImageView thumbnail;
     private final ImageView favourite;
-    private final FLDatabaseHelper db;
 
     public MovieListItemViewHolder(Context context, @NonNull View itemView, MovieListItemViewHolder.ViewHolderListener listener) {
         super(itemView);
         this.context = context;
         this.listener = listener;
+        this.db = FLDatabaseHelper.getInstance(context);
         title = itemView.findViewById(R.id.movie_list_item_title);
         rating = itemView.findViewById(R.id.movie_list_item_rating);
         releaseYear = itemView.findViewById(R.id.movie_list_item_watch_date);
         thumbnail = itemView.findViewById(R.id.movie_list_item_poster);
         favourite = itemView.findViewById(R.id.movie_list_item_fav);
-        db = FLDatabaseHelper.getInstance(context);
     }
 
     public void bindView(MovieRated movie) {
@@ -52,9 +52,8 @@ public class MovieListItemViewHolder extends RecyclerView.ViewHolder {
             ratingFormatted = getRating;
         }
         rating.setText(ratingFormatted);
-        Log.d("viewholderdebug", "is " + db.getMovieRatedForID(movie.getId()).getTitle() + " favourite: "
-                + db.isMovieFavoritedForID(db.getMovieRatedForID(movie.getId()).getId()));
-        if (db.isMovieFavoritedForID(db.getMovieRatedForID(movie.getId()).getId())) {
+        Log.d("mvdebug", "is " + db.getMovieRatedForID(movie.getId()).getTitle() + " favourite: " + db.isMovieFavoritedForID(movie.getId()));
+        if (db.isMovieFavoritedForID(movie.getId())) {
             favourite.setVisibility(View.VISIBLE);
         } else {
             favourite.setVisibility(View.INVISIBLE);

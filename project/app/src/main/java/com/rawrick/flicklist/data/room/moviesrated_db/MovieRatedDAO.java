@@ -29,6 +29,9 @@ public interface MovieRatedDAO {
     @Query("SELECT EXISTS(SELECT * FROM moviesRated WHERE id = :id)")
     boolean isRated(int id);
 
+    @Query("UPDATE moviesRated SET isFavourite= :isFavourite WHERE id = :id")
+    void updateFavouriteStatus(boolean isFavourite, int id);
+
     @Query("SELECT * from moviesRated WHERE rating> :rating")
     List<MovieRated> getMoviesForRating(double rating);
 

@@ -26,7 +26,8 @@ public class MovieRated implements Comparable<MovieRated> {
     private final int pagesTotal;
     @ColumnInfo(name = "watchDate")
     private String watchDate;
-
+    @ColumnInfo(name = "isFavourite")
+    private boolean isFavourite;
 
     @Ignore
     public MovieRated(int id, float rating, String title, String releaseYear, String posterPath, String backdropPath, int pagesTotal) {
@@ -40,7 +41,7 @@ public class MovieRated implements Comparable<MovieRated> {
     }
 
     // used for DB
-    public MovieRated(int id, float rating, String title, String releaseYear, String posterPath, String backdropPath, int pagesTotal, String watchDate) {
+    public MovieRated(int id, float rating, String title, String releaseYear, String posterPath, String backdropPath, int pagesTotal, String watchDate, boolean isFavourite) {
         this.id = id;
         this.rating = rating;
         this.title = title;
@@ -49,6 +50,7 @@ public class MovieRated implements Comparable<MovieRated> {
         this.backdropPath = backdropPath;
         this.pagesTotal = pagesTotal;
         this.watchDate = watchDate;
+        this.isFavourite = isFavourite;
     }
 
     public boolean equals(Object obj) {
@@ -98,6 +100,10 @@ public class MovieRated implements Comparable<MovieRated> {
 
     public String getWatchDate() {
         return watchDate;
+    }
+
+    public boolean isFavourite() {
+        return isFavourite;
     }
 
     @Override

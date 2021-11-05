@@ -18,6 +18,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.rawrick.flicklist.R;
 import com.rawrick.flicklist.data.api.movies.MovieManager;
+import com.rawrick.flicklist.data.movie.MovieFavorited;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.data.util.ActivitySelector;
@@ -37,7 +38,8 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     private FLDatabaseHelper db;
     private MovieManager movieManager;
     private ActivitySelector activitySelector;
-    ArrayList<MovieRated> moviesRated;
+    private ArrayList<MovieRated> moviesRated;
+    private ArrayList<MovieFavorited> moviesFavourited;
 
     private int moviesRatedPagesTotal;
     private int moviesRatedPageCurrent;
@@ -73,6 +75,12 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     private void initData() {
         activitySelector = new ActivitySelector(getActivity());
         db = FLDatabaseHelper.getInstance(this.getActivity());
+        moviesFavourited = (ArrayList<MovieFavorited>) db.getAllMoviesFavorited();
+        for (MovieFavorited movie : moviesFavourited) {
+            if (db.isMovieRatedForID(movie.getId())) {
+                db.updateRatedMovieFavoriteStatus(db.getMovieRatedForID(movie.getId()), true);
+            }
+        }
         moviesRated = (ArrayList<MovieRated>) db.getAllMoviesRated();
         sortDefault();
     }
@@ -175,6 +183,13 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
                     Log.d("dbwl", "rated: moviesFromAPI contains " + movieRatedFromDB.getId() + ": " + moviesFromAPI.contains(movieRatedFromDB));
                     Log.d("dbwl", "rated: deleted from db: " + movieRatedFromDB.getId());
                     db.deleteMovieRated(movieRatedFromDB);
+                }
+            }
+            // gets favourite movies
+            moviesFavourited = (ArrayList<MovieFavorited>) db.getAllMoviesFavorited();
+            for (MovieFavorited movie : moviesFavourited) {
+                if (db.isMovieRatedForID(movie.getId())) {
+                    db.updateRatedMovieFavoriteStatus(db.getMovieRatedForID(movie.getId()), true);
                 }
             }
             moviesRated = (ArrayList<MovieRated>) db.getAllMoviesRated();

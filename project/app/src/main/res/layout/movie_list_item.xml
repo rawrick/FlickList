@@ -75,6 +75,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/movie_list_item_star" />
 
+        <ImageView
+            android:id="@+id/movie_list_item_fav"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_favorite"
+            app:layout_constraintBottom_toBottomOf="@id/movie_list_item_rating"
+            app:layout_constraintStart_toEndOf="@id/movie_list_item_rating"
+            app:layout_constraintTop_toTopOf="@id/movie_list_item_rating"
+            app:tint="@color/fabIsFavorited" />
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/movie_list_item_edit"
             android:layout_width="wrap_content"

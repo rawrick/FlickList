@@ -20,6 +20,7 @@ public class MovieListItemViewHolder extends RecyclerView.ViewHolder {
     private final TextView rating;
     private final TextView releaseYear;
     private final ImageView thumbnail;
+    private final ImageView favourite;
 
     public MovieListItemViewHolder(Context context, @NonNull View itemView, MovieListItemViewHolder.ViewHolderListener listener) {
         super(itemView);
@@ -29,6 +30,7 @@ public class MovieListItemViewHolder extends RecyclerView.ViewHolder {
         rating = itemView.findViewById(R.id.movie_list_item_rating);
         releaseYear = itemView.findViewById(R.id.movie_list_item_watch_date);
         thumbnail = itemView.findViewById(R.id.movie_list_item_poster);
+        favourite = itemView.findViewById(R.id.movie_list_item_fav);
     }
 
     public void bindView(MovieRated movie) {
@@ -46,6 +48,11 @@ public class MovieListItemViewHolder extends RecyclerView.ViewHolder {
             ratingFormatted = getRating;
         }
         rating.setText(ratingFormatted);
+        if (movie.isFavourite()) {
+            favourite.setVisibility(View.VISIBLE);
+        } else {
+            favourite.setVisibility(View.INVISIBLE);
+        }
         releaseYear.setText(movie.getReleaseYear());
 
         itemView.setOnClickListener(new View.OnClickListener() {

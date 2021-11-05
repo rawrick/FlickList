@@ -72,6 +72,10 @@ public class FLDatabaseHelper {
         return db.movieRatedDAO().isRated(id);
     }
 
+    public void updateRatedMovieFavoriteStatus(MovieRated movieRated, boolean value) {
+        db.movieRatedDAO().updateFavouriteStatus(value, movieRated.id);
+    }
+
     // gets list of rated movies
     public List<MovieRated> getMoviesRatedForRating(double rating) {
         return db.movieRatedDAO().getMoviesForRating(rating);

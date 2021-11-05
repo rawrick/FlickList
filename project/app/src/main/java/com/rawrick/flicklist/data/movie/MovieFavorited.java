@@ -14,19 +14,23 @@ public class MovieFavorited {
     public final int id;
     @ColumnInfo(name = "isFavorited")
     private boolean isFavorited;
+    @ColumnInfo(name = "page")
+    private final int page;
     @ColumnInfo(name = "pagesTotal")
     private final int pagesTotal;
 
     @Ignore
-    public MovieFavorited(int id, int pagesTotal) {
+    public MovieFavorited(int id, int page, int pagesTotal) {
         this.id = id;
+        this.page = page;
         this.pagesTotal = pagesTotal;
     }
 
     // used by database
-    public MovieFavorited(int id, boolean isFavorited, int pagesTotal) {
+    public MovieFavorited(int id, boolean isFavorited, int page, int pagesTotal) {
         this.id = id;
         this.isFavorited = isFavorited;
+        this.page = page;
         this.pagesTotal = pagesTotal;
     }
 
@@ -49,6 +53,10 @@ public class MovieFavorited {
 
     public int getId() {
         return id;
+    }
+
+    public int getPage() {
+        return page;
     }
 
     public boolean isFavorited() {

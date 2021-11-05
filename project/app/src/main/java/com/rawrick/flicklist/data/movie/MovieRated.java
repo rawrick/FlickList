@@ -22,6 +22,8 @@ public class MovieRated implements Comparable<MovieRated> {
     private final String posterPath;
     @ColumnInfo(name = "backdropPath")
     private final String backdropPath;
+    @ColumnInfo(name = "onPage")
+    private final int onPage;
     @ColumnInfo(name = "pagesTotal")
     private final int pagesTotal;
     @ColumnInfo(name = "watchDate")
@@ -30,24 +32,26 @@ public class MovieRated implements Comparable<MovieRated> {
     private boolean isFavourite;
 
     @Ignore
-    public MovieRated(int id, float rating, String title, String releaseYear, String posterPath, String backdropPath, int pagesTotal) {
+    public MovieRated(int id, float rating, String title, String releaseYear, String posterPath, String backdropPath, int onPage, int pagesTotal) {
         this.id = id;
         this.rating = rating;
         this.title = title;
         this.releaseYear = releaseYear;
         this.posterPath = posterPath;
         this.backdropPath = backdropPath;
+        this.onPage = onPage;
         this.pagesTotal = pagesTotal;
     }
 
     // used for DB
-    public MovieRated(int id, float rating, String title, String releaseYear, String posterPath, String backdropPath, int pagesTotal, String watchDate, boolean isFavourite) {
+    public MovieRated(int id, float rating, String title, String releaseYear, String posterPath, String backdropPath, int onPage, int pagesTotal, String watchDate, boolean isFavourite) {
         this.id = id;
         this.rating = rating;
         this.title = title;
         this.releaseYear = releaseYear;
         this.posterPath = posterPath;
         this.backdropPath = backdropPath;
+        this.onPage = onPage;
         this.pagesTotal = pagesTotal;
         this.watchDate = watchDate;
         this.isFavourite = isFavourite;
@@ -92,6 +96,10 @@ public class MovieRated implements Comparable<MovieRated> {
 
     public String getBackdropPath() {
         return backdropPath;
+    }
+
+    public int getOnPage() {
+        return onPage;
     }
 
     public int getPagesTotal() {

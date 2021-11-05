@@ -151,6 +151,7 @@ public class Parser {
 
     public static ArrayList<MovieRated> parseRatedMoviesData(JSONObject response) {
         try {
+            int page = response.getInt("page");
             int pagesTotal = response.getInt("total_pages");
             JSONArray resultsArray = response.getJSONArray("results");
 
@@ -171,7 +172,7 @@ public class Parser {
 
                 //Log.d("FlickListApp", "Parsing movie: " + title + ", with ID: " + id);
 
-                MovieRated ratedMovie = new MovieRated(id, rating, title, releaseYear, fullPosterPath, fullBackdropPath, pagesTotal);
+                MovieRated ratedMovie = new MovieRated(id, rating, title, releaseYear, fullPosterPath, fullBackdropPath, page, pagesTotal);
                 ratedMovies.add(ratedMovie);
             }
             return ratedMovies;
@@ -184,6 +185,7 @@ public class Parser {
 
     public static ArrayList<MovieFavorited> parseFavouritedMoviesData(JSONObject response) {
         try {
+            int page = response.getInt("page");
             int pagesTotal = response.getInt("total_pages");
             JSONArray resultsArray = response.getJSONArray("results");
 
@@ -192,7 +194,7 @@ public class Parser {
                 JSONObject result = resultsArray.getJSONObject(i);
                 int id = result.getInt("id");
 
-                MovieFavorited movieFavorited = new MovieFavorited(id, true, pagesTotal);
+                MovieFavorited movieFavorited = new MovieFavorited(id, true, page, pagesTotal);
                 favoritedMovies.add(movieFavorited);
             }
             return favoritedMovies;
@@ -205,6 +207,7 @@ public class Parser {
 
     public static ArrayList<MovieWatchlisted> parseWatchlistedMoviesData(JSONObject response) {
         try {
+            int page = response.getInt("page");
             int pagesTotal = response.getInt("total_pages");
             JSONArray resultsArray = response.getJSONArray("results");
 
@@ -219,7 +222,7 @@ public class Parser {
                 String posterPath = result.getString("poster_path");
                 String fullPosterPath = poster500 + posterPath;
 
-                MovieWatchlisted watchlistedMovie = new MovieWatchlisted(id, title, releaseYear, fullPosterPath, pagesTotal);
+                MovieWatchlisted watchlistedMovie = new MovieWatchlisted(id, title, releaseYear, fullPosterPath, page, pagesTotal);
                 watchlistedMovies.add(watchlistedMovie);
             }
             return watchlistedMovies;

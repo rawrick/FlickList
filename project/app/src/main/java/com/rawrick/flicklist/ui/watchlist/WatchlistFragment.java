@@ -38,8 +38,6 @@ public class WatchlistFragment extends Fragment implements MovieWatchlistItemVie
     private ActivitySelector activitySelector;
     private ArrayList<MovieWatchlisted> moviesWatchlisted;
     private MovieManager movieManager;
-    private int moviesWatchlistedPagesTotal;
-    private int moviesWatchlistedPageCurrent;
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerWatchlistedMovies;
@@ -77,7 +75,6 @@ public class WatchlistFragment extends Fragment implements MovieWatchlistItemVie
 
     private void refreshData() {
         movieManager = new MovieManager(getActivity(), this, this, this);
-        moviesWatchlistedPageCurrent = 2;
         movieManager.getWatchlistedMoviesFromAPI(1);
     }
 
@@ -141,16 +138,15 @@ public class WatchlistFragment extends Fragment implements MovieWatchlistItemVie
     }
 
     @Override
-    public void onWatchlistedMoviesUpdated() {
+    public void onWatchlistedMoviesUpdated(int currentPage) {
         // saves total pages that have to be fetched
-        moviesWatchlistedPagesTotal = movieManager.getWatchlistedMoviesTotalPages();
-        while (moviesWatchlistedPageCurrent <= moviesWatchlistedPagesTotal) {
+        int moviesWatchlistedPagesTotal = movieManager.getWatchlistedMoviesTotalPages();
+        if (currentPage < moviesWatchlistedPagesTotal) {
             // changes page number on API request URL
-            movieManager.getWatchlistedMoviesFromAPI(moviesWatchlistedPageCurrent);
-            moviesWatchlistedPageCurrent++;
+            movieManager.getWatchlistedMoviesFromAPI(currentPage + 1);
         }
         // sets adapter once all pages have been fetched
-        if (moviesWatchlistedPageCurrent - 1 == moviesWatchlistedPagesTotal) {
+        if (currentPage == moviesWatchlistedPagesTotal) {
             ArrayList<MovieWatchlisted> moviesFromAPI = movieManager.getWatchlistedMovies();
             for (MovieWatchlisted movieWatchlisted : moviesFromAPI) {
                 db.addOrUpdateMovieWatchlisted(movieWatchlisted);
@@ -171,10 +167,10 @@ public class WatchlistFragment extends Fragment implements MovieWatchlistItemVie
     }
 
     @Override
-    public void onRatedMoviesUpdated() {
+    public void onRatedMoviesUpdated(int page) {
     }
 
     @Override
-    public void onFavoritedMoviesUpdated() {
+    public void onFavoritedMoviesUpdated(int currentPage) {
     }
 }

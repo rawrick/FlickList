@@ -42,13 +42,6 @@ public class SplashScreenActivity extends AppCompatActivity implements
     private int currentLoadingProgress = 0;
     private final int totalLoadingProgress = 3;
 
-    private int moviesRatedPagesTotal;
-    private int moviesFavoritedPagesTotal;
-    private int moviesWatchlistedPagesTotal;
-    private int moviesRatedPageCurrent;
-    private int moviesFavoritedPageCurrent;
-    private int moviesWatchlistedPageCurrent;
-
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
@@ -99,9 +92,6 @@ public class SplashScreenActivity extends AppCompatActivity implements
     private void initData() {
         db = FLDatabaseHelper.getInstance(this);
         db.clearMovieDetailsTable();
-        moviesRatedPageCurrent = 2;
-        moviesFavoritedPageCurrent = 2;
-        moviesWatchlistedPageCurrent = 2;
         accountManager = new AccountManager(this, this);
         accountManager.getAccountDataFromAPI();
     }
@@ -133,16 +123,15 @@ public class SplashScreenActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onRatedMoviesUpdated() {
+    public void onRatedMoviesUpdated(int currentPage) {
         // saves total pages that have to be fetched
-        moviesRatedPagesTotal = movieManager.getRatedMoviesTotalPages();
-        while (moviesRatedPageCurrent <= moviesRatedPagesTotal) {
+        int moviesRatedPagesTotal = movieManager.getRatedMoviesTotalPages();
+        if (currentPage < moviesRatedPagesTotal) {
             // changes page number on API request URL
-            movieManager.getRatedMoviesFromAPI(moviesRatedPageCurrent);
-            moviesRatedPageCurrent++;
+            movieManager.getRatedMoviesFromAPI(currentPage + 1);
         }
         // save to db once all pages have been fetched
-        if (moviesRatedPageCurrent - 1 == moviesRatedPagesTotal) {
+        if (currentPage == moviesRatedPagesTotal) {
             ArrayList<MovieRated> moviesFromAPI = movieManager.getRatedMovies();
             for (MovieRated movieRated : moviesFromAPI) {
                 db.addOrUpdateMovieRated(movieRated);
@@ -161,16 +150,15 @@ public class SplashScreenActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onFavoritedMoviesUpdated() {
+    public void onFavoritedMoviesUpdated(int currentPage) {
         // saves total pages that have to be fetched
-        moviesFavoritedPagesTotal = movieManager.getFavoritedMoviesTotalPages();
-        while (moviesFavoritedPageCurrent <= moviesFavoritedPagesTotal) {
+        int moviesFavoritedPagesTotal = movieManager.getFavoritedMoviesTotalPages();
+        if (currentPage < moviesFavoritedPagesTotal) {
             // changes page number on API request URL
-            movieManager.getFavoritedMoviesFromAPI(moviesFavoritedPageCurrent);
-            moviesFavoritedPageCurrent++;
+            movieManager.getFavoritedMoviesFromAPI(currentPage + 1);
         }
         // save to db once all pages have been fetched
-        if (moviesFavoritedPageCurrent - 1 == moviesFavoritedPagesTotal) {
+        if (currentPage == moviesFavoritedPagesTotal) {
             ArrayList<MovieFavorited> moviesFromAPI = movieManager.getFavoritedMovies();
             for (MovieFavorited movieFavorited : moviesFromAPI) {
                 db.addOrUpdateMovieFavorited(movieFavorited);
@@ -189,16 +177,15 @@ public class SplashScreenActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onWatchlistedMoviesUpdated() {
+    public void onWatchlistedMoviesUpdated(int currentPage) {
         // saves total pages that have to be fetched
-        moviesWatchlistedPagesTotal = movieManager.getWatchlistedMoviesTotalPages();
-        while (moviesWatchlistedPageCurrent <= moviesWatchlistedPagesTotal) {
+        int moviesWatchlistedPagesTotal = movieManager.getWatchlistedMoviesTotalPages();
+        if (currentPage < moviesWatchlistedPagesTotal) {
             // changes page number on API request URL
-            movieManager.getWatchlistedMoviesFromAPI(moviesWatchlistedPageCurrent);
-            moviesWatchlistedPageCurrent++;
+            movieManager.getWatchlistedMoviesFromAPI(currentPage + 1);
         }
         // sets adapter once all pages have been fetched
-        if (moviesWatchlistedPageCurrent - 1 == moviesWatchlistedPagesTotal) {
+        if (currentPage == moviesWatchlistedPagesTotal) {
             ArrayList<MovieWatchlisted> moviesFromAPI = movieManager.getWatchlistedMovies();
             for (MovieWatchlisted movieWatchlisted : moviesFromAPI) {
                 db.addOrUpdateMovieWatchlisted(movieWatchlisted);

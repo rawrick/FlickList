@@ -1,6 +1,7 @@
 package com.rawrick.flicklist.ui.movies;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.rawrick.flicklist.R;
 import com.rawrick.flicklist.data.movie.MovieRated;
+import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 
 public class MovieListItemViewHolder extends RecyclerView.ViewHolder {
 
@@ -21,6 +23,7 @@ public class MovieListItemViewHolder extends RecyclerView.ViewHolder {
     private final TextView releaseYear;
     private final ImageView thumbnail;
     private final ImageView favourite;
+    private final FLDatabaseHelper db;
 
     public MovieListItemViewHolder(Context context, @NonNull View itemView, MovieListItemViewHolder.ViewHolderListener listener) {
         super(itemView);
@@ -31,6 +34,7 @@ public class MovieListItemViewHolder extends RecyclerView.ViewHolder {
         releaseYear = itemView.findViewById(R.id.movie_list_item_watch_date);
         thumbnail = itemView.findViewById(R.id.movie_list_item_poster);
         favourite = itemView.findViewById(R.id.movie_list_item_fav);
+        db = FLDatabaseHelper.getInstance(context);
     }
 
     public void bindView(MovieRated movie) {
@@ -48,7 +52,9 @@ public class MovieListItemViewHolder extends RecyclerView.ViewHolder {
             ratingFormatted = getRating;
         }
         rating.setText(ratingFormatted);
-        if (movie.isFavourite()) {
+        Log.d("viewholderdebug", "is " + db.getMovieRatedForID(movie.getId()).getTitle() + " favourite: "
+                + db.isMovieFavoritedForID(db.getMovieRatedForID(movie.getId()).getId()));
+        if (db.isMovieFavoritedForID(db.getMovieRatedForID(movie.getId()).getId())) {
             favourite.setVisibility(View.VISIBLE);
         } else {
             favourite.setVisibility(View.INVISIBLE);

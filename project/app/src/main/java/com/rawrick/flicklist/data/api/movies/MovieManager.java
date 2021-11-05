@@ -43,7 +43,7 @@ public class MovieManager {
                 } else {
                     ratedMovies.addAll(data);
                 }
-                listenerRatedMovies.onRatedMoviesUpdated();
+                listenerRatedMovies.onRatedMoviesUpdated(data.get(0).getOnPage());
             }
         });
     }
@@ -61,7 +61,7 @@ public class MovieManager {
     }
 
     public interface RatedMoviesManagerListener {
-        void onRatedMoviesUpdated();
+        void onRatedMoviesUpdated(int page);
     }
 
     /**
@@ -78,7 +78,7 @@ public class MovieManager {
                 } else {
                     favoritedMovies.addAll(data);
                 }
-                listenerFavoritedMovies.onFavoritedMoviesUpdated();
+                listenerFavoritedMovies.onFavoritedMoviesUpdated(data.get(0).getPage());
             }
         });
     }
@@ -96,7 +96,7 @@ public class MovieManager {
     }
 
     public interface FavoritedMoviesManagerListener {
-        void onFavoritedMoviesUpdated();
+        void onFavoritedMoviesUpdated(int currentPage);
     }
 
     /**
@@ -113,7 +113,7 @@ public class MovieManager {
                 } else {
                     watchlistedMovies.addAll(data);
                 }
-                listenerWatchlistedMovies.onWatchlistedMoviesUpdated();
+                listenerWatchlistedMovies.onWatchlistedMoviesUpdated(data.get(0).getPage());
             }
         });
     }
@@ -131,6 +131,6 @@ public class MovieManager {
     }
 
     public interface WatchlistedMoviesManagerListener {
-        void onWatchlistedMoviesUpdated();
+        void onWatchlistedMoviesUpdated(int currentPage);
     }
 }

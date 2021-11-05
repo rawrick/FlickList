@@ -41,8 +41,8 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     private ArrayList<MovieRated> moviesRated;
     private ArrayList<MovieFavorited> moviesFavourited;
 
-    private int moviesRatedPagesTotal;
-    private int moviesRatedPageCurrent;
+    private int moviesFavouritedPageCurrent;
+
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -87,7 +87,6 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
 
     private void refreshData() {
         movieManager = new MovieManager(getActivity(), this, this, this);
-        moviesRatedPageCurrent = 2;
         movieManager.getRatedMoviesFromAPI(1);
     }
 
@@ -162,17 +161,18 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     }
 
     @Override
-    public void onRatedMoviesUpdated() {
+    public void onRatedMoviesUpdated(int currentPage) {
         // saves total pages that have to be fetched
-        moviesRatedPagesTotal = movieManager.getRatedMoviesTotalPages();
+        int moviesRatedPagesTotal = movieManager.getRatedMoviesTotalPages();
         // sends more requests if there are more than 1 result pages
-        while (moviesRatedPageCurrent <= moviesRatedPagesTotal) {
+        if (currentPage < moviesRatedPagesTotal) {
             // changes page number on API request URL
-            movieManager.getRatedMoviesFromAPI(moviesRatedPageCurrent);
-            moviesRatedPageCurrent++;
+            movieManager.getRatedMoviesFromAPI(currentPage + 1);
+            //moviesRatedPageCurrent++;
         }
         // save to db once all pages have been fetched
-        if (moviesRatedPageCurrent - 1 == moviesRatedPagesTotal) {
+        if (currentPage == moviesRatedPagesTotal) {
+            Log.d("updateDebug", "all rated movies have been fetched");
             ArrayList<MovieRated> moviesFromAPI = movieManager.getRatedMovies();
             for (MovieRated movieRated : moviesFromAPI) {
                 db.addOrUpdateMovieRated(movieRated);
@@ -185,7 +185,34 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
                     db.deleteMovieRated(movieRatedFromDB);
                 }
             }
-            // gets favourite movies
+            movieManager.getFavoritedMoviesFromAPI(1);
+        }
+    }
+
+    @Override
+    public void onFavoritedMoviesUpdated(int currentPage) {
+        // saves total pages that have to be fetched
+        int moviesFavouritedPagesTotal = movieManager.getFavoritedMoviesTotalPages();
+        // sends more requests if there are more than 1 result pages
+        if (currentPage < moviesFavouritedPagesTotal) {
+            // changes page number on API request URL
+            movieManager.getFavoritedMoviesFromAPI(moviesFavouritedPageCurrent);
+        }
+        // save to db once all pages have been fetched
+        if (currentPage == moviesFavouritedPagesTotal) {
+            Log.d("updateDebug", "all favourited movies have been fetched");
+            ArrayList<MovieFavorited> moviesFromAPI = movieManager.getFavoritedMovies();
+            for (MovieFavorited movieFavorited : moviesFromAPI) {
+                db.addOrUpdateMovieFavorited(movieFavorited);
+            }
+            ArrayList<MovieFavorited> moviesFromDB = (ArrayList<MovieFavorited>) db.getAllMoviesFavorited();
+            for (MovieFavorited movieFavoritedFromDB : moviesFromDB) {
+                if (!moviesFromAPI.contains(movieFavoritedFromDB)) {
+                    Log.d("updateDebug", "rated: moviesFromAPI contains " + movieFavoritedFromDB.getId() + ": " + moviesFromAPI.contains(movieFavoritedFromDB));
+                    Log.d("updateDebug", "rated: deleted from db: " + movieFavoritedFromDB.getId());
+                    db.deleteMovieFavorited(movieFavoritedFromDB);
+                }
+            }
             moviesFavourited = (ArrayList<MovieFavorited>) db.getAllMoviesFavorited();
             for (MovieFavorited movie : moviesFavourited) {
                 if (db.isMovieRatedForID(movie.getId())) {
@@ -200,12 +227,6 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     }
 
     @Override
-    public void onWatchlistedMoviesUpdated() {
-
-    }
-
-    @Override
-    public void onFavoritedMoviesUpdated() {
-
+    public void onWatchlistedMoviesUpdated(int currentPage) {
     }
 }

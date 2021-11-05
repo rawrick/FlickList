@@ -18,27 +18,31 @@ public class MovieWatchlisted {
     private final String releaseYear;
     @ColumnInfo(name = "posterPath")
     private final String posterPath;
+    @ColumnInfo(name = "page")
+    private final int page;
     @ColumnInfo(name = "pagesTotal")
     private final int pagesTotal;
     @ColumnInfo(name = "isTrue")
     private final boolean isWatchlisted;
 
     @Ignore
-    public MovieWatchlisted(int id, String title, String releaseYear, String posterPath, int pagesTotal) {
+    public MovieWatchlisted(int id, String title, String releaseYear, String posterPath, int page, int pagesTotal) {
         this.id = id;
         this.title = title;
         this.releaseYear = releaseYear;
         this.posterPath = posterPath;
+        this.page = page;
         this.pagesTotal = pagesTotal;
         this.isWatchlisted = true;
     }
 
     // used for DB
-    public MovieWatchlisted(int id, String title, String releaseYear, String posterPath, int pagesTotal, boolean isWatchlisted) {
+    public MovieWatchlisted(int id, String title, String releaseYear, String posterPath, int page, int pagesTotal, boolean isWatchlisted) {
         this.id = id;
         this.title = title;
         this.releaseYear = releaseYear;
         this.posterPath = posterPath;
+        this.page = page;
         this.pagesTotal = pagesTotal;
         this.isWatchlisted = isWatchlisted;
     }
@@ -74,6 +78,10 @@ public class MovieWatchlisted {
 
     public String getPosterPath() {
         return posterPath;
+    }
+
+    public int getPage() {
+        return page;
     }
 
     public int getPagesTotal() {

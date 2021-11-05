@@ -79,6 +79,7 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
 
     private void refreshData() {
         movieManager = new MovieManager(getActivity(), this, this, this);
+        moviesRatedPageCurrent = 2;
         movieManager.getRatedMoviesFromAPI(1);
     }
 
@@ -156,7 +157,6 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     public void onRatedMoviesUpdated() {
         // saves total pages that have to be fetched
         moviesRatedPagesTotal = movieManager.getRatedMoviesTotalPages();
-        moviesRatedPageCurrent = 2;
         // sends more requests if there are more than 1 result pages
         while (moviesRatedPageCurrent <= moviesRatedPagesTotal) {
             // changes page number on API request URL

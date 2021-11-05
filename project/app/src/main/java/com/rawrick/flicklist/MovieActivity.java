@@ -1,6 +1,7 @@
 package com.rawrick.flicklist;
 
 import static com.rawrick.flicklist.data.util.Formatter.runtimeFormatter;
+import static com.rawrick.flicklist.data.util.RatingValidator.isRatingValid;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -28,6 +30,7 @@ import com.rawrick.flicklist.data.api.account.WatchlistManager;
 import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.api.account.RatingManager;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
+import com.rawrick.flicklist.data.util.RatingValidator;
 import com.rawrick.flicklist.ui.moviedetails.MovieAboutFragment;
 import com.rawrick.flicklist.ui.moviedetails.MovieCastFragment;
 
@@ -56,6 +59,7 @@ public class MovieActivity extends FragmentActivity {
 
     private TextView ratingEditText;
     private float ratingFromDB = 0f;
+    private String ratingFromDBString;
 
     private static final int NUM_PAGES = 5;
     private ViewPager2 viewPager;
@@ -164,8 +168,12 @@ public class MovieActivity extends FragmentActivity {
         ratingEditText = customLayout.findViewById(R.id.rating_input);
         if (isMovieRated) {
             ratingFromDB = db.getMovieRatedForID(movieID).getRating();
+            ratingFromDBString = String.valueOf(ratingFromDB);
+            if (ratingFromDBString.endsWith(".0")) {
+                ratingFromDBString = ratingFromDBString.substring(0, ratingFromDBString.length() - 2);
+            }
             db.updateMovieRating(movie, ratingFromDB);
-            ratingEditText.setText(String.valueOf(ratingFromDB), TextView.BufferType.EDITABLE);
+            ratingEditText.setText(ratingFromDBString, TextView.BufferType.EDITABLE);
         }
         builder.setView(customLayout)
                 .setTitle(" ")
@@ -173,7 +181,11 @@ public class MovieActivity extends FragmentActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         float rating = Float.parseFloat(ratingEditText.getText().toString());
-                        ratingManager.postRating(movieID, rating);
+                        if (isRatingValid(rating)) {
+                            ratingManager.postRating(movieID, rating);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Invalid rating. Must be between 0.5 and 10.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .setNeutralButton("Delete Rating", new DialogInterface.OnClickListener() {

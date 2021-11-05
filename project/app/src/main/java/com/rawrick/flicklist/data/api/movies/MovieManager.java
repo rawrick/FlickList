@@ -33,9 +33,9 @@ public class MovieManager {
      * Rated Movies
      */
 
-    public void getRatedMoviesFromAPI() {
+    public void getRatedMoviesFromAPI(int currentPage) {
         MovieProvider provider = new MovieProvider(context);
-        provider.getDataForRatedMovies(new MovieProvider.RatedMoviesDataListener() {
+        provider.getDataForRatedMovies(currentPage, new MovieProvider.RatedMoviesDataListener() {
             @Override
             public void onRatedMoviesDataAvailable(ArrayList<MovieRated> data) {
                 if (ratedMovies == null) {
@@ -52,6 +52,14 @@ public class MovieManager {
         return ratedMovies;
     }
 
+    public int getRatedMoviesTotalPages() {
+        if (ratedMovies.size() != 0) {
+            return  ratedMovies.get(0).getPagesTotal();
+        } else {
+            return 0;
+        }
+    }
+
     public interface RatedMoviesManagerListener {
         void onRatedMoviesUpdated();
     }
@@ -60,9 +68,9 @@ public class MovieManager {
      * Favorited Movies
      */
 
-    public void getFavoritedMoviesFromAPI() {
+    public void getFavoritedMoviesFromAPI(int currentPage) {
         MovieProvider provider = new MovieProvider(context);
-        provider.getDataForFavoritedMovies(new MovieProvider.FavoritedMoviesDataListener() {
+        provider.getDataForFavoritedMovies(currentPage, new MovieProvider.FavoritedMoviesDataListener() {
             @Override
             public void onFavoritedMoviesDataAvailable(ArrayList<MovieFavorited> data) {
                 if (favoritedMovies == null) {
@@ -79,6 +87,14 @@ public class MovieManager {
         return favoritedMovies;
     }
 
+    public int getFavoritedMoviesTotalPages() {
+        if (favoritedMovies.size() != 0) {
+            return  favoritedMovies.get(0).getPagesTotal();
+        } else {
+            return 0;
+        }
+    }
+
     public interface FavoritedMoviesManagerListener {
         void onFavoritedMoviesUpdated();
     }
@@ -87,9 +103,9 @@ public class MovieManager {
      * Watchlisted Movies
      */
 
-    public void getWatchlistedMoviesFromAPI() {
+    public void getWatchlistedMoviesFromAPI(int currentPage) {
         MovieProvider provider = new MovieProvider(context);
-        provider.getDataForWatchlistedMovies(new MovieProvider.WatchlistedMoviesDataListener() {
+        provider.getDataForWatchlistedMovies(currentPage, new MovieProvider.WatchlistedMoviesDataListener() {
             @Override
             public void onWatchlistedMoviesDataAvailable(ArrayList<MovieWatchlisted> data) {
                 if (watchlistedMovies == null) {
@@ -104,6 +120,14 @@ public class MovieManager {
 
     public ArrayList<MovieWatchlisted> getWatchlistedMovies() {
         return watchlistedMovies;
+    }
+
+    public int getWatchlistedMoviesTotalPages() {
+        if (watchlistedMovies.size() != 0) {
+            return  watchlistedMovies.get(0).getPagesTotal();
+        } else {
+            return 0;
+        }
     }
 
     public interface WatchlistedMoviesManagerListener {

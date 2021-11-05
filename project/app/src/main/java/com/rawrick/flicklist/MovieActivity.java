@@ -1,6 +1,5 @@
 package com.rawrick.flicklist;
 
-import static com.rawrick.flicklist.data.api.APIRequest.APImovieID;
 import static com.rawrick.flicklist.data.util.Formatter.runtimeFormatter;
 
 import android.app.Activity;
@@ -164,7 +163,7 @@ public class MovieActivity extends FragmentActivity {
         final View customLayout = getLayoutInflater().inflate(R.layout.rating_dialog, null);
         ratingEditText = customLayout.findViewById(R.id.rating_input);
         if (isMovieRated) {
-            ratingFromDB = db.getMovieRatedForID(APImovieID).getRating();
+            ratingFromDB = db.getMovieRatedForID(movieID).getRating();
             db.updateMovieRating(movie, ratingFromDB);
             ratingEditText.setText(String.valueOf(ratingFromDB), TextView.BufferType.EDITABLE);
         }
@@ -174,13 +173,13 @@ public class MovieActivity extends FragmentActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         float rating = Float.parseFloat(ratingEditText.getText().toString());
-                        ratingManager.postRating(rating);
+                        ratingManager.postRating(movieID, rating);
                     }
                 })
                 .setNeutralButton("Delete Rating", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // TODO delete rating
+                        ratingManager.deleteRating(movieID);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -225,19 +224,30 @@ public class MovieActivity extends FragmentActivity {
 
         @Override
         public Fragment createFragment(int position) {
+            // about
+            MovieAboutFragment movieAboutFragment = new MovieAboutFragment();
+            Bundle bundleAbout = new Bundle();
+            bundleAbout.putInt("id", movieID);
+            movieAboutFragment.setArguments(bundleAbout);
+            // cast
+            MovieCastFragment movieCastFragment = new MovieCastFragment();
+            Bundle bundleCast = new Bundle();
+            bundleCast.putInt("id", movieID);
+            movieCastFragment.setArguments(bundleCast);
             switch (position) {
                 case 0:
-                    return new MovieAboutFragment();
+                    return movieAboutFragment;
                 case 1:
-                    return new MovieCastFragment();
+
+                    return movieCastFragment;
                 case 2:
-                    return new MovieAboutFragment();
+                    return movieAboutFragment;
                 case 3:
-                    return new MovieAboutFragment();
+                    return movieAboutFragment;
                 case 4:
-                    return new MovieAboutFragment();
+                    return movieAboutFragment;
                 default:
-                    return new MovieAboutFragment();
+                    return movieAboutFragment;
             }
         }
 

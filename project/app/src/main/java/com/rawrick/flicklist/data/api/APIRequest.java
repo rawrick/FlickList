@@ -27,16 +27,6 @@ public class APIRequest {
     public static String APIsessionID;
     public static String APIguestSessionID;
 
-    public static String APIaccountID;
-    public static int APImovieID;
-    public static int APImoviesRatedPageCurrent = 2;
-    public static int APImoviesWatchlistedPageCurrent = 2;
-    public static int APImoviesFavoritedPageCurrent = 2;
-    public static String APIcurrentPageRatedMovies;
-    public static String APIcurrentPageWatchlistedMovies;
-    public static String APIcurrentPageFavouritedMovies;
-    public static float APIrating;
-
     public APIRequest(String destination, Context context) {
         this.destination = destination;
         this.context = context.getApplicationContext();
@@ -101,10 +91,11 @@ public class APIRequest {
     /**
      * DELETE
      */
-    public void delete(ResponseListener listener, JSONObject requestBody) {
+
+    public void delete(ResponseListener listener) {
         RequestQueue queue = Volley.newRequestQueue(context);
         VolleyLog.DEBUG = true;
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.DELETE, destination, requestBody,
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.DELETE, destination, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

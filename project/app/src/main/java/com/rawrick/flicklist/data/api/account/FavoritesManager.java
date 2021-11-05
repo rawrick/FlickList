@@ -1,10 +1,11 @@
 package com.rawrick.flicklist.data.api.account;
 
-import static com.rawrick.flicklist.data.api.APIRequest.APIaccountID;
 import static com.rawrick.flicklist.data.api.APIRequest.APIkey;
 import static com.rawrick.flicklist.data.api.APIRequest.APIsessionID;
 import static com.rawrick.flicklist.data.api.URL.accountURL;
+import static com.rawrick.flicklist.data.api.account.AccountManager.getAccountID;
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
+import static com.rawrick.flicklist.data.util.SettingsManager.getSessionID;
 
 import android.content.Context;
 import android.util.Log;
@@ -44,7 +45,6 @@ public class FavoritesManager {
     }
 
     private void updateFavoriteStatus(APIRequest.ResponseListener listener) {
-        APIkey = getPreferenceAPIkey(context);
         // creates request body
         if (mediaType == MediaType.MOVIE) {
             mediaTypeString = "movie";
@@ -59,9 +59,9 @@ public class FavoritesManager {
         } catch (JSONException error) {
             error.printStackTrace();
         }
-        APIRequest request = new APIRequest(accountURL + "/" + APIaccountID
-                + "/favorite?api_key=" + APIkey
-                + "&session_id=" + APIsessionID, context);
+        APIRequest request = new APIRequest(accountURL + "/" + getAccountID(context)
+                + "/favorite?api_key=" + getPreferenceAPIkey(context)
+                + "&session_id=" + getSessionID(context), context);
         request.post(listener, object);
     }
 }

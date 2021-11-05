@@ -1,30 +1,23 @@
 package com.rawrick.flicklist.data.api.movies;
 
-import static com.rawrick.flicklist.data.api.account.AccountManager.getAccountID;
-import static com.rawrick.flicklist.data.api.APIRequest.APIcurrentPageFavouritedMovies;
-import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
 import static com.rawrick.flicklist.data.api.URL.accountURL;
 import static com.rawrick.flicklist.data.api.URL.movieURL;
 import static com.rawrick.flicklist.data.api.URL.trendingMoviesWeekURL;
-import static com.rawrick.flicklist.data.api.APIRequest.APIaccountID;
-import static com.rawrick.flicklist.data.api.APIRequest.APIcurrentPageWatchlistedMovies;
-import static com.rawrick.flicklist.data.api.APIRequest.APIkey;
-import static com.rawrick.flicklist.data.api.APIRequest.APImovieID;
-import static com.rawrick.flicklist.data.api.APIRequest.APIcurrentPageRatedMovies;
-import static com.rawrick.flicklist.data.api.APIRequest.APIsessionID;
+import static com.rawrick.flicklist.data.api.account.AccountManager.getAccountID;
+import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
+import static com.rawrick.flicklist.data.util.SettingsManager.getSessionID;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.rawrick.flicklist.BuildConfig;
+import com.rawrick.flicklist.data.api.APIRequest;
+import com.rawrick.flicklist.data.api.Parser;
 import com.rawrick.flicklist.data.credits.Cast;
 import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieFavorited;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 import com.rawrick.flicklist.data.movie.MovieWatchlisted;
-import com.rawrick.flicklist.data.api.APIRequest;
-import com.rawrick.flicklist.data.api.Parser;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 
 import org.json.JSONObject;
@@ -50,6 +43,10 @@ public class MovieProvider {
         db = new FLDatabaseHelper(context);
     }
 
+    /**
+     * Trending Movies
+     */
+
     public void getDataForMoviesTrending(DataListener listener) {
         if (trendingMovieData == null) {
             updateMoviesTrendingData(new APIRequest.ResponseListener() {
@@ -70,11 +67,7 @@ public class MovieProvider {
     }
 
     private void updateMoviesTrendingData(APIRequest.ResponseListener listener) {
-        APIkey = getPreferenceAPIkey(context);
-        if (!APIkey.equals(BuildConfig.ApiKey)) {
-            APIkey = BuildConfig.ApiKey;
-        }
-        APIRequest request = new APIRequest(trendingMoviesWeekURL + "?api_key=" + APIkey, context);
+        APIRequest request = new APIRequest(trendingMoviesWeekURL + "?api_key=" + getPreferenceAPIkey(context), context);
         request.get(listener);
     }
 
@@ -86,9 +79,9 @@ public class MovieProvider {
      * Rated Movies
      */
 
-    public void getDataForRatedMovies(RatedMoviesDataListener listener) {
+    public void getDataForRatedMovies(int currentPage, RatedMoviesDataListener listener) {
         if (ratedMovieData == null) {
-            updateRatedMoviesData(new APIRequest.ResponseListener() {
+            updateRatedMoviesData(currentPage, new APIRequest.ResponseListener() {
                 @Override
                 public void onResponse(JSONObject response) {
                     ratedMovieData = Parser.parseRatedMoviesData(response);
@@ -98,13 +91,7 @@ public class MovieProvider {
                 @Override
                 public void onError() {
                     ratedMovieData = (ArrayList<MovieRated>) db.getAllMoviesRated();
-                    if (ratedMovieData.size() != 0) {
-                        if (ratedMovieData.get(0).getPagesTotal() != 0) {
-                            APIRequest.APImoviesRatedPageCurrent = ratedMovieData.get(0).getPagesTotal() + 1;
-                        } else {
-                            APIRequest.APImoviesRatedPageCurrent = 1; // TODO check what happens when user has no rated movies
-                        }
-                    }
+                    listener.onRatedMoviesDataAvailable(ratedMovieData);
                     Log.d("FlickListApp", "No Connection");
                 }
             });
@@ -113,10 +100,11 @@ public class MovieProvider {
         }
     }
 
-    private void updateRatedMoviesData(APIRequest.ResponseListener listener) {
-        APIkey = getPreferenceAPIkey(context);
-        APIaccountID = getAccountID(context);
-        APIRequest request = new APIRequest(accountURL + "/" + APIaccountID + "/rated/movies?api_key=" + APIkey + "&language=en-US&session_id=" + APIsessionID + "&sort_by=created_at.asc&page=" + APIcurrentPageRatedMovies, context);
+    private void updateRatedMoviesData(int currentPage, APIRequest.ResponseListener listener) {
+        APIRequest request = new APIRequest(accountURL + "/" + getAccountID(context)
+                + "/rated/movies?api_key=" + getPreferenceAPIkey(context)
+                + "&language=en-US&session_id=" + getSessionID(context)
+                + "&sort_by=created_at.asc&page=" + currentPage, context);
         request.get(listener);
     }
 
@@ -128,9 +116,9 @@ public class MovieProvider {
      * Favorited Movies
      */
 
-    public void getDataForFavoritedMovies(FavoritedMoviesDataListener listener) {
+    public void getDataForFavoritedMovies(int currentPage, FavoritedMoviesDataListener listener) {
         if (favoritedMovieData == null) {
-            updateFavoritedMoviesData(new APIRequest.ResponseListener() {
+            updateFavoritedMoviesData(currentPage, new APIRequest.ResponseListener() {
                 @Override
                 public void onResponse(JSONObject response) {
                     favoritedMovieData = Parser.parseFavouritedMoviesData(response);
@@ -140,13 +128,7 @@ public class MovieProvider {
                 @Override
                 public void onError() {
                     favoritedMovieData = (ArrayList<MovieFavorited>) db.getAllMoviesFavorited();
-                    if (favoritedMovieData.size() != 0) {
-                        if (favoritedMovieData.get(0).getPagesTotal() != 0) {
-                            APIRequest.APImoviesRatedPageCurrent = favoritedMovieData.get(0).getPagesTotal() + 1;
-                        } else {
-                            APIRequest.APImoviesRatedPageCurrent = 1; // TODO check what happens when user has no rated movies
-                        }
-                    }
+                    listener.onFavoritedMoviesDataAvailable(favoritedMovieData);
                     Log.d("FlickListApp", "No Connection");
                 }
             });
@@ -155,10 +137,11 @@ public class MovieProvider {
         }
     }
 
-    private void updateFavoritedMoviesData(APIRequest.ResponseListener listener) {
-        APIkey = getPreferenceAPIkey(context);
-        APIaccountID = getAccountID(context);
-        APIRequest request = new APIRequest(accountURL + "/" + APIaccountID + "/favorite/movies?api_key=" + APIkey + "&language=en-US&session_id=" + APIsessionID + "&sort_by=created_at.asc&page=" + APIcurrentPageFavouritedMovies, context);
+    private void updateFavoritedMoviesData(int currentPage, APIRequest.ResponseListener listener) {
+        APIRequest request = new APIRequest(accountURL + "/" + getAccountID(context)
+                + "/favorite/movies?api_key=" + getPreferenceAPIkey(context)
+                + "&language=en-US&session_id=" + getSessionID(context)
+                + "&sort_by=created_at.asc&page=" + currentPage, context);
         request.get(listener);
     }
 
@@ -170,9 +153,9 @@ public class MovieProvider {
      * Watchlisted Movies
      */
 
-    public void getDataForWatchlistedMovies(WatchlistedMoviesDataListener listener) {
+    public void getDataForWatchlistedMovies(int currentPage, WatchlistedMoviesDataListener listener) {
         if (watchlistedMovieData == null) {
-            updateWatchlistedMoviesData(new APIRequest.ResponseListener() {
+            updateWatchlistedMoviesData(currentPage, new APIRequest.ResponseListener() {
                 @Override
                 public void onResponse(JSONObject response) {
                     watchlistedMovieData = Parser.parseWatchlistedMoviesData(response);
@@ -182,13 +165,7 @@ public class MovieProvider {
                 @Override
                 public void onError() {
                     watchlistedMovieData = (ArrayList<MovieWatchlisted>) db.getAllMoviesWatchlisted();
-                    if (watchlistedMovieData.size() != 0) {
-                        if (watchlistedMovieData.get(0).getPagesTotal() != 0) {
-                            APIRequest.APImoviesWatchlistedPageCurrent = watchlistedMovieData.get(0).getPagesTotal() + 1;
-                        } else {
-                            APIRequest.APImoviesWatchlistedPageCurrent = 1; // TODO check what happens when user has no watchlisted movies
-                        }
-                    }
+                    listener.onWatchlistedMoviesDataAvailable(watchlistedMovieData);
                     Log.d("FlickListApp", "No Connection");
                 }
             });
@@ -197,10 +174,11 @@ public class MovieProvider {
         }
     }
 
-    private void updateWatchlistedMoviesData(APIRequest.ResponseListener listener) {
-        APIkey = getPreferenceAPIkey(context);
-        APIaccountID = getAccountID(context);
-        APIRequest request = new APIRequest(accountURL + "/" + APIaccountID + "/watchlist/movies?api_key=" + APIkey + "&language=en-US&&session_id=" + APIsessionID + "&sort_by=created_at.asc&page=" + APIcurrentPageWatchlistedMovies, context);
+    private void updateWatchlistedMoviesData(int currentPage, APIRequest.ResponseListener listener) {
+        APIRequest request = new APIRequest(accountURL + "/" + getAccountID(context)
+                + "/watchlist/movies?api_key=" + getPreferenceAPIkey(context)
+                + "&language=en-US&&session_id=" + getSessionID(context)
+                + "&sort_by=created_at.asc&page=" + currentPage, context);
         request.get(listener);
     }
 
@@ -212,9 +190,9 @@ public class MovieProvider {
      * MOVIE DETAILS
      **/
 
-    public void getDataForMovie(MovieDataListener listener) {
+    public void getDataForMovie(int id, MovieDataListener listener) {
         if (movieData == null) {
-            updateMovieData(new APIRequest.ResponseListener() {
+            updateMovieData(id, new APIRequest.ResponseListener() {
                 @Override
                 public void onResponse(JSONObject response) {
                     movieData = Parser.parseMovieData(response);
@@ -231,10 +209,10 @@ public class MovieProvider {
         }
     }
 
-    private void updateMovieData(APIRequest.ResponseListener listener) {
-        APIkey = getPreferenceAPIkey(context);
-        APIaccountID = getAccountID(context);
-        APIRequest request = new APIRequest(movieURL + APImovieID + "?api_key=" + APIkey + "&language=en-US", context);
+    private void updateMovieData(int id, APIRequest.ResponseListener listener) {
+        APIRequest request = new APIRequest(movieURL + id
+                + "?api_key=" + getPreferenceAPIkey(context)
+                + "&language=en-US", context);
         request.get(listener);
     }
 
@@ -246,9 +224,9 @@ public class MovieProvider {
      * MOVIE CREDITS
      **/
 
-    public void getCastForMovie(MovieCastDataListener listener) {
+    public void getCastForMovie(int id, MovieCastDataListener listener) {
         if (movieCastData == null) {
-            updateMovieCastData(new APIRequest.ResponseListener() {
+            updateMovieCastData(id, new APIRequest.ResponseListener() {
                 @Override
                 public void onResponse(JSONObject response) {
                     movieCastData = Parser.parseMovieCastData(response);
@@ -265,10 +243,10 @@ public class MovieProvider {
         }
     }
 
-    private void updateMovieCastData(APIRequest.ResponseListener listener) {
-        APIkey = getPreferenceAPIkey(context);
-        APIaccountID = getAccountID(context);
-        APIRequest request = new APIRequest(movieURL + APImovieID + "/credits?api_key=" + APIkey + "&language=en-US", context);
+    private void updateMovieCastData(int id, APIRequest.ResponseListener listener) {
+        APIRequest request = new APIRequest(movieURL + id
+                + "/credits?api_key=" + getPreferenceAPIkey(context)
+                + "&language=en-US", context);
         request.get(listener);
     }
 

@@ -26,9 +26,9 @@ public class MovieDetailsManager {
      * MOVIE DETAILS
      */
 
-    public void getMovieDetailsFromAPI() {
+    public void getMovieDetailsFromAPI(int id) {
         MovieProvider provider = new MovieProvider(context);
-        provider.getDataForMovie(new MovieProvider.MovieDataListener() {
+        provider.getDataForMovie(id, new MovieProvider.MovieDataListener() {
             @Override
             public void onMovieDataAvailable(Movie data) {
                 movie = data;
@@ -49,9 +49,9 @@ public class MovieDetailsManager {
      * Movie Cast
      */
 
-    public void getMovieCastFromAPI() {
+    public void getMovieCastFromAPI(int id) {
         MovieProvider provider = new MovieProvider(context);
-        provider.getCastForMovie(new MovieProvider.MovieCastDataListener() {
+        provider.getCastForMovie(id, new MovieProvider.MovieCastDataListener() {
             @Override
             public void onMovieCastDataAvailable(ArrayList<Cast> data) {
                 cast = data;

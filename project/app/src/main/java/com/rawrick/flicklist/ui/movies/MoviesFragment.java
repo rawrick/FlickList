@@ -1,8 +1,6 @@
 package com.rawrick.flicklist.ui.movies;
 
 import static androidx.recyclerview.widget.RecyclerView.VERTICAL;
-import static com.rawrick.flicklist.data.api.APIRequest.APIcurrentPageRatedMovies;
-import static com.rawrick.flicklist.data.api.APIRequest.APImovieID;
 
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -19,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.rawrick.flicklist.R;
-import com.rawrick.flicklist.data.api.APIRequest;
 import com.rawrick.flicklist.data.api.movies.MovieManager;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
@@ -41,7 +38,9 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     private MovieManager movieManager;
     private ActivitySelector activitySelector;
     ArrayList<MovieRated> moviesRated;
+
     private int moviesRatedPagesTotal;
+    private int moviesRatedPageCurrent;
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -80,8 +79,7 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
 
     private void refreshData() {
         movieManager = new MovieManager(getActivity(), this, this, this);
-        APIcurrentPageRatedMovies = "1";
-        movieManager.getRatedMoviesFromAPI();
+        movieManager.getRatedMoviesFromAPI(1);
     }
 
     private void sortDefault() {
@@ -151,22 +149,22 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     @Override
     public void onMovieListItemClicked(int position) {
         // go to movie detail activity
-        APImovieID = moviesRated.get(position).getId();
-        activitySelector.startMovieActivity(APImovieID);
+        activitySelector.startMovieActivity(moviesRated.get(position).getId());
     }
 
     @Override
     public void onRatedMoviesUpdated() {
         // saves total pages that have to be fetched
-        moviesRatedPagesTotal = movieManager.getRatedMovies().get(0).getPagesTotal();
-        while (APIRequest.APImoviesRatedPageCurrent <= moviesRatedPagesTotal) {
+        moviesRatedPagesTotal = movieManager.getRatedMoviesTotalPages();
+        moviesRatedPageCurrent = 2;
+        // sends more requests if there are more than 1 result pages
+        while (moviesRatedPageCurrent <= moviesRatedPagesTotal) {
             // changes page number on API request URL
-            APIcurrentPageRatedMovies = String.valueOf(APIRequest.APImoviesRatedPageCurrent);
-            movieManager.getRatedMoviesFromAPI();
-            APIRequest.APImoviesRatedPageCurrent++;
+            movieManager.getRatedMoviesFromAPI(moviesRatedPageCurrent);
+            moviesRatedPageCurrent++;
         }
         // save to db once all pages have been fetched
-        if (APIRequest.APImoviesRatedPageCurrent - 1 == moviesRatedPagesTotal) {
+        if (moviesRatedPageCurrent - 1 == moviesRatedPagesTotal) {
             ArrayList<MovieRated> moviesFromAPI = movieManager.getRatedMovies();
             for (MovieRated movieRated : moviesFromAPI) {
                 db.addOrUpdateMovieRated(movieRated);

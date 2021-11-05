@@ -23,10 +23,9 @@ public class ActivitySelector implements MovieDetailsManager.MovieDetailsManager
     public void startMovieActivity(int movieID) {
         intent = new Intent(context, MovieActivity.class);
         intent.putExtra("id", movieID);
-        APIRequest.APImovieID = movieID;
         db = FLDatabaseHelper.getInstance(context);
         movieDetailsManager = new MovieDetailsManager(context, this, this);
-        movieDetailsManager.getMovieDetailsFromAPI();
+        movieDetailsManager.getMovieDetailsFromAPI(movieID);
     }
 
     @Override

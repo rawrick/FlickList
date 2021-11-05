@@ -1,10 +1,8 @@
 package com.rawrick.flicklist.ui.home;
 
 import static androidx.recyclerview.widget.RecyclerView.HORIZONTAL;
-
 import static com.rawrick.flicklist.data.api.account.AccountManager.getAccountAvatar;
 import static com.rawrick.flicklist.data.api.account.AccountManager.getAccountName;
-import static com.rawrick.flicklist.data.api.APIRequest.APImovieID;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,13 +24,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.rawrick.flicklist.MovieActivity;
 import com.rawrick.flicklist.R;
+import com.rawrick.flicklist.data.api.series.SeriesManager;
 import com.rawrick.flicklist.data.api.trends.TrendingManager;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.data.series.SeriesTrending;
 import com.rawrick.flicklist.data.util.ActivitySelector;
-import com.rawrick.flicklist.data.api.series.SeriesManager;
 import com.rawrick.flicklist.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
@@ -229,9 +227,7 @@ public class HomeFragment extends Fragment implements TrendingManager.TrendingMo
         featuredMovie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                APImovieID = trendingManager.getMoviesTrending().get(position).getId();
-                intent.putExtra("id", APImovieID);
-                activitySelector.startMovieActivity(APImovieID);
+                activitySelector.startMovieActivity(trendingManager.getMoviesTrending().get(position).getId());
             }
         });
     }

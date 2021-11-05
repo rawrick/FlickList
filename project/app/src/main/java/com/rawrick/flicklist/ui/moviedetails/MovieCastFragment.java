@@ -22,7 +22,7 @@ import com.rawrick.flicklist.databinding.FragmentMovieCastBinding;
 public class MovieCastFragment extends Fragment implements MovieDetailsManager.MovieDetailsManagerListener, MovieDetailsManager.MovieCastManagerListener, MovieCastViewHolder.ViewHolderListener {
 
     private FragmentMovieCastBinding binding;
-
+    private Bundle bundle;
     private MovieDetailsManager movieDetailsManager;
     private RecyclerView movieCastRecyclerView;
     private MovieCastAdapter movieCastAdapter;
@@ -46,8 +46,9 @@ public class MovieCastFragment extends Fragment implements MovieDetailsManager.M
     }
 
     private void initData() {
+        bundle = getArguments();
         movieDetailsManager = new MovieDetailsManager(getActivity(), this, this);
-        movieDetailsManager.getMovieCastFromAPI();
+        movieDetailsManager.getMovieCastFromAPI(bundle.getInt("id"));
     }
 
     private void initUI(View view) {

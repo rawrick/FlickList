@@ -11,4 +11,6 @@
 
     <string name="rating_success">Rating saved.</string>
     <string name="rating_failure">Failed to save rating. Please try again.</string>
+    <string name="rating_delete_success">Rating was deleted successfully.</string>
+    <string name="rating_delete_failure">Failed to delete rating. Please try again.</string>
 </resources>

@@ -219,8 +219,6 @@ public class Parser {
                 String posterPath = result.getString("poster_path");
                 String fullPosterPath = poster500 + posterPath;
 
-                //Log.d("FlickListApp", "Parsing movie: " + title + ", with ID: " + id);
-
                 MovieWatchlisted watchlistedMovie = new MovieWatchlisted(id, title, releaseYear, fullPosterPath, pagesTotal);
                 watchlistedMovies.add(watchlistedMovie);
             }

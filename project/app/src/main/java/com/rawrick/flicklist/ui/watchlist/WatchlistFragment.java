@@ -1,10 +1,13 @@
 package com.rawrick.flicklist.ui.watchlist;
 
 import static androidx.recyclerview.widget.RecyclerView.VERTICAL;
+import static com.rawrick.flicklist.data.api.APIRequest.APIcurrentPageWatchlistedMovies;
 import static com.rawrick.flicklist.data.api.APIRequest.APImovieID;
+import static com.rawrick.flicklist.data.api.APIRequest.APImoviesWatchlistedPageCurrent;
 
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.rawrick.flicklist.R;
+import com.rawrick.flicklist.data.api.movies.MovieManager;
 import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.data.util.ActivitySelector;
@@ -26,14 +30,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class WatchlistFragment extends Fragment implements MovieWatchlistItemViewHolder.ViewHolderListener {
+public class WatchlistFragment extends Fragment implements MovieWatchlistItemViewHolder.ViewHolderListener,
+        MovieManager.RatedMoviesManagerListener,
+        MovieManager.WatchlistedMoviesManagerListener,
+        MovieManager.FavoritedMoviesManagerListener {
 
     private FragmentWatchlistBinding binding;
 
     private FLDatabaseHelper db;
     private ActivitySelector activitySelector;
     private ArrayList<MovieWatchlisted> moviesWatchlisted;
-
+    private MovieManager movieManager;
+    private int moviesWatchlistedPagesTotal;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private RecyclerView recyclerWatchlistedMovies;
@@ -64,9 +72,15 @@ public class WatchlistFragment extends Fragment implements MovieWatchlistItemVie
 
     private void initData() {
         activitySelector = new ActivitySelector(getActivity());
-        db = new FLDatabaseHelper(getActivity().getApplicationContext());
+        db = FLDatabaseHelper.getInstance(this.getActivity());
         moviesWatchlisted = (ArrayList<MovieWatchlisted>) db.getAllMoviesWatchlisted();
         sortDefault();
+    }
+
+    private void refreshData() {
+        movieManager = new MovieManager(getActivity(), this, this, this);
+        APIcurrentPageWatchlistedMovies = "1";
+        movieManager.getWatchlistedMoviesFromAPI();
     }
 
     private void sortDefault() {
@@ -117,8 +131,7 @@ public class WatchlistFragment extends Fragment implements MovieWatchlistItemVie
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                movieWatchlistAdapter.notifyDataSetChanged();
-                swipeRefreshLayout.setRefreshing(false);
+                refreshData();
             }
         });
     }
@@ -126,7 +139,46 @@ public class WatchlistFragment extends Fragment implements MovieWatchlistItemVie
     @Override
     public void onMovieWatchlistItemClicked(int position) {
         // go to movie detail activity
-        APImovieID = String.valueOf(moviesWatchlisted.get(position).getId());
+        APImovieID = moviesWatchlisted.get(position).getId();
         activitySelector.startMovieActivity(APImovieID);
+    }
+
+    @Override
+    public void onWatchlistedMoviesUpdated() {
+        // saves total pages that have to be fetched
+        moviesWatchlistedPagesTotal = movieManager.getWatchlistedMovies().get(0).getPagesTotal();
+        while (APImoviesWatchlistedPageCurrent <= moviesWatchlistedPagesTotal) {
+            // changes page number on API request URL
+            APIcurrentPageWatchlistedMovies = String.valueOf(APImoviesWatchlistedPageCurrent);
+            movieManager.getWatchlistedMoviesFromAPI();
+            APImoviesWatchlistedPageCurrent++;
+        }
+        // sets adapter once all pages have been fetched
+        if (APImoviesWatchlistedPageCurrent - 1 == moviesWatchlistedPagesTotal) {
+            ArrayList<MovieWatchlisted> moviesFromAPI = movieManager.getWatchlistedMovies();
+            for (MovieWatchlisted movieWatchlisted : moviesFromAPI) {
+                db.addOrUpdateMovieWatchlisted(movieWatchlisted);
+            }
+            ArrayList<MovieWatchlisted> moviesFromDB = (ArrayList<MovieWatchlisted>) db.getAllMoviesWatchlisted();
+            for (MovieWatchlisted movieWatchlistedFromDB : moviesFromDB) {
+                if (!moviesFromAPI.contains(movieWatchlistedFromDB)) {
+                    Log.d("dbwl", "moviesFromAPI contains " + movieWatchlistedFromDB.getTitle() + ": " + moviesFromAPI.contains(movieWatchlistedFromDB));
+                    Log.d("dbwl", "deleted from db: " + movieWatchlistedFromDB.getTitle());
+                    db.deleteMovieWatchlisted(movieWatchlistedFromDB);
+                }
+            }
+            moviesWatchlisted = (ArrayList<MovieWatchlisted>) db.getAllMoviesWatchlisted();
+            sortDefault();
+            movieWatchlistAdapter.setWatchlistedMovies(moviesWatchlisted);
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void onRatedMoviesUpdated() {
+    }
+
+    @Override
+    public void onFavoritedMoviesUpdated() {
     }
 }

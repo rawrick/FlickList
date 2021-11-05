@@ -1,8 +1,9 @@
-package com.rawrick.flicklist.data.api.rating;
+package com.rawrick.flicklist.data.api.account;
 
 import static com.rawrick.flicklist.data.api.APIRequest.APIaccountID;
-import static com.rawrick.flicklist.data.api.APIRequest.keyAPI;
+import static com.rawrick.flicklist.data.api.APIRequest.APIkey;
 import static com.rawrick.flicklist.data.api.APIRequest.APImovieID;
+import static com.rawrick.flicklist.data.api.APIRequest.APIsessionID;
 import static com.rawrick.flicklist.data.api.URL.accountURL;
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
 
@@ -18,15 +19,19 @@ import org.json.JSONObject;
 public class WatchlistManager {
 
     private final Context context;
-    public static boolean isWatchlisted;
-    public static String mediaType;
-    public static int mediaID;
+    private int mediaID;
+    private MediaType mediaType;
+    private String mediaTypeString;
+    private boolean watchlist;
 
     public WatchlistManager(Context context) {
         this.context = context;
     }
 
-    public void postWatchlistStatus(float value) {
+    public void postWatchlistStatus(MediaType type, int id, boolean wl) {
+        mediaType = type;
+        mediaID = id;
+        watchlist = wl;
         updateWatchlistStatus(new APIRequest.ResponseListener() {
             @Override
             public void onResponse(JSONObject response) {
@@ -41,23 +46,24 @@ public class WatchlistManager {
     }
 
     private void updateWatchlistStatus(APIRequest.ResponseListener listener) {
-        keyAPI = getPreferenceAPIkey(context);
-        if (!keyAPI.equals(BuildConfig.ApiKey)) {
-            keyAPI = BuildConfig.ApiKey;
-        }
+        APIkey = getPreferenceAPIkey(context);
         // creates request body
-        isWatchlisted = true;
-        mediaType = "movie";
-        mediaID = Integer.parseInt(APImovieID);
+        if (mediaType == MediaType.MOVIE) {
+            mediaTypeString = "movie";
+        } else if (mediaType == MediaType.TV) {
+            mediaTypeString = "tv";
+        }
         JSONObject object = new JSONObject();
         try {
-            object.put("media_type", mediaType); // TODO "movie" OR "tv"
-            object.put("media_id", mediaID); // TODO post movie OR series ID
-            object.put("watchlist", isWatchlisted);
+            object.put("media_type", mediaTypeString); // "movie" or "tv"
+            object.put("media_id", mediaID); // int
+            object.put("watchlist", watchlist); // true / false
         } catch (JSONException error) {
             error.printStackTrace();
         }
-        APIRequest request = new APIRequest(accountURL + APIaccountID + "/watchlist?api_key=" + keyAPI, context);
+        APIRequest request = new APIRequest(accountURL + "/" + APIaccountID
+                + "/watchlist?api_key=" + APIkey
+                + "&session_id=" + APIsessionID, context);
         request.post(listener, object);
     }
 }

@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.rawrick.flicklist.data.api.APIRequest.keyAPI;
+import static com.rawrick.flicklist.data.api.APIRequest.APIkey;
 
 
 public class SeriesProvider {
@@ -46,7 +46,7 @@ public class SeriesProvider {
     }
 
     private void updateSeriesTrendingData(APIRequest.ResponseListener listener) {
-        APIRequest request = new APIRequest(trendingSeriesWeekURL + "?api_key=" + keyAPI, context);
+        APIRequest request = new APIRequest(trendingSeriesWeekURL + "?api_key=" + APIkey, context);
         request.get(listener);
     }
 

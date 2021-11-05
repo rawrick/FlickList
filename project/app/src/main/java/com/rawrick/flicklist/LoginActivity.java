@@ -2,7 +2,7 @@ package com.rawrick.flicklist;
 
 import static com.rawrick.flicklist.data.api.APIRequest.APIguestSessionID;
 import static com.rawrick.flicklist.data.api.APIRequest.APIsessionID;
-import static com.rawrick.flicklist.data.api.APIRequest.tokenAPI;
+import static com.rawrick.flicklist.data.api.APIRequest.APItoken;
 import static com.rawrick.flicklist.data.util.SettingsManager.getToken;
 import static com.rawrick.flicklist.data.util.SettingsManager.setLoginStatus;
 import static com.rawrick.flicklist.data.util.SettingsManager.setSessionID;
@@ -34,11 +34,11 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
 
     @Override
     protected void onResume() {
-        tokenAPI = getToken(this);
-        Log.d("FlickListApp", "login token: " + tokenAPI);
-        if (!tokenAPI.equals("")) {
+        APItoken = getToken(this);
+        Log.d("FlickListApp", "login token: " + APItoken);
+        if (!APItoken.equals("")) {
             Log.d("FlickListApp", "getSessionID");
-            //loginManager.getSessionIDFromAPI();
+            loginManager.getSessionIDFromAPI();
         }
         super.onResume();
     }
@@ -53,14 +53,14 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
         sessionCreation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //loginManager.getTokenFromAPI();
+                loginManager.getTokenFromAPI();
             }
         });
         Button guestSessionCreation = findViewById(R.id.login_generate_guest_session);
         guestSessionCreation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //loginManager.getGuestSessionFromAPI();
+                loginManager.getGuestSessionFromAPI();
             }
         });
         Button devLogin = findViewById(R.id.login_build_data);
@@ -89,10 +89,10 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
 
     @Override
     public void onTokenCreated() {
-        tokenAPI = loginManager.getToken();
-        setToken(this, tokenAPI);
+        APItoken = loginManager.getToken();
+        setToken(this, APItoken);
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(loginManager.getAuthenticationURL(tokenAPI)));
+        intent.setData(Uri.parse(loginManager.getAuthenticationURL(APItoken)));
         startActivity(intent);
     }
 

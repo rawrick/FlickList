@@ -1,12 +1,12 @@
 package com.rawrick.flicklist.ui.movies;
 
 import static androidx.recyclerview.widget.RecyclerView.VERTICAL;
-import static com.rawrick.flicklist.SplashScreenActivity.moviesRatedPageCurrent;
 import static com.rawrick.flicklist.data.api.APIRequest.APIcurrentPageRatedMovies;
 import static com.rawrick.flicklist.data.api.APIRequest.APImovieID;
 
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.rawrick.flicklist.R;
+import com.rawrick.flicklist.data.api.APIRequest;
 import com.rawrick.flicklist.data.api.movies.MovieManager;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
@@ -31,7 +32,8 @@ import java.util.Comparator;
 
 public class MoviesFragment extends Fragment implements MovieListItemViewHolder.ViewHolderListener,
         MovieManager.RatedMoviesManagerListener,
-        MovieManager.WatchlistedMoviesManagerListener, MovieManager.FavoritedMoviesManagerListener {
+        MovieManager.WatchlistedMoviesManagerListener,
+        MovieManager.FavoritedMoviesManagerListener {
 
     private FragmentMoviesBinding binding;
 
@@ -71,7 +73,7 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
 
     private void initData() {
         activitySelector = new ActivitySelector(getActivity());
-        db = new FLDatabaseHelper(getActivity().getApplicationContext());
+        db = FLDatabaseHelper.getInstance(this.getActivity());
         moviesRated = (ArrayList<MovieRated>) db.getAllMoviesRated();
         sortDefault();
     }
@@ -149,7 +151,7 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     @Override
     public void onMovieListItemClicked(int position) {
         // go to movie detail activity
-        APImovieID = String.valueOf(moviesRated.get(position).getId());
+        APImovieID = moviesRated.get(position).getId();
         activitySelector.startMovieActivity(APImovieID);
     }
 
@@ -157,18 +159,28 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     public void onRatedMoviesUpdated() {
         // saves total pages that have to be fetched
         moviesRatedPagesTotal = movieManager.getRatedMovies().get(0).getPagesTotal();
-        while (moviesRatedPageCurrent <= moviesRatedPagesTotal) {
+        while (APIRequest.APImoviesRatedPageCurrent <= moviesRatedPagesTotal) {
             // changes page number on API request URL
-            APIcurrentPageRatedMovies = String.valueOf(moviesRatedPageCurrent);
+            APIcurrentPageRatedMovies = String.valueOf(APIRequest.APImoviesRatedPageCurrent);
             movieManager.getRatedMoviesFromAPI();
-            moviesRatedPageCurrent++;
+            APIRequest.APImoviesRatedPageCurrent++;
         }
         // save to db once all pages have been fetched
-        if (moviesRatedPageCurrent - 1 == moviesRatedPagesTotal) {
-            ArrayList<MovieRated> movies = movieManager.getRatedMovies();
-            for (MovieRated movieRated : movies) {
+        if (APIRequest.APImoviesRatedPageCurrent - 1 == moviesRatedPagesTotal) {
+            ArrayList<MovieRated> moviesFromAPI = movieManager.getRatedMovies();
+            for (MovieRated movieRated : moviesFromAPI) {
                 db.addOrUpdateMovieRated(movieRated);
             }
+            ArrayList<MovieRated> moviesFromDB = (ArrayList<MovieRated>) db.getAllMoviesRated();
+            for (MovieRated movieRatedFromDB : moviesFromDB) {
+                if (!moviesFromAPI.contains(movieRatedFromDB)) {
+                    Log.d("dbwl", "rated: moviesFromAPI contains " + movieRatedFromDB.getId() + ": " + moviesFromAPI.contains(movieRatedFromDB));
+                    Log.d("dbwl", "rated: deleted from db: " + movieRatedFromDB.getId());
+                    db.deleteMovieRated(movieRatedFromDB);
+                }
+            }
+            moviesRated = (ArrayList<MovieRated>) db.getAllMoviesRated();
+            sortDefault();
             movieListAdapter.setRatedMovies(moviesRated);
             swipeRefreshLayout.setRefreshing(false);
         }

@@ -21,12 +21,16 @@ public class APIRequest {
     private final String destination;
     private final Context context;
 
-    public static String keyAPI;
-    public static String tokenAPI;
+    public static String APIkey;
+    public static String APItoken;
     public static String APIsessionID;
     public static String APIguestSessionID;
+
     public static String APIaccountID;
-    public static String APImovieID;
+    public static int APImovieID;
+    public static int APImoviesRatedPageCurrent = 2;
+    public static int APImoviesWatchlistedPageCurrent = 2;
+    public static int APImoviesFavoritedPageCurrent = 2;
     public static String APIcurrentPageRatedMovies;
     public static String APIcurrentPageWatchlistedMovies;
     public static String APIcurrentPageFavouritedMovies;
@@ -37,18 +41,22 @@ public class APIRequest {
         this.context = context.getApplicationContext();
     }
 
+    /**
+     * GET
+     */
+
     public void get(ResponseListener listener) {
         RequestQueue queue = Volley.newRequestQueue(context);
         VolleyLog.DEBUG = true;
         String request = destination;
-        if (tokenAPI != null) {
-            request = authenticationSessionNew + "?api_key=" + keyAPI + "&request_token=" + tokenAPI;
+        if (APItoken != null) {
+            request = authenticationSessionNew + "?api_key=" + APIkey + "&request_token=" + APItoken;
         }
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, request, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        tokenAPI = null;
+                        APItoken = null;
                         listener.onResponse(response);
                     }
                 }, new Response.ErrorListener() {
@@ -65,10 +73,37 @@ public class APIRequest {
         queue.add(stringRequest);
     }
 
+    /**
+     * POST
+     */
+
     public void post(ResponseListener listener, JSONObject requestBody) {
         RequestQueue queue = Volley.newRequestQueue(context);
         VolleyLog.DEBUG = true;
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, destination, requestBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        listener.onResponse(response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                listener.onError();
+                Log.d("FlickListApp", "No Connection");
+                error.printStackTrace();
+            }
+        });
+        queue.add(stringRequest);
+    }
+
+    /**
+     * DELETE
+     */
+    public void delete(ResponseListener listener, JSONObject requestBody) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        VolleyLog.DEBUG = true;
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.DELETE, destination, requestBody,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

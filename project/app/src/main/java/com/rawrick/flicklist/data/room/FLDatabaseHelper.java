@@ -21,6 +21,7 @@ public class FLDatabaseHelper {
     private static final String DATABASE_NAME = "main-db";
     private final Context context;
     private FLDatabase db;
+    private static FLDatabaseHelper mInstance = null;
 
     public FLDatabaseHelper(Context context) {
         this.context = context;
@@ -31,6 +32,13 @@ public class FLDatabaseHelper {
         db = Room.databaseBuilder(context, FLDatabase.class, DATABASE_NAME)
                 .allowMainThreadQueries()
                 .build();
+    }
+
+    public static FLDatabaseHelper getInstance(Context ctx) {
+        if (mInstance == null) {
+            mInstance = new FLDatabaseHelper(ctx.getApplicationContext());
+        }
+        return mInstance;
     }
 
     /**
@@ -60,7 +68,7 @@ public class FLDatabaseHelper {
     }
 
     // checks whether movie is rated
-    public boolean isMovieRatedForID (int id) {
+    public boolean isMovieRatedForID(int id) {
         return db.movieRatedDAO().isRated(id);
     }
 
@@ -101,7 +109,7 @@ public class FLDatabaseHelper {
     }
 
     // checks whether movie is favorited
-    public boolean isMovieFavoritedForID (int id) {
+    public boolean isMovieFavoritedForID(int id) {
         return db.movieFavoritedDAO().isFavorited(id);
     }
 
@@ -138,7 +146,7 @@ public class FLDatabaseHelper {
     }
 
     // checks whether movie is watchlisted
-    public boolean isMovieWatchlistedForID (int id) {
+    public boolean isMovieWatchlistedForID(int id) {
         return db.movieWatchlistedDAO().isWatchlisted(id);
     }
 

@@ -2,7 +2,8 @@ package com.rawrick.flicklist.ui.home;
 
 import static androidx.recyclerview.widget.RecyclerView.HORIZONTAL;
 
-import static com.rawrick.flicklist.data.account.AccountManager.getAccountName;
+import static com.rawrick.flicklist.data.api.account.AccountManager.getAccountAvatar;
+import static com.rawrick.flicklist.data.api.account.AccountManager.getAccountName;
 import static com.rawrick.flicklist.data.api.APIRequest.APImovieID;
 
 import android.content.Intent;
@@ -73,7 +74,6 @@ public class HomeFragment extends Fragment implements TrendingManager.TrendingMo
     ShapeableImageView userAvatar;
     TextView userName;
 
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -103,25 +103,21 @@ public class HomeFragment extends Fragment implements TrendingManager.TrendingMo
      */
 
     private void initData() {
-        db = new FLDatabaseHelper(getActivity().getApplicationContext());
+        db = FLDatabaseHelper.getInstance(this.getActivity());
         activitySelector = new ActivitySelector(getActivity());
         trendingManager = new TrendingManager(getActivity(), this, this);
         trendingManager.getTrendingMoviesFromAPI();
         trendingManager.getTrendingSeriesFromAPI();
     }
 
-
     /**
      * UI
      */
 
     private void initUI(View view) {
-        /**
-         * BANNER
-         */
-
+        // HEADER
         String name = getAccountName(this.getActivity());
-        String avatar = null;
+        String avatar = getAccountAvatar(this.getActivity());
         userName = view.findViewById(R.id.home_header_name);
         userAvatar = view.findViewById(R.id.home_header_avatar);
         String welcomeText = "Hello, " + name + ".";
@@ -145,10 +141,7 @@ public class HomeFragment extends Fragment implements TrendingManager.TrendingMo
                 .centerCrop()
                 .into(banner);
 
-        /**
-         * MOVIES
-         **/
-        // initialize trending movies adapter
+        // MOVIES
         recyclerTrendingMovies = view.findViewById(R.id.home_trending_movies_container);
         recyclerTrendingMovies.setLayoutManager(new LinearLayoutManager(getActivity(), HORIZONTAL, false));
         trendingMoviesAdapter = new TrendingMoviesAdapter(getActivity(), this);
@@ -159,9 +152,7 @@ public class HomeFragment extends Fragment implements TrendingManager.TrendingMo
         featuredScore = view.findViewById(R.id.home_trending_view_score);
         featuredPoster = view.findViewById(R.id.home_trending_view_poster);
         featuredBackdrop = view.findViewById(R.id.home_featured_backdrop);
-        /**
-         * SERIES
-         **/
+        // SERIES
         recyclerTrendingSeries = view.findViewById(R.id.home_trending_series_container);
         recyclerTrendingSeries.setLayoutManager(new LinearLayoutManager(getActivity(), HORIZONTAL, false));
         trendingSeriesAdapter = new TrendingSeriesAdapter(getActivity(), this);
@@ -238,7 +229,7 @@ public class HomeFragment extends Fragment implements TrendingManager.TrendingMo
         featuredMovie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                APImovieID = String.valueOf(trendingManager.getMoviesTrending().get(position).getId());
+                APImovieID = trendingManager.getMoviesTrending().get(position).getId();
                 intent.putExtra("id", APImovieID);
                 activitySelector.startMovieActivity(APImovieID);
             }

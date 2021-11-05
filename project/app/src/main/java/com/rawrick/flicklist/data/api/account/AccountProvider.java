@@ -1,16 +1,17 @@
-package com.rawrick.flicklist.data.account;
+package com.rawrick.flicklist.data.api.account;
 
-import static com.rawrick.flicklist.data.account.AccountManager.getAccountID;
-import static com.rawrick.flicklist.data.account.AccountManager.getAccountName;
+import static com.rawrick.flicklist.data.api.account.AccountManager.getAccountID;
+import static com.rawrick.flicklist.data.api.account.AccountManager.getAccountName;
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
 import static com.rawrick.flicklist.data.util.SettingsManager.getSessionID;
 import static com.rawrick.flicklist.data.api.URL.accountURL;
-import static com.rawrick.flicklist.data.api.APIRequest.keyAPI;
+import static com.rawrick.flicklist.data.api.APIRequest.APIkey;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.rawrick.flicklist.BuildConfig;
+import com.rawrick.flicklist.data.account.Account;
 import com.rawrick.flicklist.data.api.APIRequest;
 import com.rawrick.flicklist.data.api.Parser;
 
@@ -51,12 +52,12 @@ public class AccountProvider {
     }
 
     private void sendSessionRequest(APIRequest.ResponseListener listener) {
-        keyAPI = getPreferenceAPIkey(context);
-        if (!keyAPI.equals(BuildConfig.ApiKey)) {
-            keyAPI = BuildConfig.ApiKey;
+        APIkey = getPreferenceAPIkey(context);
+        if (!APIkey.equals(BuildConfig.ApiKey)) {
+            APIkey = BuildConfig.ApiKey;
         }
         APIsessionID = getSessionID(context);
-        APIRequest request = new APIRequest(accountURL + "?api_key=" + keyAPI + "&session_id=" + APIsessionID, context);
+        APIRequest request = new APIRequest(accountURL + "?api_key=" + APIkey + "&session_id=" + APIsessionID, context);
         request.get(listener);
     }
 

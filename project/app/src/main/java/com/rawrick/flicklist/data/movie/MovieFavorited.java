@@ -30,6 +30,23 @@ public class MovieFavorited {
         this.pagesTotal = pagesTotal;
     }
 
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+
+        MovieFavorited other = (MovieFavorited) obj;
+        if (id == 0) {
+            if (other.id != 0)
+                return false;
+        } else if (!(id == other.id))
+            return false;
+        return true;
+    }
+
     public int getId() {
         return id;
     }

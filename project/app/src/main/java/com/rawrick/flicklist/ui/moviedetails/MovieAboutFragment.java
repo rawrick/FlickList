@@ -45,7 +45,7 @@ public class MovieAboutFragment extends Fragment {
     }
 
     private void initUI(View view) {
-        movie = db.getMovieDetailsForID(Integer.parseInt(APIRequest.APImovieID));
+        movie = db.getMovieDetailsForID(APIRequest.APImovieID);
         movieTagline = view.findViewById(R.id.movie_about_tagline);
         movieOverview = view.findViewById(R.id.movie_about_overview);
         if (!movie.getTagline().equals("")) {

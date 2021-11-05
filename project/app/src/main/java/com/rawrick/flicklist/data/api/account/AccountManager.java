@@ -1,9 +1,11 @@
-package com.rawrick.flicklist.data.account;
+package com.rawrick.flicklist.data.api.account;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
+
+import com.rawrick.flicklist.data.account.Account;
 
 public class AccountManager {
 
@@ -60,6 +62,19 @@ public class AccountManager {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("accountname", accountName);
+        editor.apply();
+    }
+
+
+    public static String getAccountAvatar(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getString("accountavatar", "");
+    }
+
+    public static void setAccountAvatar(Context context, String accountavatar) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("accountavatar", accountavatar);
         editor.apply();
     }
 }

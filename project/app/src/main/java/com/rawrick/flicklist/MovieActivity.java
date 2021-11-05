@@ -23,9 +23,11 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.rawrick.flicklist.data.api.account.FavoritesManager;
+import com.rawrick.flicklist.data.api.account.MediaType;
+import com.rawrick.flicklist.data.api.account.WatchlistManager;
 import com.rawrick.flicklist.data.movie.Movie;
-import com.rawrick.flicklist.data.api.rating.RatingManager;
-import com.rawrick.flicklist.data.movie.MovieFavorited;
+import com.rawrick.flicklist.data.api.account.RatingManager;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.ui.moviedetails.MovieAboutFragment;
 import com.rawrick.flicklist.ui.moviedetails.MovieCastFragment;
@@ -35,6 +37,9 @@ public class MovieActivity extends FragmentActivity {
     private FLDatabaseHelper db;
     private Movie movie;
     private RatingManager ratingManager;
+    private FavoritesManager favoritesManager;
+    private WatchlistManager watchlistManager;
+    private int movieID;
 
     private TextView movieTitle;
     private TextView movieReleaseYear;
@@ -74,12 +79,16 @@ public class MovieActivity extends FragmentActivity {
     }
 
     private void initData() {
-        db = new FLDatabaseHelper(this);
-        movie = db.getMovieDetailsForID(Integer.parseInt(APImovieID));
+        movieID = getIntent().getIntExtra("id", -1);
+        db = FLDatabaseHelper.getInstance(this);
+        ratingManager = new RatingManager(this);
+        favoritesManager = new FavoritesManager(this);
+        watchlistManager = new WatchlistManager(this);
+
+        movie = db.getMovieDetailsForID(movieID);
         isMovieRated = db.isMovieRatedForID(movie.getId());
         isMovieFavorited = db.isMovieFavoritedForID(movie.getId());
         isMovieWatchlisted = db.isMovieWatchlistedForID(movie.getId());
-        ratingManager = new RatingManager(this);
     }
 
     private void initUI() {
@@ -108,14 +117,14 @@ public class MovieActivity extends FragmentActivity {
         movieFavoriteFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isMovieFavorited) {
-                    setFABIconColor(movieFavoriteFAB, R.color.textDefaultDark);
-                    db.updateMovieFavoriteStatus(movie, false);
-                    isMovieFavorited = false;
-                } else {
+                if (!isMovieFavorited) {
+                    favoritesManager.postFavoriteStatus(MediaType.MOVIE, movieID, true);
                     setFABIconColor(movieFavoriteFAB, R.color.fabIsFavorited);
-                    db.updateMovieFavoriteStatus(movie, true);
                     isMovieFavorited = true;
+                } else {
+                    favoritesManager.postFavoriteStatus(MediaType.MOVIE, movieID, false);
+                    setFABIconColor(movieFavoriteFAB, R.color.textDefaultDark);
+                    isMovieFavorited = false;
                 }
             }
         });
@@ -125,7 +134,15 @@ public class MovieActivity extends FragmentActivity {
         movieWatchlistFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (!isMovieWatchlisted) {
+                    watchlistManager.postWatchlistStatus(MediaType.MOVIE, movieID, true);
+                    setFABIconColor(movieWatchlistFAB, R.color.fabIsWatchlisted);
+                    isMovieWatchlisted = true;
+                } else {
+                    watchlistManager.postWatchlistStatus(MediaType.MOVIE, movieID, false);
+                    setFABIconColor(movieWatchlistFAB, R.color.textDefaultDark);
+                    isMovieWatchlisted = false;
+                }
             }
         });
 
@@ -147,9 +164,9 @@ public class MovieActivity extends FragmentActivity {
         final View customLayout = getLayoutInflater().inflate(R.layout.rating_dialog, null);
         ratingEditText = customLayout.findViewById(R.id.rating_input);
         if (isMovieRated) {
-            ratingFromDB = db.getMovieRatedForID(Integer.parseInt(APImovieID)).getRating();
+            ratingFromDB = db.getMovieRatedForID(APImovieID).getRating();
             db.updateMovieRating(movie, ratingFromDB);
-            ratingEditText.setText(String.valueOf((int) ratingFromDB), TextView.BufferType.EDITABLE);
+            ratingEditText.setText(String.valueOf(ratingFromDB), TextView.BufferType.EDITABLE);
         }
         builder.setView(customLayout)
                 .setTitle(" ")
@@ -163,7 +180,7 @@ public class MovieActivity extends FragmentActivity {
                 .setNeutralButton("Delete Rating", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // delete rating
+                        // TODO delete rating
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

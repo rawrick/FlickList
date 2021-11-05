@@ -21,7 +21,7 @@ public class MovieWatchlisted {
     @ColumnInfo(name = "pagesTotal")
     private final int pagesTotal;
     @ColumnInfo(name = "isTrue")
-    private boolean isTrue;
+    private final boolean isWatchlisted;
 
     @Ignore
     public MovieWatchlisted(int id, String title, String releaseYear, String posterPath, int pagesTotal) {
@@ -30,16 +30,34 @@ public class MovieWatchlisted {
         this.releaseYear = releaseYear;
         this.posterPath = posterPath;
         this.pagesTotal = pagesTotal;
+        this.isWatchlisted = true;
     }
 
     // used for DB
-    public MovieWatchlisted(int id, String title, String releaseYear, String posterPath, int pagesTotal, boolean isTrue) {
+    public MovieWatchlisted(int id, String title, String releaseYear, String posterPath, int pagesTotal, boolean isWatchlisted) {
         this.id = id;
         this.title = title;
         this.releaseYear = releaseYear;
         this.posterPath = posterPath;
         this.pagesTotal = pagesTotal;
-        this.isTrue = isTrue;
+        this.isWatchlisted = isWatchlisted;
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+
+        MovieWatchlisted other = (MovieWatchlisted) obj;
+        if (id == 0) {
+            if (other.id != 0)
+                return false;
+        } else if (!(id == other.id))
+            return false;
+        return true;
     }
 
     public int getId() {
@@ -62,7 +80,7 @@ public class MovieWatchlisted {
         return pagesTotal;
     }
 
-    public boolean isTrue() {
-        return isTrue;
+    public boolean isWatchlisted() {
+        return isWatchlisted;
     }
 }

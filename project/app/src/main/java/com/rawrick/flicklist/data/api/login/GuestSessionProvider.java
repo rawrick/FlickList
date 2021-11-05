@@ -2,7 +2,7 @@ package com.rawrick.flicklist.data.api.login;
 
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
 import static com.rawrick.flicklist.data.api.URL.authenticationSessionGuestNew;
-import static com.rawrick.flicklist.data.api.APIRequest.keyAPI;
+import static com.rawrick.flicklist.data.api.APIRequest.APIkey;
 
 import android.content.Context;
 import android.util.Log;
@@ -43,11 +43,11 @@ public class GuestSessionProvider {
     }
 
     private void sendSessionRequest(APIRequest.ResponseListener listener) {
-        keyAPI = getPreferenceAPIkey(context);
-        if (!keyAPI.equals(BuildConfig.ApiKey)) {
-            keyAPI = BuildConfig.ApiKey;
+        APIkey = getPreferenceAPIkey(context);
+        if (!APIkey.equals(BuildConfig.ApiKey)) {
+            APIkey = BuildConfig.ApiKey;
         }
-        APIRequest request = new APIRequest(authenticationSessionGuestNew + "?api_key=" + keyAPI, context);
+        APIRequest request = new APIRequest(authenticationSessionGuestNew + "?api_key=" + APIkey, context);
         request.get(listener);
     }
 

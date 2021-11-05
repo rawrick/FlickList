@@ -71,18 +71,14 @@ public class MovieCastFragment extends Fragment implements MovieDetailsManager.M
     @Override
     public void onMovieCastUpdated() {
         movieCastAdapter.setMovieCast(movieDetailsManager.getMovieCast());
-
     }
-
-
 
     @Override
     public void onMovieDetailsUpdated() {
-
     }
 
     @Override
     public void onMovieCastItemClicked(int position) {
-
+        // start person activity
     }
 }

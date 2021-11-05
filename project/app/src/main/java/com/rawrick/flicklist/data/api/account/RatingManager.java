@@ -1,8 +1,8 @@
-package com.rawrick.flicklist.data.api.rating;
+package com.rawrick.flicklist.data.api.account;
 
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
 import static com.rawrick.flicklist.data.api.URL.movieURL;
-import static com.rawrick.flicklist.data.api.APIRequest.keyAPI;
+import static com.rawrick.flicklist.data.api.APIRequest.APIkey;
 import static com.rawrick.flicklist.data.api.APIRequest.APImovieID;
 import static com.rawrick.flicklist.data.api.APIRequest.APIsessionID;
 import static com.rawrick.flicklist.data.api.APIRequest.APIrating;
@@ -49,7 +49,7 @@ public class RatingManager {
     }
 
     private void updateRating(APIRequest.ResponseListener listener) {
-        keyAPI = getPreferenceAPIkey(context);
+        APIkey = getPreferenceAPIkey(context);
         // request body
         JSONObject object = new JSONObject();
         try {
@@ -57,7 +57,7 @@ public class RatingManager {
         } catch (JSONException error) {
             error.printStackTrace();
         }
-        APIRequest request = new APIRequest(movieURL + APImovieID + "/rating?api_key=" + keyAPI + "&session_id=" + APIsessionID, context);
+        APIRequest request = new APIRequest(movieURL + APImovieID + "/rating?api_key=" + APIkey + "&session_id=" + APIsessionID, context);
         request.post(listener, object);
     }
 }

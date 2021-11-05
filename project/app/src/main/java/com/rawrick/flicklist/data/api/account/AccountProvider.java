@@ -1,5 +1,6 @@
 package com.rawrick.flicklist.data.api.account;
 
+import static com.rawrick.flicklist.data.api.APIRequest.APItokenRequested;
 import static com.rawrick.flicklist.data.api.account.AccountManager.getAccountID;
 import static com.rawrick.flicklist.data.api.account.AccountManager.getAccountName;
 import static com.rawrick.flicklist.data.util.SettingsManager.getPreferenceAPIkey;
@@ -34,6 +35,7 @@ public class AccountProvider {
             sendSessionRequest(new APIRequest.ResponseListener() {
                 @Override
                 public void onResponse(JSONObject response) {
+                    APItokenRequested = false;
                     details = Parser.parseAccountData(response);
                     Log.d("FlickListApp", "account data received");
                     listener.onAccountDataAvailable(details);
@@ -53,9 +55,6 @@ public class AccountProvider {
 
     private void sendSessionRequest(APIRequest.ResponseListener listener) {
         APIkey = getPreferenceAPIkey(context);
-        if (!APIkey.equals(BuildConfig.ApiKey)) {
-            APIkey = BuildConfig.ApiKey;
-        }
         APIsessionID = getSessionID(context);
         APIRequest request = new APIRequest(accountURL + "?api_key=" + APIkey + "&session_id=" + APIsessionID, context);
         request.get(listener);

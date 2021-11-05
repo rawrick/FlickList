@@ -3,6 +3,7 @@ package com.rawrick.flicklist;
 import static com.rawrick.flicklist.data.api.APIRequest.APIguestSessionID;
 import static com.rawrick.flicklist.data.api.APIRequest.APIsessionID;
 import static com.rawrick.flicklist.data.api.APIRequest.APItoken;
+import static com.rawrick.flicklist.data.api.APIRequest.APItokenRequested;
 import static com.rawrick.flicklist.data.util.SettingsManager.getToken;
 import static com.rawrick.flicklist.data.util.SettingsManager.setLoginStatus;
 import static com.rawrick.flicklist.data.util.SettingsManager.setSessionID;
@@ -89,6 +90,7 @@ public class LoginActivity extends AppCompatActivity implements LoginManager.Log
 
     @Override
     public void onTokenCreated() {
+        APItokenRequested = true;
         APItoken = loginManager.getToken();
         setToken(this, APItoken);
         Intent intent = new Intent(Intent.ACTION_VIEW);

@@ -23,6 +23,7 @@ public class APIRequest {
 
     public static String APIkey;
     public static String APItoken;
+    public static boolean APItokenRequested = false;
     public static String APIsessionID;
     public static String APIguestSessionID;
 
@@ -49,7 +50,7 @@ public class APIRequest {
         RequestQueue queue = Volley.newRequestQueue(context);
         VolleyLog.DEBUG = true;
         String request = destination;
-        if (APItoken != null) {
+        if (APItokenRequested) {
             request = authenticationSessionNew + "?api_key=" + APIkey + "&request_token=" + APItoken;
         }
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, request, null,

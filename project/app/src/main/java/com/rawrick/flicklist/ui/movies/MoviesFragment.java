@@ -88,6 +88,7 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     private void refreshData() {
         movieManager = new MovieManager(getActivity(), this, this, this);
         movieManager.getRatedMoviesFromAPI(1);
+        movieManager.getFavoritedMoviesFromAPI(1);
     }
 
     private void sortDefault() {

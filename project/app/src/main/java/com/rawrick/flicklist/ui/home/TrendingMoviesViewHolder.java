@@ -1,18 +1,14 @@
 package com.rawrick.flicklist.ui.home;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.rawrick.flicklist.R;
-import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 
 public class TrendingMoviesViewHolder extends RecyclerView.ViewHolder {

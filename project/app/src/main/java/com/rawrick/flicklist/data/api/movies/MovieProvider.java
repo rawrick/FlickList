@@ -13,7 +13,7 @@ import android.util.Log;
 import com.rawrick.flicklist.data.api.APIRequest;
 import com.rawrick.flicklist.data.api.Parser;
 import com.rawrick.flicklist.data.credits.Cast;
-import com.rawrick.flicklist.data.movie.Movie;
+import com.rawrick.flicklist.data.movie.MovieDetails;
 import com.rawrick.flicklist.data.movie.MovieFavorited;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
@@ -35,7 +35,7 @@ public class MovieProvider {
     private ArrayList<MovieRated> ratedMovieData;
     private ArrayList<MovieFavorited> favoritedMovieData;
     private ArrayList<MovieWatchlisted> watchlistedMovieData;
-    private Movie movieData;
+    private MovieDetails movieDetailsData;
     private ArrayList<Cast> movieCastData;
 
     public MovieProvider(Context context) {
@@ -191,12 +191,12 @@ public class MovieProvider {
      **/
 
     public void getDataForMovie(int id, MovieDataListener listener) {
-        if (movieData == null) {
+        if (movieDetailsData == null) {
             updateMovieData(id, new APIRequest.ResponseListener() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    movieData = Parser.parseMovieData(response);
-                    listener.onMovieDataAvailable(movieData);
+                    movieDetailsData = Parser.parseMovieData(response);
+                    listener.onMovieDataAvailable(movieDetailsData);
                 }
 
                 @Override
@@ -205,7 +205,7 @@ public class MovieProvider {
                 }
             });
         } else {
-            listener.onMovieDataAvailable(movieData);
+            listener.onMovieDataAvailable(movieDetailsData);
         }
     }
 
@@ -217,7 +217,7 @@ public class MovieProvider {
     }
 
     public interface MovieDataListener {
-        void onMovieDataAvailable(Movie data);
+        void onMovieDataAvailable(MovieDetails data);
     }
 
     /**

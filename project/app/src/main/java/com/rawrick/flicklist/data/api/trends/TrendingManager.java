@@ -3,13 +3,8 @@ package com.rawrick.flicklist.data.api.trends;
 import android.content.Context;
 
 import com.rawrick.flicklist.data.api.movies.MovieProvider;
-import com.rawrick.flicklist.data.api.series.SeriesManager;
 import com.rawrick.flicklist.data.api.series.SeriesProvider;
-import com.rawrick.flicklist.data.credits.Cast;
-import com.rawrick.flicklist.data.movie.Movie;
-import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
-import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 import com.rawrick.flicklist.data.series.SeriesTrending;
 
 import java.util.ArrayList;

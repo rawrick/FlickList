@@ -1,16 +1,14 @@
 package com.rawrick.flicklist.data.api;
 
 import static com.rawrick.flicklist.data.api.URL.backdrop1280;
-import static com.rawrick.flicklist.data.api.URL.backdrop700;
 import static com.rawrick.flicklist.data.api.URL.poster500;
-import static com.rawrick.flicklist.data.api.URL.profile45;
 import static com.rawrick.flicklist.data.api.URL.profile632;
 
 import android.util.Log;
 
 import com.rawrick.flicklist.data.account.Account;
 import com.rawrick.flicklist.data.credits.Cast;
-import com.rawrick.flicklist.data.movie.Movie;
+import com.rawrick.flicklist.data.movie.MovieDetails;
 import com.rawrick.flicklist.data.movie.MovieFavorited;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
@@ -233,7 +231,7 @@ public class Parser {
         return null;
     }
 
-    public static Movie parseMovieData(JSONObject response) {
+    public static MovieDetails parseMovieData(JSONObject response) {
         try {
             boolean isAdult = response.getBoolean("adult");
             int id = response.getInt("id");
@@ -248,8 +246,8 @@ public class Parser {
 
             String fullPosterPath = poster500 + posterPath;
             String fullBackdropPath = backdrop1280 + backdropPath;
-            Movie movie = new Movie(isAdult, id, overview, tagline, fullPosterPath, fullBackdropPath, releaseDate, runtime, title, voteAverage);
-            return movie;
+            MovieDetails movieDetails = new MovieDetails(isAdult, id, overview, tagline, fullPosterPath, fullBackdropPath, releaseDate, runtime, title, voteAverage);
+            return movieDetails;
         } catch (JSONException e) {
             Log.d("FlickListApp", "movie details parse error");
             e.printStackTrace();

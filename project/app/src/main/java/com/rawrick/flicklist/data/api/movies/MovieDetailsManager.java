@@ -3,13 +3,13 @@ package com.rawrick.flicklist.data.api.movies;
 import android.content.Context;
 
 import com.rawrick.flicklist.data.credits.Cast;
-import com.rawrick.flicklist.data.movie.Movie;
+import com.rawrick.flicklist.data.movie.MovieDetails;
 
 import java.util.ArrayList;
 
 public class MovieDetailsManager {
 
-    private Movie movie;
+    private MovieDetails movieDetails;
     private ArrayList<Cast> cast;
     private final Context context;
 
@@ -30,15 +30,15 @@ public class MovieDetailsManager {
         MovieProvider provider = new MovieProvider(context);
         provider.getDataForMovie(id, new MovieProvider.MovieDataListener() {
             @Override
-            public void onMovieDataAvailable(Movie data) {
-                movie = data;
+            public void onMovieDataAvailable(MovieDetails data) {
+                movieDetails = data;
                 listenerMovieDetails.onMovieDetailsUpdated();
             }
         });
     }
 
-    public Movie getMovieDetails() {
-        return movie;
+    public MovieDetails getMovieDetails() {
+        return movieDetails;
     }
 
     public interface MovieDetailsManagerListener {
@@ -46,7 +46,7 @@ public class MovieDetailsManager {
     }
 
     /**
-     * Movie Cast
+     * MovieDetails Cast
      */
 
     public void getMovieCastFromAPI(int id) {
@@ -69,6 +69,6 @@ public class MovieDetailsManager {
     }
 
     /**
-     * Movie Crew
+     * MovieDetails Crew
      */
 }

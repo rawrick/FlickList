@@ -4,9 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.rawrick.flicklist.MovieActivity;
-import com.rawrick.flicklist.data.api.APIRequest;
 import com.rawrick.flicklist.data.api.movies.MovieDetailsManager;
-import com.rawrick.flicklist.data.movie.Movie;
+import com.rawrick.flicklist.data.movie.MovieDetails;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 
 public class ActivitySelector implements MovieDetailsManager.MovieDetailsManagerListener, MovieDetailsManager.MovieCastManagerListener {
@@ -30,8 +29,8 @@ public class ActivitySelector implements MovieDetailsManager.MovieDetailsManager
 
     @Override
     public void onMovieDetailsUpdated() {
-        Movie movie = movieDetailsManager.getMovieDetails();
-        db.addOrUpdateMovieDetails(movie);
+        MovieDetails movieDetails = movieDetailsManager.getMovieDetails();
+        db.addOrUpdateMovieDetails(movieDetails);
         context.startActivity(intent);
     }
 

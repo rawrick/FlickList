@@ -6,130 +6,66 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "moviedetails")
+@Entity(tableName = "movies")
 public class Movie {
 
     @PrimaryKey
     @NonNull
     public final int id;
-    @ColumnInfo(name = "isAdult")
-    private final boolean isAdult;
-    @ColumnInfo(name = "overview")
-    private final String overview;
-    @ColumnInfo(name = "tagline")
-    private final String tagline;
-    @ColumnInfo(name = "posterPath")
-    private final String posterPath;
-    @ColumnInfo(name = "backdropPath")
-    private final String backdropPath;
-    @ColumnInfo(name = "releaseDate")
-    private final String releaseDate;
-    @ColumnInfo(name = "runtime")
-    private final int runtime;
     @ColumnInfo(name = "title")
-    private final String title;
+    private final String title; // title
+    @ColumnInfo(name = "titleOriginal")
+    private final String titleOriginal; // original_title
+    @ColumnInfo(name = "overview")
+    private final String overview; // overview
+    @ColumnInfo(name = "releaseDate")
+    private final String releaseDate; // release_date
+    @ColumnInfo(name = "genreIDs")
+    private final int[] genreIDs; // genre_ids
+    @ColumnInfo(name = "isAdult")
+    private final boolean isAdult; // adult
+    @ColumnInfo(name = "language")
+    private final String language; // original_language
+    @ColumnInfo(name = "popularity")
+    private final float popularity; // popularity
     @ColumnInfo(name = "voteAverage")
-    private final float voteAverage;
+    private final float voteAverage; // vote_average
+    @ColumnInfo(name = "posterPath")
+    private final String posterPath; // poster_path
+    @ColumnInfo(name = "backdropPath")
+    private final String backdropPath; // backdrop_path
     @ColumnInfo(name = "userRating")
-    private float userRating;
-    @ColumnInfo(name = "userFavoriteStatus")
-    private boolean userFavoriteStatus;
+    private final float userRating; // rating
+    @ColumnInfo(name = "isFavourite")
+    private final boolean isFavourite; // n.a.
 
-    @Ignore
-    public Movie(boolean isAdult,
-                 int id,
-                 String overview,
-                 String tagline,
-                 String posterPath,
-                 String backdropPath,
-                 String releaseDate,
-                 int runtime,
+    public Movie(int id,
                  String title,
-                 float voteAverage) {
-        this.isAdult = isAdult;
-        this.id = id;
-        this.overview = overview;
-        this.tagline = tagline;
-        this.posterPath = posterPath;
-        this.backdropPath = backdropPath;
-        this.releaseDate = releaseDate;
-        this.runtime = runtime;
-        this.title = title;
-        this.voteAverage = voteAverage;
-    }
-
-    // used by database
-    public Movie(boolean isAdult,
-                 int id,
+                 String titleOriginal,
                  String overview,
-                 String tagline,
-                 String posterPath,
-                 String backdropPath,
                  String releaseDate,
-                 int runtime,
-                 String title,
+                 int[] genreIDs,
+                 boolean isAdult,
+                 String language,
+                 float popularity,
                  float voteAverage,
+                 String posterPath,
+                 String backdropPath,
                  float userRating,
-                 boolean userFavoriteStatus) {
-        this.isAdult = isAdult;
+                 boolean isFavourite) {
         this.id = id;
+        this.title = title;
+        this.titleOriginal = titleOriginal;
         this.overview = overview;
-        this.tagline = tagline;
+        this.releaseDate = releaseDate;
+        this.genreIDs = genreIDs;
+        this.isAdult = isAdult;
+        this.language = language;
+        this.popularity = popularity;
+        this.voteAverage = voteAverage;
         this.posterPath = posterPath;
         this.backdropPath = backdropPath;
-        this.releaseDate = releaseDate;
-        this.runtime = runtime;
-        this.title = title;
-        this.voteAverage = voteAverage;
         this.userRating = userRating;
-        this.userFavoriteStatus = userFavoriteStatus;
-    }
-
-    public String getPosterPath() {
-        return posterPath;
-    }
-
-    public String getBackdropPath() {
-        return backdropPath;
-    }
-
-    public boolean isAdult() {
-        return isAdult;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getReleaseDate() {
-        return releaseDate;
-    }
-
-    public int getRuntime() {
-        return runtime;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public float getVoteAverage() {
-        return voteAverage;
-    }
-
-    public String getOverview() {
-        return overview;
-    }
-
-    public float getUserRating() {
-        return userRating;
-    }
-
-    public String getTagline() {
-        return tagline;
-    }
-
-    public boolean isUserFavoriteStatus() {
-        return userFavoriteStatus;
+        this.isFavourite = isFavourite;
     }
 }

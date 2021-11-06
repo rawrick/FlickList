@@ -6,32 +6,29 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.rawrick.flicklist.data.movie.Movie;
-import com.rawrick.flicklist.data.movie.MovieRated;
-
-import java.util.List;
+import com.rawrick.flicklist.data.movie.MovieDetails;
 
 @Dao
 public interface MovieDetailsDAO {
 
     @Insert
-    void addMovie(Movie movie);
+    void addMovie(MovieDetails movieDetails);
 
     @Update
-    void updateMovie(Movie movie);
+    void updateMovie(MovieDetails movieDetails);
 
     @Delete
-    void deleteMovie(Movie movie);
+    void deleteMovie(MovieDetails movieDetails);
 
-    @Query("SELECT * from moviedetails WHERE id= :id")
-    Movie getMovieForID(int id);
+    @Query("SELECT * from MovieDetails WHERE id= :id")
+    MovieDetails getMovieForID(int id);
 
-    @Query("UPDATE moviedetails SET userRating=:rating WHERE id= :id")
+    @Query("UPDATE MovieDetails SET userRating=:rating WHERE id= :id")
     void updateRating(int id, Float rating);
 
-    @Query("UPDATE moviedetails SET userFavoriteStatus=:isFavorite WHERE id= :id")
+    @Query("UPDATE MovieDetails SET userFavoriteStatus=:isFavorite WHERE id= :id")
     void updateFavoriteStatus(int id, boolean isFavorite);
 
-    @Query("DELETE FROM moviedetails")
+    @Query("DELETE FROM MovieDetails")
     void delete();
 }

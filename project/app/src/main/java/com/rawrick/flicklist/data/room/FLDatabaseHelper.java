@@ -2,20 +2,16 @@ package com.rawrick.flicklist.data.room;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.room.Room;
 
 
-import com.rawrick.flicklist.data.movie.Movie;
+import com.rawrick.flicklist.data.movie.MovieDetails;
 import com.rawrick.flicklist.data.movie.MovieFavorited;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.UUID;
 
 public class FLDatabaseHelper {
     private static final String DATABASE_NAME = "main-db";
@@ -160,32 +156,32 @@ public class FLDatabaseHelper {
     }
 
     /**
-     * Movie Details
+     * MovieDetails Details
      */
 
-    public void addOrUpdateMovieDetails(Movie movie) {
-        Movie movieFromDB = db.movieDetailsDAO().getMovieForID(movie.id);
-        if (movieFromDB == null) {
-            db.movieDetailsDAO().addMovie(movie);
+    public void addOrUpdateMovieDetails(MovieDetails movieDetails) {
+        MovieDetails movieDetailsFromDB = db.movieDetailsDAO().getMovieForID(movieDetails.id);
+        if (movieDetailsFromDB == null) {
+            db.movieDetailsDAO().addMovie(movieDetails);
         } else {
-            db.movieDetailsDAO().updateMovie(movie);
+            db.movieDetailsDAO().updateMovie(movieDetails);
         }
     }
 
-    public void updateMovieRating(Movie movie, Float rating) {
-        db.movieDetailsDAO().updateRating(movie.id, rating);
+    public void updateMovieRating(MovieDetails movieDetails, Float rating) {
+        db.movieDetailsDAO().updateRating(movieDetails.id, rating);
     }
 
-    public void updateMovieFavoriteStatus(Movie movie, boolean isFavorite) {
-        db.movieDetailsDAO().updateFavoriteStatus(movie.id, isFavorite);
+    public void updateMovieFavoriteStatus(MovieDetails movieDetails, boolean isFavorite) {
+        db.movieDetailsDAO().updateFavoriteStatus(movieDetails.id, isFavorite);
     }
 
 
-    // deletes movie
-    public void deleteMovieDetails(Movie movie) {
-        Movie movieFromDB = db.movieDetailsDAO().getMovieForID(movie.id);
-        if (movieFromDB != null) {
-            db.movieDetailsDAO().deleteMovie(movie);
+    // deletes movieDetails
+    public void deleteMovieDetails(MovieDetails movieDetails) {
+        MovieDetails movieDetailsFromDB = db.movieDetailsDAO().getMovieForID(movieDetails.id);
+        if (movieDetailsFromDB != null) {
+            db.movieDetailsDAO().deleteMovie(movieDetails);
         }
     }
 
@@ -194,7 +190,7 @@ public class FLDatabaseHelper {
     }
 
     // gets movie deatils for id
-    public Movie getMovieDetailsForID(int id) {
+    public MovieDetails getMovieDetailsForID(int id) {
         return db.movieDetailsDAO().getMovieForID(id);
     }
 

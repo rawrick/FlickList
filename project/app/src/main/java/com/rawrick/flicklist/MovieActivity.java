@@ -27,17 +27,16 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.rawrick.flicklist.data.api.account.FavoritesManager;
 import com.rawrick.flicklist.data.api.account.MediaType;
 import com.rawrick.flicklist.data.api.account.WatchlistManager;
-import com.rawrick.flicklist.data.movie.Movie;
+import com.rawrick.flicklist.data.movie.MovieDetails;
 import com.rawrick.flicklist.data.api.account.RatingManager;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
-import com.rawrick.flicklist.data.util.RatingValidator;
 import com.rawrick.flicklist.ui.moviedetails.MovieAboutFragment;
 import com.rawrick.flicklist.ui.moviedetails.MovieCastFragment;
 
 public class MovieActivity extends FragmentActivity {
 
     private FLDatabaseHelper db;
-    private Movie movie;
+    private MovieDetails movieDetails;
     private RatingManager ratingManager;
     private FavoritesManager favoritesManager;
     private WatchlistManager watchlistManager;
@@ -88,10 +87,10 @@ public class MovieActivity extends FragmentActivity {
         favoritesManager = new FavoritesManager(this);
         watchlistManager = new WatchlistManager(this);
 
-        movie = db.getMovieDetailsForID(movieID);
-        isMovieRated = db.isMovieRatedForID(movie.getId());
-        isMovieFavorited = db.isMovieFavoritedForID(movie.getId());
-        isMovieWatchlisted = db.isMovieWatchlistedForID(movie.getId());
+        movieDetails = db.getMovieDetailsForID(movieID);
+        isMovieRated = db.isMovieRatedForID(movieDetails.getId());
+        isMovieFavorited = db.isMovieFavoritedForID(movieDetails.getId());
+        isMovieWatchlisted = db.isMovieWatchlistedForID(movieDetails.getId());
     }
 
     private void initUI() {
@@ -149,15 +148,15 @@ public class MovieActivity extends FragmentActivity {
             }
         });
 
-        movieTitle.setText(movie.getTitle());
-        movieReleaseYear.setText(movie.getReleaseDate().substring(0, 4));
-        movieRuntime.setText(runtimeFormatter(movie.getRuntime()));
+        movieTitle.setText(movieDetails.getTitle());
+        movieReleaseYear.setText(movieDetails.getReleaseDate().substring(0, 4));
+        movieRuntime.setText(runtimeFormatter(movieDetails.getRuntime()));
         Glide.with(this)
-                .load(movie.getPosterPath())
+                .load(movieDetails.getPosterPath())
                 .centerCrop()
                 .into(moviePoster);
         Glide.with(this)
-                .load(movie.getBackdropPath())
+                .load(movieDetails.getBackdropPath())
                 .centerCrop()
                 .into(movieBackdrop);
     }
@@ -172,7 +171,7 @@ public class MovieActivity extends FragmentActivity {
             if (ratingFromDBString.endsWith(".0")) {
                 ratingFromDBString = ratingFromDBString.substring(0, ratingFromDBString.length() - 2);
             }
-            db.updateMovieRating(movie, ratingFromDB);
+            db.updateMovieRating(movieDetails, ratingFromDB);
             ratingEditText.setText(ratingFromDBString, TextView.BufferType.EDITABLE);
         }
         builder.setView(customLayout)

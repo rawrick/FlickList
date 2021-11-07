@@ -19,9 +19,12 @@
     <color name="textSubtitleDark">#8c8c8c</color>
     <color name="textTitleVariationDark">#dbdbdb</color>
     <color name="textSubtitleVariationDark">#b8b8b8</color>
+    <color name="textEditorDark">#95a5b5</color>
 
     <color name="fabIsRated">#ffd700</color>
     <color name="fabIsWatchlisted">#3DB4F2</color>
     <color name="fabIsFavorited">#ff0000</color>
+
+    <color name="brightRed">#F25560</color>
 
 </resources>

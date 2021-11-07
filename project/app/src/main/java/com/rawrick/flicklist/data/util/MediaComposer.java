@@ -13,37 +13,61 @@ public class MediaComposer {
 
     public static ArrayList<Movie> composeMovie(ArrayList<MovieRated> ratingData, ArrayList<MovieFavorited> favouritesData, ArrayList<MovieWatchlisted> watchlistData) {
         ArrayList<Movie> movies = new ArrayList<>(); // output ArrayList
+        Map<Integer, MovieRated> ratingMap = new HashMap<>();
         Map<Integer, MovieFavorited> favouritesMap = new HashMap<>();
+        Map<Integer, MovieWatchlisted> watchlistMap = new HashMap<>();
+
+        for (MovieRated movieRated : ratingData) {
+            ratingMap.put(movieRated.getId(), movieRated);
+        }
         for (MovieFavorited movieFavorited : favouritesData) {
             favouritesMap.put(movieFavorited.getId(), movieFavorited);
+        }
+        for (MovieWatchlisted movieWatchlisted : watchlistData) {
+            watchlistMap.put(movieWatchlisted.getId(), movieWatchlisted);
         }
         // adds rated movies
         for (MovieRated movieRated : ratingData) {
             boolean isFavourite;
+            boolean isWatchlisted;
             if (favouritesMap.get(movieRated.getId()) != null) {
                 isFavourite = true;
             } else {
                 isFavourite = false;
             }
+            if (watchlistMap.get(movieRated.getId()) != null) {
+                isWatchlisted = true;
+            } else {
+                isWatchlisted = false;
+            }
             Movie movie = new Movie(movieRated.getId(), movieRated.getTitle(), movieRated.getTitle(), movieRated.getOverview(),
                     movieRated.getReleaseDate(), movieRated.isAdult(), movieRated.getLanguage(), movieRated.getPopularity(),
                     movieRated.getVoteAverage(), movieRated.getPosterPath(), movieRated.getBackdropPath(), movieRated.getUserRating(),
-                    isFavourite, false, null, 0);
+                    isFavourite, isWatchlisted, null, 0);
             movies.add(movie);
         }
         // adds watchlisted movies
         for (MovieWatchlisted movieWatchlisted : watchlistData) {
             boolean isFavourite;
+            float userRating;
             if (favouritesMap.get(movieWatchlisted.getId()) != null) {
                 isFavourite = true;
             } else {
                 isFavourite = false;
             }
+            if (ratingMap.get(movieWatchlisted.getId()) != null) {
+                userRating = ratingMap.get(movieWatchlisted.getId()).getUserRating();
+            } else {
+                userRating = -1f;
+            }
             Movie movie = new Movie(movieWatchlisted.getId(), movieWatchlisted.getTitle(), movieWatchlisted.getTitle(), movieWatchlisted.getOverview(),
                     movieWatchlisted.getReleaseDate(), movieWatchlisted.isAdult(), movieWatchlisted.getLanguage(), movieWatchlisted.getPopularity(),
-                    movieWatchlisted.getVoteAverage(), movieWatchlisted.getPosterPath(), movieWatchlisted.getBackdropPath(), -1,
+                    movieWatchlisted.getVoteAverage(), movieWatchlisted.getPosterPath(), movieWatchlisted.getBackdropPath(), userRating,
                     isFavourite, true, null, 0);
-            movies.add(movie);
+
+            if (!movies.contains(movie)) {
+                movies.add(movie);
+            }
         }
         return movies;
     }

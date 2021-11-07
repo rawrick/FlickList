@@ -92,15 +92,12 @@ public class MovieActivity extends FragmentActivity {
         if (db.isMovieInDBForID(movieID)) {
             if (db.getMovieForID(movieID).getUserRating() != -1) {
                 isMovieRated = true;
-                isMovieWatchlisted = false;
-            } else if (db.getMovieForID(movieID).isWatchlisted()) {
+            }
+            if (db.getMovieForID(movieID).isWatchlisted()) {
                 isMovieWatchlisted = true;
-                isMovieRated = false;
             }
             if (db.getMovieForID(movieID).isFavourite()) {
                 isMovieFavorited = true;
-            } else {
-                isMovieFavorited = false;
             }
         }
     }
@@ -133,12 +130,23 @@ public class MovieActivity extends FragmentActivity {
             public void onClick(View v) {
                 if (!isMovieFavorited) {
                     favoritesManager.postFavoriteStatus(MediaType.MOVIE, movieID, true);
-                    db.updateMovieFavouriteStatus(movieID, true);
+                    if (db.isMovieInDBForID(movieID)) {
+                        db.updateMovieFavouriteStatus(movieID, true);
+                    } else {
+                        db.addOrUpdateMovie(new Movie(movieID, movie.getTitle(), movie.getTitleOriginal(), movie.getOverview(), movie.getReleaseDate(),
+                                movie.isAdult(), movie.getLanguage(), movie.getPopularity(), movie.getVoteAverage(), movie.getPosterPath(),
+                                movie.getBackdropPath(), -1, true, false, null, 0));
+                    }
                     setFABIconColor(movieFavoriteFAB, R.color.fabIsFavorited);
                     isMovieFavorited = true;
-                } else {
+                } else if (isMovieWatchlisted || isMovieRated) {
                     favoritesManager.postFavoriteStatus(MediaType.MOVIE, movieID, false);
                     db.updateMovieFavouriteStatus(movieID, false);
+                    setFABIconColor(movieFavoriteFAB, R.color.textDefaultDark);
+                    isMovieFavorited = false;
+                } else {
+                    favoritesManager.postFavoriteStatus(MediaType.MOVIE, movieID, false);
+                    db.deleteMovie(movie);
                     setFABIconColor(movieFavoriteFAB, R.color.textDefaultDark);
                     isMovieFavorited = false;
                 }
@@ -152,12 +160,23 @@ public class MovieActivity extends FragmentActivity {
             public void onClick(View v) {
                 if (!isMovieWatchlisted) {
                     watchlistManager.postWatchlistStatus(MediaType.MOVIE, movieID, true);
-                    db.updateMovieWatchlistStatus(movieID, true);
+                    if (db.isMovieInDBForID(movieID)) {
+                        db.updateMovieWatchlistStatus(movieID, true);
+                    } else {
+                        db.addOrUpdateMovie(new Movie(movieID, movie.getTitle(), movie.getTitleOriginal(), movie.getOverview(), movie.getReleaseDate(),
+                                movie.isAdult(), movie.getLanguage(), movie.getPopularity(), movie.getVoteAverage(), movie.getPosterPath(),
+                                movie.getBackdropPath(), -1, false, true, null, 0));
+                    }
                     setFABIconColor(movieWatchlistFAB, R.color.fabIsWatchlisted);
                     isMovieWatchlisted = true;
-                } else {
+                } else if (isMovieFavorited) {
                     watchlistManager.postWatchlistStatus(MediaType.MOVIE, movieID, false);
                     db.updateMovieWatchlistStatus(movieID, false);
+                    setFABIconColor(movieWatchlistFAB, R.color.textDefaultDark);
+                    isMovieWatchlisted = false;
+                } else {
+                    watchlistManager.postWatchlistStatus(MediaType.MOVIE, movieID, false);
+                    db.deleteMovie(movie);
                     setFABIconColor(movieWatchlistFAB, R.color.textDefaultDark);
                     isMovieWatchlisted = false;
                 }
@@ -203,7 +222,7 @@ public class MovieActivity extends FragmentActivity {
                             } else {
                                 db.addOrUpdateMovie(new Movie(movieID, movie.getTitle(), movie.getTitleOriginal(), movie.getOverview(), movie.getReleaseDate(),
                                         movie.isAdult(), movie.getLanguage(), movie.getPopularity(), movie.getVoteAverage(), movie.getPosterPath(),
-                                        movie.getBackdropPath(), rating, movie.isFavourite(), movie.isWatchlisted(), movie.getTagline(), movie.getRuntime()));
+                                        movie.getBackdropPath(), rating, movie.isFavourite(), movie.isWatchlisted(), null, 0));
                             }
                         } else {
                             Toast.makeText(getApplicationContext(), "Invalid rating. Must be between 0.5 and 10.", Toast.LENGTH_SHORT).show();
@@ -214,7 +233,11 @@ public class MovieActivity extends FragmentActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ratingManager.deleteRating(movieID);
-                        db.updateMovieRating(movieID, -1);
+                        if (isMovieFavorited) {
+                            db.updateMovieRating(movieID, -1);
+                        } else {
+                            db.deleteMovie(movie);
+                        }
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

@@ -82,7 +82,8 @@ public class WatchlistFragment extends Fragment implements MovieWatchlistItemVie
         mediaSorter = new MediaSorter();
         db = FLDatabaseHelper.getInstance(this.getActivity());
         movies = (ArrayList<Movie>) db.getAllMovies();
-        movies.removeIf(T -> T.getUserRating() != -1);
+        db.cleanDB(movies);
+        movies.removeIf(T -> !T.isWatchlisted());
         movies = mediaSorter.sortMoviesByTitle(movies);
     }
 
@@ -96,7 +97,7 @@ public class WatchlistFragment extends Fragment implements MovieWatchlistItemVie
         if (value == 3) {
             movies = MediaComposer.composeMovie(ratingData, favoritesData, watchlistData);
             db.cleanDB(movies);
-            movies.removeIf(T -> T.getUserRating() != -1);
+            movies.removeIf(T -> !T.isWatchlisted());
             movies = mediaSorter.sortMoviesByTitle(movies);
             movieWatchlistAdapter.setWatchlistedMovies(movies);
             swipeRefreshLayout.setRefreshing(false);

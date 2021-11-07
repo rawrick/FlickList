@@ -225,7 +225,6 @@ public class HomeFragment extends Fragment implements TrendingManager.TrendingMo
                 .centerCrop()
                 .into(featuredBackdrop);
         // onclick
-        Intent intent = new Intent(this.getActivity(), MovieActivity.class);
         featuredMovie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

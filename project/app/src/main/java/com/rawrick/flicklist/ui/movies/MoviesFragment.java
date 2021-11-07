@@ -82,7 +82,8 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
         mediaSorter = new MediaSorter();
         db = FLDatabaseHelper.getInstance(this.getActivity());
         movies = (ArrayList<Movie>) db.getAllMovies();
-        movies.removeIf(Movie::isWatchlisted);
+        db.cleanDB(movies);
+        movies.removeIf(T -> T.getUserRating() == -1f);
         movies = mediaSorter.sortMoviesByRating(movies);
     }
 
@@ -96,7 +97,7 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
         if (value == 3) {
             movies = MediaComposer.composeMovie(ratingData, favoritesData, watchlistData);
             db.cleanDB(movies);
-            movies.removeIf(Movie::isWatchlisted);
+            movies.removeIf(T -> T.getUserRating() == -1f);
             movies = mediaSorter.sortMoviesByRating(movies);
             movieListAdapter.setRatedMovies(movies);
             swipeRefreshLayout.setRefreshing(false);

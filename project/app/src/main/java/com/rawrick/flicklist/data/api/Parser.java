@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.rawrick.flicklist.data.account.Account;
 import com.rawrick.flicklist.data.credits.Cast;
-import com.rawrick.flicklist.data.movie.MovieDetails;
+import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieFavorited;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
@@ -244,23 +244,32 @@ public class Parser {
         return null;
     }
 
-    public static MovieDetails parseMovieData(JSONObject response) {
+    public static Movie parseMovieData(JSONObject response) {
         try {
-            boolean isAdult = response.getBoolean("adult");
             int id = response.getInt("id");
+            String title = response.getString("title");
+            String titleOriginal = response.getString("original_title");
             String overview = response.getString("overview");
+            String releaseDate = response.getString("release_date");
+            //int[] genreIDs = ;
+            boolean isAdult = response.getBoolean("adult");
+            String language = response.getString("original_language");
+            float popularity = (float) response.getDouble("popularity");
+            float voteAverage = (float) response.getDouble("vote_average");
             String posterPath = response.getString("poster_path");
             String backdropPath = response.getString("backdrop_path");
-            String releaseDate = response.getString("release_date");
-            String title = response.getString("title");
-            float voteAverage = (float) response.getDouble("vote_average");
+
             int runtime = response.getInt("runtime");
             String tagline = response.getString("tagline");
 
+            String releaseYear = releaseDate.substring(0, 4);
             String fullPosterPath = poster500 + posterPath;
             String fullBackdropPath = backdrop1280 + backdropPath;
-            MovieDetails movieDetails = new MovieDetails(isAdult, id, overview, tagline, fullPosterPath, fullBackdropPath, releaseDate, runtime, title, voteAverage);
-            return movieDetails;
+            return  new Movie(id, title, titleOriginal, overview,
+                    releaseYear, isAdult, language, popularity,
+                    voteAverage, fullPosterPath, fullBackdropPath,
+                    -1f, false, false,
+                    tagline, runtime);
         } catch (JSONException e) {
             Log.d("FlickListApp", "movie details parse error");
             e.printStackTrace();

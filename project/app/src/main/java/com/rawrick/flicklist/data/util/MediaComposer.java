@@ -28,7 +28,7 @@ public class MediaComposer {
             Movie movie = new Movie(movieRated.getId(), movieRated.getTitle(), movieRated.getTitle(), movieRated.getOverview(),
                     movieRated.getReleaseDate(), movieRated.isAdult(), movieRated.getLanguage(), movieRated.getPopularity(),
                     movieRated.getVoteAverage(), movieRated.getPosterPath(), movieRated.getBackdropPath(), movieRated.getUserRating(),
-                    isFavourite, false);
+                    isFavourite, false, null, 0);
             movies.add(movie);
         }
         // adds watchlisted movies
@@ -42,7 +42,7 @@ public class MediaComposer {
             Movie movie = new Movie(movieWatchlisted.getId(), movieWatchlisted.getTitle(), movieWatchlisted.getTitle(), movieWatchlisted.getOverview(),
                     movieWatchlisted.getReleaseDate(), movieWatchlisted.isAdult(), movieWatchlisted.getLanguage(), movieWatchlisted.getPopularity(),
                     movieWatchlisted.getVoteAverage(), movieWatchlisted.getPosterPath(), movieWatchlisted.getBackdropPath(), -1,
-                    isFavourite, true);
+                    isFavourite, true, null, 0);
             movies.add(movie);
         }
         return movies;

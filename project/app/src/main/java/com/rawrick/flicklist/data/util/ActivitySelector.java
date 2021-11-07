@@ -2,18 +2,19 @@ package com.rawrick.flicklist.data.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.rawrick.flicklist.MovieActivity;
 import com.rawrick.flicklist.data.api.movies.MovieDetailsManager;
-import com.rawrick.flicklist.data.movie.MovieDetails;
-import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 
-public class ActivitySelector implements MovieDetailsManager.MovieDetailsManagerListener, MovieDetailsManager.MovieCastManagerListener {
+public class ActivitySelector implements MovieDetailsManager.MovieCastManagerListener,
+        MovieDetailsManager.MovieDetailsManagerListener {
 
-    private FLDatabaseHelper db;
-    private MovieDetailsManager movieDetailsManager;
     private Intent intent;
     Context context;
+
+    private MovieDetailsManager movieDetailsManager;
+
 
     public ActivitySelector(Context context) {
         this.context = context;
@@ -22,15 +23,16 @@ public class ActivitySelector implements MovieDetailsManager.MovieDetailsManager
     public void startMovieActivity(int movieID) {
         intent = new Intent(context, MovieActivity.class);
         intent.putExtra("id", movieID);
-        db = FLDatabaseHelper.getInstance(context);
         movieDetailsManager = new MovieDetailsManager(context, this, this);
         movieDetailsManager.getMovieDetailsFromAPI(movieID);
+
     }
 
     @Override
     public void onMovieDetailsUpdated() {
-        MovieDetails movieDetails = movieDetailsManager.getMovieDetails();
-        db.addOrUpdateMovieDetails(movieDetails);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("movie", movieDetailsManager.getMovieDetails());
+        intent.putExtra("movie", bundle);
         context.startActivity(intent);
     }
 

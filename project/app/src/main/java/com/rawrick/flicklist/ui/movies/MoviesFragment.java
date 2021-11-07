@@ -25,6 +25,7 @@ import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.data.util.ActivitySelector;
 import com.rawrick.flicklist.data.util.MediaComposer;
+import com.rawrick.flicklist.data.util.MediaSorter;
 import com.rawrick.flicklist.databinding.FragmentMoviesBinding;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     private FragmentMoviesBinding binding;
 
     private FLDatabaseHelper db;
+    private MediaSorter mediaSorter;
     private MovieManager movieManager;
     private ActivitySelector activitySelector;
     private ArrayList<Movie> movies;
@@ -77,10 +79,11 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
 
     private void initData() {
         activitySelector = new ActivitySelector(getActivity());
+        mediaSorter = new MediaSorter();
         db = FLDatabaseHelper.getInstance(this.getActivity());
         movies = (ArrayList<Movie>) db.getAllMovies();
         movies.removeIf(Movie::isWatchlisted);
-        sortDefault();
+        movies = mediaSorter.sortMoviesByRating(movies);
     }
 
     private void refreshData() {
@@ -92,44 +95,12 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     private void updateList(int value) {
         if (value == 3) {
             movies = MediaComposer.composeMovie(ratingData, favoritesData, watchlistData);
+            db.cleanDB(movies);
             movies.removeIf(Movie::isWatchlisted);
-            sortDefault();
+            movies = mediaSorter.sortMoviesByRating(movies);
             movieListAdapter.setRatedMovies(movies);
             swipeRefreshLayout.setRefreshing(false);
-        }
-    }
-
-    private void sortDefault() {
-        Collections.sort(movies, CompDefault);
-    }
-
-    Comparator<Movie> CompDefault = (M1, M2) -> {
-        double R1 = M1.getUserRating();
-        double R2 = M2.getUserRating();
-        String T1 = M1.getTitle();
-        String T2 = M2.getTitle();
-        String t1 = ignoreArticles(T1);
-        String t2 = ignoreArticles(T2);
-
-        if (R1 > R2) {
-            return -1;
-        }
-        if (R1 < R2) {
-            return 1;
-        }
-        if (R1 == R2) {
-            return t1.compareTo(t2);
-        }
-        return 0;
-    };
-
-    private String ignoreArticles(String input) {
-        if (input.startsWith("The ")) {
-            return input.substring(4);
-        } else if (input.startsWith("A ")) {
-            return input.substring(2);
-        } else {
-            return input;
+            loadingProgress = 0;
         }
     }
 

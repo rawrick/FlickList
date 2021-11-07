@@ -11,17 +11,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.rawrick.flicklist.R;
-import com.rawrick.flicklist.data.movie.MovieDetails;
-import com.rawrick.flicklist.data.room.FLDatabaseHelper;
+import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.databinding.FragmentMovieAboutBinding;
 
 public class MovieAboutFragment extends Fragment {
 
     private FragmentMovieAboutBinding binding;
 
-    private FLDatabaseHelper db;
     private Bundle bundle;
-    private MovieDetails movieDetails;
+    private Movie movie;
 
     private TextView movieTagline;
     private TextView movieOverview;
@@ -41,18 +39,17 @@ public class MovieAboutFragment extends Fragment {
 
     private void initData() {
         bundle = getArguments();
-        db = new FLDatabaseHelper(this.getActivity());
     }
 
     private void initUI(View view) {
-        movieDetails = db.getMovieDetailsForID(bundle.getInt("id"));
+        movie = bundle.getParcelable("movie");
         movieTagline = view.findViewById(R.id.movie_about_tagline);
         movieOverview = view.findViewById(R.id.movie_about_overview);
-        if (!movieDetails.getTagline().equals("")) {
-            movieTagline.setText(movieDetails.getTagline());
+        if (!movie.getTagline().equals("")) {
+            movieTagline.setText(movie.getTagline());
         } else {
             movieTagline.setHeight(0);
         }
-        movieOverview.setText(movieDetails.getOverview());
+        movieOverview.setText(movie.getOverview());
     }
 }

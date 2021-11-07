@@ -101,7 +101,6 @@ public class SplashScreenActivity extends AppCompatActivity implements
 
     private void initData() {
         db = FLDatabaseHelper.getInstance(this);
-        db.clearMovieDetailsTable();
         accountManager = new AccountManager(this, this);
         accountManager.getAccountDataFromAPI();
     }

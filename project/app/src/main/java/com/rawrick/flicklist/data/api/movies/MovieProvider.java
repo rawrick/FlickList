@@ -13,7 +13,7 @@ import android.util.Log;
 import com.rawrick.flicklist.data.api.APIRequest;
 import com.rawrick.flicklist.data.api.Parser;
 import com.rawrick.flicklist.data.credits.Cast;
-import com.rawrick.flicklist.data.movie.MovieDetails;
+import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieFavorited;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
@@ -35,7 +35,7 @@ public class MovieProvider {
     private ArrayList<MovieRated> ratedMovieData;
     private ArrayList<MovieFavorited> favoritedMovieData;
     private ArrayList<MovieWatchlisted> watchlistedMovieData;
-    private MovieDetails movieDetailsData;
+    private Movie movieDetailsData;
     private ArrayList<Cast> movieCastData;
 
     public MovieProvider(Context context) {
@@ -217,7 +217,7 @@ public class MovieProvider {
     }
 
     public interface MovieDataListener {
-        void onMovieDataAvailable(MovieDetails data);
+        void onMovieDataAvailable(Movie data);
     }
 
     /**

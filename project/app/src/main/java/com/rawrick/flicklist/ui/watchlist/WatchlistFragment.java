@@ -4,6 +4,7 @@ import static androidx.recyclerview.widget.RecyclerView.VERTICAL;
 
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.data.util.ActivitySelector;
 import com.rawrick.flicklist.data.util.MediaComposer;
+import com.rawrick.flicklist.data.util.MediaSorter;
 import com.rawrick.flicklist.databinding.FragmentWatchlistBinding;
 
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class WatchlistFragment extends Fragment implements MovieWatchlistItemVie
 
     private FLDatabaseHelper db;
     private ActivitySelector activitySelector;
+    private MediaSorter mediaSorter;
 
     private MovieManager movieManager;
     private ArrayList<Movie> movies;
@@ -76,10 +79,11 @@ public class WatchlistFragment extends Fragment implements MovieWatchlistItemVie
 
     private void initData() {
         activitySelector = new ActivitySelector(getActivity());
+        mediaSorter = new MediaSorter();
         db = FLDatabaseHelper.getInstance(this.getActivity());
         movies = (ArrayList<Movie>) db.getAllMovies();
         movies.removeIf(T -> T.getUserRating() != -1);
-        sortDefault();
+        movies = mediaSorter.sortMoviesByTitle(movies);
     }
 
     private void refreshData() {
@@ -91,32 +95,12 @@ public class WatchlistFragment extends Fragment implements MovieWatchlistItemVie
     private void updateList(int value) {
         if (value == 3) {
             movies = MediaComposer.composeMovie(ratingData, favoritesData, watchlistData);
+            db.cleanDB(movies);
             movies.removeIf(T -> T.getUserRating() != -1);
-            sortDefault();
+            movies = mediaSorter.sortMoviesByTitle(movies);
             movieWatchlistAdapter.setWatchlistedMovies(movies);
             swipeRefreshLayout.setRefreshing(false);
-        }
-    }
-
-    private void sortDefault() {
-        Collections.sort(movies, CompDefault);
-    }
-
-    Comparator<Movie> CompDefault = (M1, M2) -> {
-        String T1 = M1.getTitle();
-        String T2 = M2.getTitle();
-        String t1 = ignoreArticles(T1);
-        String t2 = ignoreArticles(T2);
-        return t1.compareTo(t2);
-    };
-
-    private String ignoreArticles(String input) {
-        if (input.startsWith("The ")) {
-            return input.substring(4);
-        } else if (input.startsWith("A ")) {
-            return input.substring(2);
-        } else {
-            return input;
+            loadingProgress = 0;
         }
     }
 

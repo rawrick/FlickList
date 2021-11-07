@@ -26,9 +26,9 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.rawrick.flicklist.data.api.account.FavoritesManager;
 import com.rawrick.flicklist.data.api.account.MediaType;
-import com.rawrick.flicklist.data.api.account.WatchlistManager;
-import com.rawrick.flicklist.data.movie.MovieDetails;
 import com.rawrick.flicklist.data.api.account.RatingManager;
+import com.rawrick.flicklist.data.api.account.WatchlistManager;
+import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.ui.moviedetails.MovieAboutFragment;
 import com.rawrick.flicklist.ui.moviedetails.MovieCastFragment;
@@ -36,10 +36,10 @@ import com.rawrick.flicklist.ui.moviedetails.MovieCastFragment;
 public class MovieActivity extends FragmentActivity {
 
     private FLDatabaseHelper db;
-    private MovieDetails movieDetails;
     private RatingManager ratingManager;
     private FavoritesManager favoritesManager;
     private WatchlistManager watchlistManager;
+    private Movie movie;
     private int movieID;
 
     private TextView movieTitle;
@@ -81,16 +81,28 @@ public class MovieActivity extends FragmentActivity {
     }
 
     private void initData() {
-        movieID = getIntent().getIntExtra("id", -1);
+        Bundle bundle = getIntent().getBundleExtra("movie");
+        movie = bundle.getParcelable("movie");
+        movieID = movie.getId();
         db = FLDatabaseHelper.getInstance(this);
         ratingManager = new RatingManager(this);
         favoritesManager = new FavoritesManager(this);
         watchlistManager = new WatchlistManager(this);
 
-        movieDetails = db.getMovieDetailsForID(movieID);
-        //isMovieRated = db.isMovieRatedForID(movieDetails.getId());
-        //isMovieFavorited = db.isMovieFavoritedForID(movieDetails.getId());
-        //isMovieWatchlisted = db.isMovieWatchlistedForID(movieDetails.getId());
+        if (db.isMovieInDBForID(movieID)) {
+            if (db.getMovieForID(movieID).getUserRating() != -1) {
+                isMovieRated = true;
+                isMovieWatchlisted = false;
+            } else if (db.getMovieForID(movieID).isWatchlisted()) {
+                isMovieWatchlisted = true;
+                isMovieRated = false;
+            }
+            if (db.getMovieForID(movieID).isFavourite()) {
+                isMovieFavorited = true;
+            } else {
+                isMovieFavorited = false;
+            }
+        }
     }
 
     private void initUI() {
@@ -110,7 +122,7 @@ public class MovieActivity extends FragmentActivity {
         movieRateFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showRatingDialog();
+                showRatingDialog(movie);
             }
         });
         if (isMovieFavorited) {
@@ -121,10 +133,12 @@ public class MovieActivity extends FragmentActivity {
             public void onClick(View v) {
                 if (!isMovieFavorited) {
                     favoritesManager.postFavoriteStatus(MediaType.MOVIE, movieID, true);
+                    db.updateMovieFavouriteStatus(movieID, true);
                     setFABIconColor(movieFavoriteFAB, R.color.fabIsFavorited);
                     isMovieFavorited = true;
                 } else {
                     favoritesManager.postFavoriteStatus(MediaType.MOVIE, movieID, false);
+                    db.updateMovieFavouriteStatus(movieID, false);
                     setFABIconColor(movieFavoriteFAB, R.color.textDefaultDark);
                     isMovieFavorited = false;
                 }
@@ -138,40 +152,42 @@ public class MovieActivity extends FragmentActivity {
             public void onClick(View v) {
                 if (!isMovieWatchlisted) {
                     watchlistManager.postWatchlistStatus(MediaType.MOVIE, movieID, true);
+                    db.updateMovieWatchlistStatus(movieID, true);
                     setFABIconColor(movieWatchlistFAB, R.color.fabIsWatchlisted);
                     isMovieWatchlisted = true;
                 } else {
                     watchlistManager.postWatchlistStatus(MediaType.MOVIE, movieID, false);
+                    db.updateMovieWatchlistStatus(movieID, false);
                     setFABIconColor(movieWatchlistFAB, R.color.textDefaultDark);
                     isMovieWatchlisted = false;
                 }
             }
         });
 
-        movieTitle.setText(movieDetails.getTitle());
-        movieReleaseYear.setText(movieDetails.getReleaseDate().substring(0, 4));
-        movieRuntime.setText(runtimeFormatter(movieDetails.getRuntime()));
+        movieTitle.setText(movie.getTitle());
+        movieReleaseYear.setText(movie.getReleaseDate().substring(0, 4));
+        movieRuntime.setText(runtimeFormatter(movie.getRuntime()));
         Glide.with(this)
-                .load(movieDetails.getPosterPath())
+                .load(movie.getPosterPath())
                 .centerCrop()
                 .into(moviePoster);
         Glide.with(this)
-                .load(movieDetails.getBackdropPath())
+                .load(movie.getBackdropPath())
                 .centerCrop()
                 .into(movieBackdrop);
     }
 
-    private void showRatingDialog() {
+    private void showRatingDialog(Movie movie) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final View customLayout = getLayoutInflater().inflate(R.layout.rating_dialog, null);
         ratingEditText = customLayout.findViewById(R.id.rating_input);
         if (isMovieRated) {
-            ratingFromDB = 10.0f; //db.getMovieRatedForID(movieID).getRating();
+            ratingFromDB = db.getMovieForID(movieID).getUserRating();
             ratingFromDBString = String.valueOf(ratingFromDB);
             if (ratingFromDBString.endsWith(".0")) {
                 ratingFromDBString = ratingFromDBString.substring(0, ratingFromDBString.length() - 2);
             }
-            db.updateMovieRating(movieDetails, ratingFromDB);
+            db.updateMovieRating(movie.getId(), ratingFromDB);
             ratingEditText.setText(ratingFromDBString, TextView.BufferType.EDITABLE);
         }
         builder.setView(customLayout)
@@ -182,6 +198,13 @@ public class MovieActivity extends FragmentActivity {
                         float rating = Float.parseFloat(ratingEditText.getText().toString());
                         if (isRatingValid(rating)) {
                             ratingManager.postRating(movieID, rating);
+                            if (db.isMovieInDBForID(movieID)) {
+                                db.updateMovieRating(movieID, rating);
+                            } else {
+                                db.addOrUpdateMovie(new Movie(movieID, movie.getTitle(), movie.getTitleOriginal(), movie.getOverview(), movie.getReleaseDate(),
+                                        movie.isAdult(), movie.getLanguage(), movie.getPopularity(), movie.getVoteAverage(), movie.getPosterPath(),
+                                        movie.getBackdropPath(), rating, movie.isFavourite(), movie.isWatchlisted(), movie.getTagline(), movie.getRuntime()));
+                            }
                         } else {
                             Toast.makeText(getApplicationContext(), "Invalid rating. Must be between 0.5 and 10.", Toast.LENGTH_SHORT).show();
                         }
@@ -191,6 +214,7 @@ public class MovieActivity extends FragmentActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ratingManager.deleteRating(movieID);
+                        db.updateMovieRating(movieID, -1);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -238,7 +262,7 @@ public class MovieActivity extends FragmentActivity {
             // about
             MovieAboutFragment movieAboutFragment = new MovieAboutFragment();
             Bundle bundleAbout = new Bundle();
-            bundleAbout.putInt("id", movieID);
+            bundleAbout.putParcelable("movie", movie);
             movieAboutFragment.setArguments(bundleAbout);
             // cast
             MovieCastFragment movieCastFragment = new MovieCastFragment();
@@ -250,7 +274,7 @@ public class MovieActivity extends FragmentActivity {
                     return movieAboutFragment;
                 case 1:
 
-                    return movieCastFragment;
+                    return movieAboutFragment;
                 case 2:
                     return movieAboutFragment;
                 case 3:

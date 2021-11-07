@@ -27,19 +27,21 @@ public interface MovieDAO {
     @Query("SELECT * from movies WHERE id= :id")
     Movie getMovieForID(int id);
 
-    /*
     @Query("SELECT EXISTS(SELECT * FROM movies WHERE id = :id)")
-    boolean isRated(int id);
+    boolean isEntryForID(int id);
 
-    @Query("UPDATE movies SET isFavourite= :isFavourite WHERE id = :id")
-    void updateFavouriteStatus(boolean isFavourite, int id);
+    @Query("UPDATE movies SET userRating= :rating WHERE id = :id")
+    void updateRatingForID(int id, float rating);
 
-*/
+    @Query("UPDATE movies SET isFavourite= :favourite WHERE id = :id")
+    void updateFavouriteStatusForID(int id, boolean favourite);
+
+    @Query("UPDATE movies SET isWatchlisted= :watchlist WHERE id = :id")
+    void updateWatchlistStatusForID(int id, boolean watchlist);
+
     @Query("SELECT * from movies WHERE userRating> :rating")
     List<Movie> getMoviesForRating(double rating);
 
-
     @Query("SELECT * from movies")
     List<Movie> getAllMovies();
-
 }

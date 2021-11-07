@@ -2,16 +2,13 @@ package com.rawrick.flicklist.data.room;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.room.Room;
 
-
 import com.rawrick.flicklist.data.movie.Movie;
-import com.rawrick.flicklist.data.movie.MovieDetails;
-import com.rawrick.flicklist.data.movie.MovieFavorited;
-import com.rawrick.flicklist.data.movie.MovieRated;
-import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FLDatabaseHelper {
@@ -64,64 +61,42 @@ public class FLDatabaseHelper {
         return db.movieDAO().getMovieForID(id);
     }
 
-    // checks whether movie is rated
-    //public boolean isMovieRatedForID(int id) {
-    //    return db.movieDAO().isRated(id);
-    //}
+    // checks whether movie is in database
+    public boolean isMovieInDBForID(int id) {
+        return db.movieDAO().isEntryForID(id);
+    }
 
-    //public void updateRatedMovieFavoriteStatus(MovieRated movieRated, boolean value) {
-    //    db.movieRatedDAO().updateFavouriteStatus(value, movieRated.id);
-    //}
+    public void updateMovieRating(int id, float value) {
+        db.movieDAO().updateRatingForID(id, value);
+    }
+
+    public void updateMovieFavouriteStatus(int id, boolean value) {
+        db.movieDAO().updateFavouriteStatusForID(id, value);
+    }
+
+    public void updateMovieWatchlistStatus(int id, boolean value) {
+        db.movieDAO().updateWatchlistStatusForID(id, value);
+    }
 
      //gets list of rated movies
     public List<Movie> getMoviesForRating(double rating) {
         return db.movieDAO().getMoviesForRating(rating);
     }
 
-    // gets list of sll movies
+    public void cleanDB(ArrayList<Movie> moviesFromAPI) {
+        ArrayList<Movie> moviesFromDB = (ArrayList<Movie>) db.movieDAO().getAllMovies();
+        for (Movie movieFromDB : moviesFromDB) {
+            if (!moviesFromAPI.contains(movieFromDB)) {
+                Log.d("FlickListApp", "deleted from db: " + movieFromDB.getTitle());
+                db.movieDAO().deleteMovie(movieFromDB);
+            }
+        }
+    }
+
+    // gets list of all movies
     public List<Movie> getAllMovies() {
         return db.movieDAO().getAllMovies();
     }
-
-    /**
-     * MovieDetails Details
-     */
-
-    public void addOrUpdateMovieDetails(MovieDetails movieDetails) {
-        MovieDetails movieDetailsFromDB = db.movieDetailsDAO().getMovieForID(movieDetails.id);
-        if (movieDetailsFromDB == null) {
-            db.movieDetailsDAO().addMovie(movieDetails);
-        } else {
-            db.movieDetailsDAO().updateMovie(movieDetails);
-        }
-    }
-
-    public void updateMovieRating(MovieDetails movieDetails, Float rating) {
-        db.movieDetailsDAO().updateRating(movieDetails.id, rating);
-    }
-
-    public void updateMovieFavoriteStatus(MovieDetails movieDetails, boolean isFavorite) {
-        db.movieDetailsDAO().updateFavoriteStatus(movieDetails.id, isFavorite);
-    }
-
-
-    // deletes movieDetails
-    public void deleteMovieDetails(MovieDetails movieDetails) {
-        MovieDetails movieDetailsFromDB = db.movieDetailsDAO().getMovieForID(movieDetails.id);
-        if (movieDetailsFromDB != null) {
-            db.movieDetailsDAO().deleteMovie(movieDetails);
-        }
-    }
-
-    public void clearMovieDetailsTable() {
-        db.movieDetailsDAO().delete();
-    }
-
-    // gets movie deatils for id
-    public MovieDetails getMovieDetailsForID(int id) {
-        return db.movieDetailsDAO().getMovieForID(id);
-    }
-
 
     // used in reset data
     public void clearAllTables() {

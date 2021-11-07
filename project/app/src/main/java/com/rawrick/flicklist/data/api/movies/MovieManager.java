@@ -29,13 +29,19 @@ public class MovieManager {
         this.listenerWatchlistedMovies = listenerWatchlistedMovies;
     }
 
+    public void getAllMovieDataFromAPI() {
+        getRatedMoviesFromAPI(1);
+        getFavoritedMoviesFromAPI(1);
+        getWatchlistedMoviesFromAPI(1);
+    }
+
     /**
      * Rated Movies
      */
 
-    public void getRatedMoviesFromAPI(int currentPage) {
+    public void getRatedMoviesFromAPI(int fromPage) {
         MovieProvider provider = new MovieProvider(context);
-        provider.getDataForRatedMovies(currentPage, new MovieProvider.RatedMoviesDataListener() {
+        provider.getDataForRatedMovies(fromPage, new MovieProvider.RatedMoviesDataListener() {
             @Override
             public void onRatedMoviesDataAvailable(ArrayList<MovieRated> data) {
                 if (ratedMovies == null) {
@@ -43,7 +49,11 @@ public class MovieManager {
                 } else {
                     ratedMovies.addAll(data);
                 }
-                listenerRatedMovies.onRatedMoviesUpdated(data.get(0).getOnPage());
+                if (data.get(0).getCurrentPage() < data.get(0).getPagesTotal()) {
+                    getRatedMoviesFromAPI(data.get(0).getCurrentPage() + 1);
+                } else if (data.get(0).getCurrentPage() == data.get(0).getPagesTotal()) {
+                    listenerRatedMovies.onRatedMoviesUpdated();
+                }
             }
         });
     }
@@ -52,25 +62,17 @@ public class MovieManager {
         return ratedMovies;
     }
 
-    public int getRatedMoviesTotalPages() {
-        if (ratedMovies.size() != 0) {
-            return  ratedMovies.get(0).getPagesTotal();
-        } else {
-            return 0;
-        }
-    }
-
     public interface RatedMoviesManagerListener {
-        void onRatedMoviesUpdated(int page);
+        void onRatedMoviesUpdated();
     }
 
     /**
      * Favorited Movies
      */
 
-    public void getFavoritedMoviesFromAPI(int currentPage) {
+    public void getFavoritedMoviesFromAPI(int fromPage) {
         MovieProvider provider = new MovieProvider(context);
-        provider.getDataForFavoritedMovies(currentPage, new MovieProvider.FavoritedMoviesDataListener() {
+        provider.getDataForFavoritedMovies(fromPage, new MovieProvider.FavoritedMoviesDataListener() {
             @Override
             public void onFavoritedMoviesDataAvailable(ArrayList<MovieFavorited> data) {
                 if (favoritedMovies == null) {
@@ -78,7 +80,11 @@ public class MovieManager {
                 } else {
                     favoritedMovies.addAll(data);
                 }
-                listenerFavoritedMovies.onFavoritedMoviesUpdated(data.get(0).getPage());
+                if (data.get(0).getCurrentPage() < data.get(0).getPagesTotal()) {
+                    getFavoritedMoviesFromAPI(data.get(0).getCurrentPage() + 1);
+                } else if (data.get(0).getCurrentPage() == data.get(0).getPagesTotal()) {
+                    listenerFavoritedMovies.onFavoritedMoviesUpdated();
+                }
             }
         });
     }
@@ -87,25 +93,17 @@ public class MovieManager {
         return favoritedMovies;
     }
 
-    public int getFavoritedMoviesTotalPages() {
-        if (favoritedMovies.size() != 0) {
-            return  favoritedMovies.get(0).getPagesTotal();
-        } else {
-            return 0;
-        }
-    }
-
     public interface FavoritedMoviesManagerListener {
-        void onFavoritedMoviesUpdated(int currentPage);
+        void onFavoritedMoviesUpdated();
     }
 
     /**
      * Watchlisted Movies
      */
 
-    public void getWatchlistedMoviesFromAPI(int currentPage) {
+    public void getWatchlistedMoviesFromAPI(int fromPage) {
         MovieProvider provider = new MovieProvider(context);
-        provider.getDataForWatchlistedMovies(currentPage, new MovieProvider.WatchlistedMoviesDataListener() {
+        provider.getDataForWatchlistedMovies(fromPage, new MovieProvider.WatchlistedMoviesDataListener() {
             @Override
             public void onWatchlistedMoviesDataAvailable(ArrayList<MovieWatchlisted> data) {
                 if (watchlistedMovies == null) {
@@ -113,7 +111,11 @@ public class MovieManager {
                 } else {
                     watchlistedMovies.addAll(data);
                 }
-                listenerWatchlistedMovies.onWatchlistedMoviesUpdated(data.get(0).getPage());
+                if (data.get(0).getCurrentPage() < data.get(0).getPagesTotal()) {
+                    getWatchlistedMoviesFromAPI(data.get(0).getCurrentPage() + 1);
+                } else if (data.get(0).getCurrentPage() == data.get(0).getPagesTotal()) {
+                    listenerWatchlistedMovies.onWatchlistedMoviesUpdated();
+                }
             }
         });
     }
@@ -122,15 +124,7 @@ public class MovieManager {
         return watchlistedMovies;
     }
 
-    public int getWatchlistedMoviesTotalPages() {
-        if (watchlistedMovies.size() != 0) {
-            return  watchlistedMovies.get(0).getPagesTotal();
-        } else {
-            return 0;
-        }
-    }
-
     public interface WatchlistedMoviesManagerListener {
-        void onWatchlistedMoviesUpdated(int currentPage);
+        void onWatchlistedMoviesUpdated();
     }
 }

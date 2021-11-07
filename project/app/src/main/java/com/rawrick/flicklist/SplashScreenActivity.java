@@ -20,10 +20,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.rawrick.flicklist.data.api.account.AccountManager;
 import com.rawrick.flicklist.data.api.movies.MovieManager;
 import com.rawrick.flicklist.data.api.series.SeriesManager;
+import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieFavorited;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
+import com.rawrick.flicklist.data.util.MediaComposer;
 
 import java.util.ArrayList;
 
@@ -36,6 +38,10 @@ public class SplashScreenActivity extends AppCompatActivity implements
 
     private AccountManager accountManager;
     private MovieManager movieManager;
+    private ArrayList<Movie> movies;
+    private ArrayList<MovieRated> ratingData;
+    private ArrayList<MovieFavorited> favoritesData;
+    private ArrayList<MovieWatchlisted> watchlistData;
     private SeriesManager seriesManager;
     private Intent intent;
 
@@ -82,6 +88,10 @@ public class SplashScreenActivity extends AppCompatActivity implements
 
     private void startMainActivity() {
         if (currentLoadingProgress == totalLoadingProgress) {
+            movies = MediaComposer.composeMovie(ratingData, favoritesData, watchlistData);
+            for (Movie movie : movies) {
+                db.addOrUpdateMovie(movie);
+            }
             Log.d("FlickListApp", "Starting MainActivity...");
             intent = new Intent(SplashScreenActivity.this, MainActivity.class);
             startActivity(intent);
@@ -98,12 +108,7 @@ public class SplashScreenActivity extends AppCompatActivity implements
 
     private void initMovieData() {
         movieManager = new MovieManager(this, this, this, this);
-        // rated
-        movieManager.getRatedMoviesFromAPI(1);
-        // favorited
-        movieManager.getFavoritedMoviesFromAPI(1);
-        // watchlisted
-        movieManager.getWatchlistedMoviesFromAPI(1);
+        movieManager.getAllMovieDataFromAPI();
     }
 
     private void initSeriesData() {
@@ -123,83 +128,23 @@ public class SplashScreenActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onRatedMoviesUpdated(int currentPage) {
-        // saves total pages that have to be fetched
-        int moviesRatedPagesTotal = movieManager.getRatedMoviesTotalPages();
-        if (currentPage < moviesRatedPagesTotal) {
-            // changes page number on API request URL
-            movieManager.getRatedMoviesFromAPI(currentPage + 1);
-        }
-        // save to db once all pages have been fetched
-        if (currentPage == moviesRatedPagesTotal) {
-            ArrayList<MovieRated> moviesFromAPI = movieManager.getRatedMovies();
-            for (MovieRated movieRated : moviesFromAPI) {
-                db.addOrUpdateMovieRated(movieRated);
-            }
-            ArrayList<MovieRated> moviesFromDB = (ArrayList<MovieRated>) db.getAllMoviesRated();
-            for (MovieRated movieRatedFromDB : moviesFromDB) {
-                if (!moviesFromAPI.contains(movieRatedFromDB)) {
-                    Log.d("dbwl", "rated: moviesFromAPI contains " + movieRatedFromDB.getId() + ": " + moviesFromAPI.contains(movieRatedFromDB));
-                    Log.d("dbwl", "rated: deleted from db: " + movieRatedFromDB.getId());
-                    db.deleteMovieRated(movieRatedFromDB);
-                }
-            }
-            currentLoadingProgress++;
-            startMainActivity();
-        }
+    public void onRatedMoviesUpdated() {
+        ratingData = movieManager.getRatedMovies();
+        currentLoadingProgress++;
+        startMainActivity();
     }
 
     @Override
-    public void onFavoritedMoviesUpdated(int currentPage) {
-        // saves total pages that have to be fetched
-        int moviesFavoritedPagesTotal = movieManager.getFavoritedMoviesTotalPages();
-        if (currentPage < moviesFavoritedPagesTotal) {
-            // changes page number on API request URL
-            movieManager.getFavoritedMoviesFromAPI(currentPage + 1);
-        }
-        // save to db once all pages have been fetched
-        if (currentPage == moviesFavoritedPagesTotal) {
-            ArrayList<MovieFavorited> moviesFromAPI = movieManager.getFavoritedMovies();
-            for (MovieFavorited movieFavorited : moviesFromAPI) {
-                db.addOrUpdateMovieFavorited(movieFavorited);
-            }
-            ArrayList<MovieFavorited> moviesFromDB = (ArrayList<MovieFavorited>) db.getAllMoviesFavorited();
-            for (MovieFavorited movieFavoritedFromDB : moviesFromDB) {
-                if (!moviesFromAPI.contains(movieFavoritedFromDB)) {
-                    Log.d("dbwl", "favorites: moviesFromAPI contains " + movieFavoritedFromDB.getId() + ": " + moviesFromAPI.contains(movieFavoritedFromDB));
-                    Log.d("dbwl", "favorites: deleted from db: " + movieFavoritedFromDB.getId());
-                    db.deleteMovieFavorited(movieFavoritedFromDB);
-                }
-            }
-            currentLoadingProgress++;
-            startMainActivity();
-        }
+    public void onFavoritedMoviesUpdated() {
+        favoritesData = movieManager.getFavoritedMovies();
+        currentLoadingProgress++;
+        startMainActivity();
     }
 
     @Override
-    public void onWatchlistedMoviesUpdated(int currentPage) {
-        // saves total pages that have to be fetched
-        int moviesWatchlistedPagesTotal = movieManager.getWatchlistedMoviesTotalPages();
-        if (currentPage < moviesWatchlistedPagesTotal) {
-            // changes page number on API request URL
-            movieManager.getWatchlistedMoviesFromAPI(currentPage + 1);
-        }
-        // sets adapter once all pages have been fetched
-        if (currentPage == moviesWatchlistedPagesTotal) {
-            ArrayList<MovieWatchlisted> moviesFromAPI = movieManager.getWatchlistedMovies();
-            for (MovieWatchlisted movieWatchlisted : moviesFromAPI) {
-                db.addOrUpdateMovieWatchlisted(movieWatchlisted);
-            }
-            ArrayList<MovieWatchlisted> moviesFromDB = (ArrayList<MovieWatchlisted>) db.getAllMoviesWatchlisted();
-            for (MovieWatchlisted movieWatchlistedFromDB : moviesFromDB) {
-                if (!moviesFromAPI.contains(movieWatchlistedFromDB)) {
-                    Log.d("dbwl", "watchlist: moviesFromAPI contains " + movieWatchlistedFromDB.getTitle() + ": " + moviesFromAPI.contains(movieWatchlistedFromDB));
-                    Log.d("dbwl", "watchlist: deleted from db: " + movieWatchlistedFromDB.getTitle());
-                    db.deleteMovieWatchlisted(movieWatchlistedFromDB);
-                }
-            }
-            currentLoadingProgress++;
-            startMainActivity();
-        }
+    public void onWatchlistedMoviesUpdated() {
+        watchlistData = movieManager.getWatchlistedMovies();
+        currentLoadingProgress++;
+        startMainActivity();
     }
 }

@@ -88,9 +88,9 @@ public class MovieActivity extends FragmentActivity {
         watchlistManager = new WatchlistManager(this);
 
         movieDetails = db.getMovieDetailsForID(movieID);
-        isMovieRated = db.isMovieRatedForID(movieDetails.getId());
-        isMovieFavorited = db.isMovieFavoritedForID(movieDetails.getId());
-        isMovieWatchlisted = db.isMovieWatchlistedForID(movieDetails.getId());
+        //isMovieRated = db.isMovieRatedForID(movieDetails.getId());
+        //isMovieFavorited = db.isMovieFavoritedForID(movieDetails.getId());
+        //isMovieWatchlisted = db.isMovieWatchlistedForID(movieDetails.getId());
     }
 
     private void initUI() {
@@ -166,7 +166,7 @@ public class MovieActivity extends FragmentActivity {
         final View customLayout = getLayoutInflater().inflate(R.layout.rating_dialog, null);
         ratingEditText = customLayout.findViewById(R.id.rating_input);
         if (isMovieRated) {
-            ratingFromDB = db.getMovieRatedForID(movieID).getRating();
+            ratingFromDB = 10.0f; //db.getMovieRatedForID(movieID).getRating();
             ratingFromDBString = String.valueOf(ratingFromDB);
             if (ratingFromDBString.endsWith(".0")) {
                 ratingFromDBString = ratingFromDBString.substring(0, ratingFromDBString.length() - 2);

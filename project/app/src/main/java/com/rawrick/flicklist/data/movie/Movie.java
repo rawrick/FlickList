@@ -20,8 +20,8 @@ public class Movie {
     private final String overview; // overview
     @ColumnInfo(name = "releaseDate")
     private final String releaseDate; // release_date
-    @ColumnInfo(name = "genreIDs")
-    private final int[] genreIDs; // genre_ids
+    //@ColumnInfo(name = "genreIDs")
+    //private final int[] genreIDs; // genre_ids
     @ColumnInfo(name = "isAdult")
     private final boolean isAdult; // adult
     @ColumnInfo(name = "language")
@@ -38,13 +38,15 @@ public class Movie {
     private final float userRating; // rating
     @ColumnInfo(name = "isFavourite")
     private final boolean isFavourite; // n.a.
+    @ColumnInfo(name = "isWatchlisted")
+    private final boolean isWatchlisted; // n.a.
 
     public Movie(int id,
                  String title,
                  String titleOriginal,
                  String overview,
                  String releaseDate,
-                 int[] genreIDs,
+                 //int[] genreIDs,
                  boolean isAdult,
                  String language,
                  float popularity,
@@ -52,13 +54,14 @@ public class Movie {
                  String posterPath,
                  String backdropPath,
                  float userRating,
-                 boolean isFavourite) {
+                 boolean isFavourite,
+                 boolean isWatchlisted) {
         this.id = id;
         this.title = title;
         this.titleOriginal = titleOriginal;
         this.overview = overview;
         this.releaseDate = releaseDate;
-        this.genreIDs = genreIDs;
+        //this.genreIDs = genreIDs;
         this.isAdult = isAdult;
         this.language = language;
         this.popularity = popularity;
@@ -67,5 +70,68 @@ public class Movie {
         this.backdropPath = backdropPath;
         this.userRating = userRating;
         this.isFavourite = isFavourite;
+        this.isWatchlisted = isWatchlisted;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getTitleOriginal() {
+        return titleOriginal;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    /*
+    public int[] getGenreIDs() {
+        return genreIDs;
+    }
+    */
+
+    public boolean isAdult() {
+        return isAdult;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public float getPopularity() {
+        return popularity;
+    }
+
+    public float getVoteAverage() {
+        return voteAverage;
+    }
+
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
+    public float getUserRating() {
+        return userRating;
+    }
+
+    public boolean isFavourite() {
+        return isFavourite;
+    }
+
+    public boolean isWatchlisted() {
+        return isWatchlisted;
     }
 }

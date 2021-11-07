@@ -18,10 +18,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.rawrick.flicklist.R;
 import com.rawrick.flicklist.data.api.movies.MovieManager;
+import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieFavorited;
 import com.rawrick.flicklist.data.movie.MovieRated;
+import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 import com.rawrick.flicklist.data.util.ActivitySelector;
+import com.rawrick.flicklist.data.util.MediaComposer;
 import com.rawrick.flicklist.databinding.FragmentMoviesBinding;
 
 import java.util.ArrayList;
@@ -38,11 +41,11 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     private FLDatabaseHelper db;
     private MovieManager movieManager;
     private ActivitySelector activitySelector;
-    private ArrayList<MovieRated> moviesRated;
-    private ArrayList<MovieFavorited> moviesFavourited;
-
-    private int moviesFavouritedPageCurrent;
-
+    private ArrayList<Movie> movies;
+    private ArrayList<MovieRated> ratingData;
+    private ArrayList<MovieFavorited> favoritesData;
+    private ArrayList<MovieWatchlisted> watchlistData;
+    private int loadingProgress;
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -75,29 +78,34 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     private void initData() {
         activitySelector = new ActivitySelector(getActivity());
         db = FLDatabaseHelper.getInstance(this.getActivity());
-        moviesFavourited = (ArrayList<MovieFavorited>) db.getAllMoviesFavorited();
-        for (MovieFavorited movie : moviesFavourited) {
-            if (db.isMovieRatedForID(movie.getId())) {
-                db.updateRatedMovieFavoriteStatus(db.getMovieRatedForID(movie.getId()), true);
-            }
-        }
-        moviesRated = (ArrayList<MovieRated>) db.getAllMoviesRated();
+        movies = (ArrayList<Movie>) db.getAllMovies();
+        movies.removeIf(Movie::isWatchlisted);
         sortDefault();
     }
 
     private void refreshData() {
+        loadingProgress = 0;
         movieManager = new MovieManager(getActivity(), this, this, this);
-        movieManager.getRatedMoviesFromAPI(1);
-        movieManager.getFavoritedMoviesFromAPI(1);
+        movieManager.getAllMovieDataFromAPI();
+    }
+
+    private void updateList(int value) {
+        if (value == 3) {
+            movies = MediaComposer.composeMovie(ratingData, favoritesData, watchlistData);
+            movies.removeIf(Movie::isWatchlisted);
+            sortDefault();
+            movieListAdapter.setRatedMovies(movies);
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     private void sortDefault() {
-        Collections.sort(moviesRated, CompDefault);
+        Collections.sort(movies, CompDefault);
     }
 
-    Comparator<MovieRated> CompDefault = (M1, M2) -> {
-        double R1 = M1.getRating();
-        double R2 = M2.getRating();
+    Comparator<Movie> CompDefault = (M1, M2) -> {
+        double R1 = M1.getUserRating();
+        double R2 = M2.getUserRating();
         String T1 = M1.getTitle();
         String T2 = M2.getTitle();
         String t1 = ignoreArticles(T1);
@@ -144,7 +152,7 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
         });
         movieListAdapter = new MovieListAdapter(getActivity(), this);
         recyclerRatedMovies.setAdapter(movieListAdapter);
-        movieListAdapter.setRatedMovies(moviesRated);
+        movieListAdapter.setRatedMovies(movies);
 
         swipeRefreshLayout = view.findViewById(R.id.movies_swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -158,76 +166,27 @@ public class MoviesFragment extends Fragment implements MovieListItemViewHolder.
     @Override
     public void onMovieListItemClicked(int position) {
         // go to movie detail activity
-        activitySelector.startMovieActivity(moviesRated.get(position).getId());
+        activitySelector.startMovieActivity(movies.get(position).getId());
     }
 
     @Override
-    public void onRatedMoviesUpdated(int currentPage) {
-        // saves total pages that have to be fetched
-        int moviesRatedPagesTotal = movieManager.getRatedMoviesTotalPages();
-        // sends more requests if there are more than 1 result pages
-        if (currentPage < moviesRatedPagesTotal) {
-            // changes page number on API request URL
-            movieManager.getRatedMoviesFromAPI(currentPage + 1);
-        }
-        // save to db once all pages have been fetched
-        if (currentPage == moviesRatedPagesTotal) {
-            Log.d("updateDebug", "all rated movies have been fetched");
-            ArrayList<MovieRated> moviesFromAPI = movieManager.getRatedMovies();
-            for (MovieRated movieRated : moviesFromAPI) {
-                db.addOrUpdateMovieRated(movieRated);
-            }
-            ArrayList<MovieRated> moviesFromDB = (ArrayList<MovieRated>) db.getAllMoviesRated();
-            for (MovieRated movieRatedFromDB : moviesFromDB) {
-                if (!moviesFromAPI.contains(movieRatedFromDB)) {
-                    Log.d("dbwl", "rated: moviesFromAPI contains " + movieRatedFromDB.getId() + ": " + moviesFromAPI.contains(movieRatedFromDB));
-                    Log.d("dbwl", "rated: deleted from db: " + movieRatedFromDB.getId());
-                    db.deleteMovieRated(movieRatedFromDB);
-                }
-            }
-            movieManager.getFavoritedMoviesFromAPI(1);
-        }
+    public void onRatedMoviesUpdated() {
+        ratingData = movieManager.getRatedMovies();
+        loadingProgress++;
+        updateList(loadingProgress);
     }
 
     @Override
-    public void onFavoritedMoviesUpdated(int currentPage) {
-        // saves total pages that have to be fetched
-        int moviesFavouritedPagesTotal = movieManager.getFavoritedMoviesTotalPages();
-        // sends more requests if there are more than 1 result pages
-        if (currentPage < moviesFavouritedPagesTotal) {
-            // changes page number on API request URL
-            movieManager.getFavoritedMoviesFromAPI(moviesFavouritedPageCurrent);
-        }
-        // save to db once all pages have been fetched
-        if (currentPage == moviesFavouritedPagesTotal) {
-            Log.d("updateDebug", "all favourited movies have been fetched");
-            ArrayList<MovieFavorited> moviesFromAPI = movieManager.getFavoritedMovies();
-            for (MovieFavorited movieFavorited : moviesFromAPI) {
-                db.addOrUpdateMovieFavorited(movieFavorited);
-            }
-            ArrayList<MovieFavorited> moviesFromDB = (ArrayList<MovieFavorited>) db.getAllMoviesFavorited();
-            for (MovieFavorited movieFavoritedFromDB : moviesFromDB) {
-                if (!moviesFromAPI.contains(movieFavoritedFromDB)) {
-                    Log.d("updateDebug", "rated: moviesFromAPI contains " + movieFavoritedFromDB.getId() + ": " + moviesFromAPI.contains(movieFavoritedFromDB));
-                    Log.d("updateDebug", "rated: deleted from db: " + movieFavoritedFromDB.getId());
-                    db.deleteMovieFavorited(movieFavoritedFromDB);
-                }
-            }
-            moviesFavourited = (ArrayList<MovieFavorited>) db.getAllMoviesFavorited();
-            for (MovieFavorited movie : moviesFavourited) {
-                if (db.isMovieRatedForID(movie.getId())) {
-                    Log.d("updateDebug", "marking as favourite: " + db.getMovieRatedForID(movie.getId()).getTitle());
-                    db.updateRatedMovieFavoriteStatus(db.getMovieRatedForID(movie.getId()), true);
-                }
-            }
-            moviesRated = (ArrayList<MovieRated>) db.getAllMoviesRated();
-            sortDefault();
-            movieListAdapter.setRatedMovies(moviesRated);
-            swipeRefreshLayout.setRefreshing(false);
-        }
+    public void onFavoritedMoviesUpdated() {
+        favoritesData = movieManager.getFavoritedMovies();
+        loadingProgress++;
+        updateList(loadingProgress);
     }
 
     @Override
-    public void onWatchlistedMoviesUpdated(int currentPage) {
+    public void onWatchlistedMoviesUpdated() {
+        watchlistData = movieManager.getWatchlistedMovies();
+        loadingProgress++;
+        updateList(loadingProgress);
     }
 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.rawrick.flicklist.R;
+import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieWatchlisted;
 
@@ -30,14 +31,14 @@ public class MovieWatchlistItemViewHolder extends RecyclerView.ViewHolder {
         thumbnail = itemView.findViewById(R.id.movie_watchlist_item_poster);
     }
 
-    public void bindView(MovieWatchlisted movie) {
+    public void bindView(Movie movie) {
         Glide.with(context)
                 .load(movie.getPosterPath())
                 .centerCrop()
                 .into(thumbnail);
 
         title.setText(movie.getTitle());
-        releaseYear.setText(movie.getReleaseYear());
+        releaseYear.setText(movie.getReleaseDate());
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

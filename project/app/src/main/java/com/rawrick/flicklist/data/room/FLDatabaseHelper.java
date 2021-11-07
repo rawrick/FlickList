@@ -6,6 +6,7 @@ import android.content.Context;
 import androidx.room.Room;
 
 
+import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieDetails;
 import com.rawrick.flicklist.data.movie.MovieFavorited;
 import com.rawrick.flicklist.data.movie.MovieRated;
@@ -38,121 +39,48 @@ public class FLDatabaseHelper {
     }
 
     /**
-     * Rated Movies
+     * Movies
      */
 
-    public void addOrUpdateMovieRated(MovieRated movieRated) {
-        MovieRated movieFromDB = db.movieRatedDAO().getMovieForID(movieRated.id);
+    public void addOrUpdateMovie(Movie movie) {
+        Movie movieFromDB = db.movieDAO().getMovieForID(movie.id);
         if (movieFromDB == null) {
-            db.movieRatedDAO().addMovie(movieRated);
+            db.movieDAO().addMovie(movie);
         } else {
-            db.movieRatedDAO().updateMovie(movieRated);
+            db.movieDAO().updateMovie(movie);
         }
     }
 
     // deletes movie
-    public void deleteMovieRated(MovieRated movieRated) {
-        MovieRated movieFromDB = db.movieRatedDAO().getMovieForID(movieRated.id);
+    public void deleteMovie(Movie movie) {
+        Movie movieFromDB = db.movieDAO().getMovieForID(movie.id);
         if (movieFromDB != null) {
-            db.movieRatedDAO().deleteMovie(movieRated);
+            db.movieDAO().deleteMovie(movie);
         }
     }
 
     // gets rated movie for id
-    public MovieRated getMovieRatedForID(int id) {
-        return db.movieRatedDAO().getMovieForID(id);
+    public Movie getMovieForID(int id) {
+        return db.movieDAO().getMovieForID(id);
     }
 
     // checks whether movie is rated
-    public boolean isMovieRatedForID(int id) {
-        return db.movieRatedDAO().isRated(id);
+    //public boolean isMovieRatedForID(int id) {
+    //    return db.movieDAO().isRated(id);
+    //}
+
+    //public void updateRatedMovieFavoriteStatus(MovieRated movieRated, boolean value) {
+    //    db.movieRatedDAO().updateFavouriteStatus(value, movieRated.id);
+    //}
+
+     //gets list of rated movies
+    public List<Movie> getMoviesForRating(double rating) {
+        return db.movieDAO().getMoviesForRating(rating);
     }
 
-    public void updateRatedMovieFavoriteStatus(MovieRated movieRated, boolean value) {
-        db.movieRatedDAO().updateFavouriteStatus(value, movieRated.id);
-    }
-
-    // gets list of rated movies
-    public List<MovieRated> getMoviesRatedForRating(double rating) {
-        return db.movieRatedDAO().getMoviesForRating(rating);
-    }
-
-    // gets list of rated movies
-    public List<MovieRated> getAllMoviesRated() {
-        return db.movieRatedDAO().getAllMoviesRated();
-    }
-
-    /**
-     * Favorited Movies
-     */
-
-    public void addOrUpdateMovieFavorited(MovieFavorited movieFavorited) {
-        MovieFavorited movieFromDB = db.movieFavoritedDAO().getMovieForID(movieFavorited.id);
-        if (movieFromDB == null) {
-            db.movieFavoritedDAO().addMovie(movieFavorited);
-        } else {
-            db.movieFavoritedDAO().updateMovie(movieFavorited);
-        }
-    }
-
-    // deletes movie
-    public void deleteMovieFavorited(MovieFavorited movieFavorited) {
-        MovieFavorited movieFromDB = db.movieFavoritedDAO().getMovieForID(movieFavorited.id);
-        if (movieFromDB != null) {
-            db.movieFavoritedDAO().deleteMovie(movieFavorited);
-        }
-    }
-
-    // gets favorited movie for id
-    public MovieFavorited getMovieFavoritedForID(int id) {
-        return db.movieFavoritedDAO().getMovieForID(id);
-    }
-
-    // checks whether movie is favorited
-    public boolean isMovieFavoritedForID(int id) {
-        return db.movieFavoritedDAO().isFavorited(id);
-    }
-
-    // gets list of favorited movies
-    public List<MovieFavorited> getAllMoviesFavorited() {
-        return db.movieFavoritedDAO().getAllMovies();
-    }
-
-
-    /**
-     * Watchlisted Movies
-     */
-
-    public void addOrUpdateMovieWatchlisted(MovieWatchlisted movie) {
-        MovieWatchlisted movieFromDB = db.movieWatchlistedDAO().getMovieForID(movie.id);
-        if (movieFromDB == null) {
-            db.movieWatchlistedDAO().addMovie(movie);
-        } else {
-            db.movieWatchlistedDAO().updateMovie(movie);
-        }
-    }
-
-    // deletes movie
-    public void deleteMovieWatchlisted(MovieWatchlisted movie) {
-        MovieWatchlisted movieFromDB = db.movieWatchlistedDAO().getMovieForID(movie.id);
-        if (movieFromDB != null) {
-            db.movieWatchlistedDAO().deleteMovie(movie);
-        }
-    }
-
-    // gets watchlisted movie for id
-    public MovieWatchlisted getWatchlistedMovieForID(int id) {
-        return db.movieWatchlistedDAO().getMovieForID(id);
-    }
-
-    // checks whether movie is watchlisted
-    public boolean isMovieWatchlistedForID(int id) {
-        return db.movieWatchlistedDAO().isWatchlisted(id);
-    }
-
-    // gets list of rated movies
-    public List<MovieWatchlisted> getAllMoviesWatchlisted() {
-        return db.movieWatchlistedDAO().getAllMoviesWatchlisted();
+    // gets list of sll movies
+    public List<Movie> getAllMovies() {
+        return db.movieDAO().getAllMovies();
     }
 
     /**

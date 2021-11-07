@@ -90,8 +90,8 @@ public class MovieProvider {
 
                 @Override
                 public void onError() {
-                    ratedMovieData = (ArrayList<MovieRated>) db.getAllMoviesRated();
-                    listener.onRatedMoviesDataAvailable(ratedMovieData);
+                    //ratedMovieData = (ArrayList<MovieRated>) db.getAllMoviesRated();
+                    //listener.onRatedMoviesDataAvailable(ratedMovieData);
                     Log.d("FlickListApp", "No Connection");
                 }
             });
@@ -127,8 +127,8 @@ public class MovieProvider {
 
                 @Override
                 public void onError() {
-                    favoritedMovieData = (ArrayList<MovieFavorited>) db.getAllMoviesFavorited();
-                    listener.onFavoritedMoviesDataAvailable(favoritedMovieData);
+                    //favoritedMovieData = (ArrayList<MovieFavorited>) db.getAllMoviesFavorited();
+                    //listener.onFavoritedMoviesDataAvailable(favoritedMovieData);
                     Log.d("FlickListApp", "No Connection");
                 }
             });
@@ -164,8 +164,8 @@ public class MovieProvider {
 
                 @Override
                 public void onError() {
-                    watchlistedMovieData = (ArrayList<MovieWatchlisted>) db.getAllMoviesWatchlisted();
-                    listener.onWatchlistedMoviesDataAvailable(watchlistedMovieData);
+                    //watchlistedMovieData = (ArrayList<MovieWatchlisted>) db.getAllMoviesWatchlisted();
+                    //listener.onWatchlistedMoviesDataAvailable(watchlistedMovieData);
                     Log.d("FlickListApp", "No Connection");
                 }
             });

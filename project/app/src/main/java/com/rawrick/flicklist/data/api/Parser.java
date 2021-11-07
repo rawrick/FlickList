@@ -149,28 +149,32 @@ public class Parser {
 
     public static ArrayList<MovieRated> parseRatedMoviesData(JSONObject response) {
         try {
-            int page = response.getInt("page");
+            int currentPage = response.getInt("page");
             int pagesTotal = response.getInt("total_pages");
             JSONArray resultsArray = response.getJSONArray("results");
-
             ArrayList<MovieRated> ratedMovies = new ArrayList<>();
             for (int i = 0; i < resultsArray.length(); i++) {
                 JSONObject result = resultsArray.getJSONObject(i);
 
                 int id = result.getInt("id");
-                float rating = (float) result.getDouble("rating");
                 String title = result.getString("title");
+                String titleOriginal = result.getString("original_title");
+                String overview = result.getString("overview");
                 String releaseDate = result.getString("release_date");
-                String releaseYear = releaseDate.substring(0, 4);
+                //int[] genreIDs = ;
+                boolean isAdult = result.getBoolean("adult");
+                String language = result.getString("original_language");
+                float popularity = (float) result.getDouble("popularity");
+                float voteAverage = (float) result.getDouble("vote_average");
                 String posterPath = result.getString("poster_path");
-                String fullPosterPath = poster500 + posterPath;
                 String backdropPath = result.getString("backdrop_path");
+                float userRating = (float) result.getDouble("rating");
+
+                String releaseYear = releaseDate.substring(0, 4);
+                String fullPosterPath = poster500 + posterPath;
                 String fullBackdropPath = backdrop1280 + backdropPath;
 
-
-                //Log.d("FlickListApp", "Parsing movie: " + title + ", with ID: " + id);
-
-                MovieRated ratedMovie = new MovieRated(id, rating, title, releaseYear, fullPosterPath, fullBackdropPath, page, pagesTotal);
+                MovieRated ratedMovie = new MovieRated(id, title, titleOriginal, overview, releaseYear, isAdult, language, popularity, voteAverage, fullPosterPath, fullBackdropPath, userRating, currentPage, pagesTotal);
                 ratedMovies.add(ratedMovie);
             }
             return ratedMovies;
@@ -192,7 +196,7 @@ public class Parser {
                 JSONObject result = resultsArray.getJSONObject(i);
                 int id = result.getInt("id");
 
-                MovieFavorited movieFavorited = new MovieFavorited(id, true, page, pagesTotal);
+                MovieFavorited movieFavorited = new MovieFavorited(id, page, pagesTotal);
                 favoritedMovies.add(movieFavorited);
             }
             return favoritedMovies;
@@ -205,22 +209,31 @@ public class Parser {
 
     public static ArrayList<MovieWatchlisted> parseWatchlistedMoviesData(JSONObject response) {
         try {
-            int page = response.getInt("page");
+            int currentPage = response.getInt("page");
             int pagesTotal = response.getInt("total_pages");
             JSONArray resultsArray = response.getJSONArray("results");
-
             ArrayList<MovieWatchlisted> watchlistedMovies = new ArrayList<>();
             for (int i = 0; i < resultsArray.length(); i++) {
                 JSONObject result = resultsArray.getJSONObject(i);
 
                 int id = result.getInt("id");
                 String title = result.getString("title");
+                String titleOriginal = result.getString("original_title");
+                String overview = result.getString("overview");
                 String releaseDate = result.getString("release_date");
-                String releaseYear = releaseDate.substring(0, 4);
+                //int[] genreIDs = ;
+                boolean isAdult = result.getBoolean("adult");
+                String language = result.getString("original_language");
+                float popularity = (float) result.getDouble("popularity");
+                float voteAverage = (float) result.getDouble("vote_average");
                 String posterPath = result.getString("poster_path");
-                String fullPosterPath = poster500 + posterPath;
+                String backdropPath = result.getString("backdrop_path");
 
-                MovieWatchlisted watchlistedMovie = new MovieWatchlisted(id, title, releaseYear, fullPosterPath, page, pagesTotal);
+                String releaseYear = releaseDate.substring(0, 4);
+                String fullPosterPath = poster500 + posterPath;
+                String fullBackdropPath = backdrop1280 + backdropPath;
+
+                MovieWatchlisted watchlistedMovie = new MovieWatchlisted(id, title, titleOriginal, overview, releaseYear, isAdult, language, popularity, voteAverage, fullPosterPath, fullBackdropPath, currentPage, pagesTotal);
                 watchlistedMovies.add(watchlistedMovie);
             }
             return watchlistedMovies;

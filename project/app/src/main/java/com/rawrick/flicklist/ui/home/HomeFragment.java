@@ -26,6 +26,7 @@ import com.rawrick.flicklist.MovieActivity;
 import com.rawrick.flicklist.R;
 import com.rawrick.flicklist.data.api.series.SeriesManager;
 import com.rawrick.flicklist.data.api.trends.TrendingManager;
+import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
@@ -126,7 +127,8 @@ public class HomeFragment extends Fragment implements TrendingManager.TrendingMo
                 .into(userAvatar);
         banner = view.findViewById(R.id.home_header_image);
         Random random = new Random();
-        ArrayList<MovieRated> moviesRatedHighRating = (ArrayList<MovieRated>) db.getMoviesRatedForRating(8.0);
+
+        ArrayList<Movie> moviesRatedHighRating = (ArrayList<Movie>) db.getMoviesForRating(8.0);
         String backdropPath;
         if (moviesRatedHighRating.size() != 0) {
              backdropPath = moviesRatedHighRating.get(random.nextInt(moviesRatedHighRating.size())).getBackdropPath();

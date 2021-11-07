@@ -1,60 +1,54 @@
 package com.rawrick.flicklist.data.movie;
 
-import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
-
-@Entity(tableName = "moviesrated")
 public class MovieRated implements Comparable<MovieRated> {
 
-    @PrimaryKey
-    @NonNull
     public final int id;
-    @ColumnInfo(name = "rating")
-    private final float rating;
-    @ColumnInfo(name = "title")
-    private final String title;
-    @ColumnInfo(name = "releaseYear")
-    private final String releaseYear;
-    @ColumnInfo(name = "posterPath")
-    private final String posterPath;
-    @ColumnInfo(name = "backdropPath")
-    private final String backdropPath;
-    @ColumnInfo(name = "onPage")
-    private final int onPage;
-    @ColumnInfo(name = "pagesTotal")
+    private final String title; // title
+    private final String titleOriginal; // original_title
+    private final String overview; // overview
+    private final String releaseDate; // release_date
+    //@ColumnInfo(name = "genreIDs")
+    //private final int[] genreIDs; // genre_ids
+    private final boolean isAdult; // adult
+    private final String language; // original_language
+    private final float popularity; // popularity
+    private final float voteAverage; // vote_average
+    private final String posterPath; // poster_path
+    private final String backdropPath; // backdrop_path
+    private final float userRating; // rating
+    private final int currentPage;
     private final int pagesTotal;
-    @ColumnInfo(name = "watchDate")
-    private String watchDate;
-    @ColumnInfo(name = "isFavourite")
-    private boolean isFavourite;
 
-    @Ignore
-    public MovieRated(int id, float rating, String title, String releaseYear, String posterPath, String backdropPath, int onPage, int pagesTotal) {
+    public MovieRated(int id,
+                      String title,
+                      String titleOriginal,
+                      String overview,
+                      String releaseDate,
+                      //int[] genreIDs,
+                      boolean isAdult,
+                      String language,
+                      float popularity,
+                      float voteAverage,
+                      String posterPath,
+                      String backdropPath,
+                      float userRating,
+                      int currentPage,
+                      int pagesTotal) {
         this.id = id;
-        this.rating = rating;
         this.title = title;
-        this.releaseYear = releaseYear;
+        this.titleOriginal = titleOriginal;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+        //this.genreIDs = genreIDs;
+        this.isAdult = isAdult;
+        this.language = language;
+        this.popularity = popularity;
+        this.voteAverage = voteAverage;
         this.posterPath = posterPath;
         this.backdropPath = backdropPath;
-        this.onPage = onPage;
+        this.userRating = userRating;
+        this.currentPage = currentPage;
         this.pagesTotal = pagesTotal;
-    }
-
-    // used for DB
-    public MovieRated(int id, float rating, String title, String releaseYear, String posterPath, String backdropPath, int onPage, int pagesTotal, String watchDate, boolean isFavourite) {
-        this.id = id;
-        this.rating = rating;
-        this.title = title;
-        this.releaseYear = releaseYear;
-        this.posterPath = posterPath;
-        this.backdropPath = backdropPath;
-        this.onPage = onPage;
-        this.pagesTotal = pagesTotal;
-        this.watchDate = watchDate;
-        this.isFavourite = isFavourite;
     }
 
     public boolean equals(Object obj) {
@@ -74,20 +68,45 @@ public class MovieRated implements Comparable<MovieRated> {
         return true;
     }
 
-    public int getId() {
-        return id;
+    @Override
+    public int compareTo(MovieRated o) {
+        return 0;
     }
 
-    public float getRating() {
-        return rating;
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getReleaseYear() {
-        return releaseYear;
+    public String getTitleOriginal() {
+        return titleOriginal;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public boolean isAdult() {
+        return isAdult;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public float getPopularity() {
+        return popularity;
+    }
+
+    public float getVoteAverage() {
+        return voteAverage;
     }
 
     public String getPosterPath() {
@@ -98,24 +117,15 @@ public class MovieRated implements Comparable<MovieRated> {
         return backdropPath;
     }
 
-    public int getOnPage() {
-        return onPage;
+    public float getUserRating() {
+        return userRating;
+    }
+
+    public int getCurrentPage() {
+        return currentPage;
     }
 
     public int getPagesTotal() {
         return pagesTotal;
-    }
-
-    public String getWatchDate() {
-        return watchDate;
-    }
-
-    public boolean isFavourite() {
-        return isFavourite;
-    }
-
-    @Override
-    public int compareTo(MovieRated o) {
-        return 0;
     }
 }

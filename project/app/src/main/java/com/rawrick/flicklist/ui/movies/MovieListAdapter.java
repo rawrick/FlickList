@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rawrick.flicklist.R;
+import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.movie.MovieTrending;
 import com.rawrick.flicklist.ui.home.TrendingMoviesViewHolder;
@@ -21,18 +22,18 @@ import java.util.Comparator;
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListItemViewHolder> {
 
     private final Context context;
-    private ArrayList<MovieRated> moviesRated;
+    private ArrayList<Movie> movies;
     private final MovieListItemViewHolder.ViewHolderListener listener;
     private final int selectedPosition = RecyclerView.NO_POSITION;
 
     public MovieListAdapter(Context context, MovieListItemViewHolder.ViewHolderListener listener) {
         this.context = context;
         this.listener = listener;
-        moviesRated = new ArrayList<>();
+        movies = new ArrayList<>();
     }
 
-    public void setRatedMovies(ArrayList<MovieRated> moviesRated) {
-        this.moviesRated = moviesRated;
+    public void setRatedMovies(ArrayList<Movie> movies) {
+        this.movies = movies;
         this.notifyDataSetChanged();
     }
 
@@ -46,12 +47,12 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListItemViewHold
     @Override
     public void onBindViewHolder(@NonNull MovieListItemViewHolder holder, int position) {
         holder.itemView.setSelected(position == selectedPosition);
-        MovieRated movieRated = moviesRated.get(position);
-        holder.bindView(movieRated);
+        Movie movie = movies.get(position);
+        holder.bindView(movie);
     }
 
     @Override
     public int getItemCount() {
-        return moviesRated.size();
+        return movies.size();
     }
 }

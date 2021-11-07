@@ -1,36 +1,17 @@
 package com.rawrick.flicklist.data.movie;
 
-import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
 
-@Entity(tableName = "moviesfavorited")
+
 public class MovieFavorited {
 
-    @PrimaryKey
-    @NonNull
     public final int id;
-    @ColumnInfo(name = "isFavorited")
-    private boolean isFavorited;
-    @ColumnInfo(name = "page")
-    private final int page;
-    @ColumnInfo(name = "pagesTotal")
+    private final int currentPage;
     private final int pagesTotal;
 
-    @Ignore
-    public MovieFavorited(int id, int page, int pagesTotal) {
-        this.id = id;
-        this.page = page;
-        this.pagesTotal = pagesTotal;
-    }
 
-    // used by database
-    public MovieFavorited(int id, boolean isFavorited, int page, int pagesTotal) {
+    public MovieFavorited(int id, int currentPage, int pagesTotal) {
         this.id = id;
-        this.isFavorited = isFavorited;
-        this.page = page;
+        this.currentPage = currentPage;
         this.pagesTotal = pagesTotal;
     }
 
@@ -55,12 +36,8 @@ public class MovieFavorited {
         return id;
     }
 
-    public int getPage() {
-        return page;
-    }
-
-    public boolean isFavorited() {
-        return isFavorited;
+    public int getCurrentPage() {
+        return currentPage;
     }
 
     public int getPagesTotal() {

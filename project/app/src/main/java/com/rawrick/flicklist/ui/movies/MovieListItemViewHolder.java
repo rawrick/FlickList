@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.rawrick.flicklist.R;
+import com.rawrick.flicklist.data.movie.Movie;
 import com.rawrick.flicklist.data.movie.MovieRated;
 import com.rawrick.flicklist.data.room.FLDatabaseHelper;
 
@@ -37,14 +38,14 @@ public class MovieListItemViewHolder extends RecyclerView.ViewHolder {
         favourite = itemView.findViewById(R.id.movie_list_item_fav);
     }
 
-    public void bindView(MovieRated movie) {
+    public void bindView(Movie movie) {
         Glide.with(context)
                 .load(movie.getPosterPath())
                 .centerCrop()
                 .into(thumbnail);
 
         title.setText(movie.getTitle());
-        String getRating = String.valueOf(movie.getRating());
+        String getRating = String.valueOf(movie.getUserRating());
         String ratingFormatted;
         if (getRating.endsWith(".0")) {
             ratingFormatted = getRating.substring(0, getRating.length() - 2);
@@ -52,13 +53,12 @@ public class MovieListItemViewHolder extends RecyclerView.ViewHolder {
             ratingFormatted = getRating;
         }
         rating.setText(ratingFormatted);
-        Log.d("mvdebug", "is " + db.getMovieRatedForID(movie.getId()).getTitle() + " favourite: " + db.isMovieFavoritedForID(movie.getId()));
-        if (db.isMovieFavoritedForID(movie.getId())) {
+        if (movie.isFavourite()) {
             favourite.setVisibility(View.VISIBLE);
         } else {
             favourite.setVisibility(View.INVISIBLE);
         }
-        releaseYear.setText(movie.getReleaseYear());
+        releaseYear.setText(movie.getReleaseDate());
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

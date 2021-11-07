@@ -1,50 +1,51 @@
 package com.rawrick.flicklist.data.movie;
 
-import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
-
-@Entity(tableName = "movieswatchlisted")
 public class MovieWatchlisted {
 
-    @PrimaryKey
-    @NonNull
     public final int id;
-    @ColumnInfo(name = "title")
-    private final String title;
-    @ColumnInfo(name = "releaseYear")
-    private final String releaseYear;
-    @ColumnInfo(name = "posterPath")
-    private final String posterPath;
-    @ColumnInfo(name = "page")
-    private final int page;
-    @ColumnInfo(name = "pagesTotal")
+    private final String title; // title
+    private final String titleOriginal; // original_title
+    private final String overview; // overview
+    private final String releaseDate; // release_date
+    //@ColumnInfo(name = "genreIDs")
+    //private final int[] genreIDs; // genre_ids
+    private final boolean isAdult; // adult
+    private final String language; // original_language
+    private final float popularity; // popularity
+    private final float voteAverage; // vote_average
+    private final String posterPath; // poster_path
+    private final String backdropPath; // backdrop_path
+    private final int currentPage;
     private final int pagesTotal;
-    @ColumnInfo(name = "isTrue")
-    private final boolean isWatchlisted;
 
-    @Ignore
-    public MovieWatchlisted(int id, String title, String releaseYear, String posterPath, int page, int pagesTotal) {
+    public MovieWatchlisted(int id,
+                            String title,
+                            String titleOriginal,
+                            String overview,
+                            String releaseDate,
+                            //int[] genreIDs,
+                            boolean isAdult,
+                            String language,
+                            float popularity,
+                            float voteAverage,
+                            String posterPath,
+                            String backdropPath,
+                            int currentPage,
+                            int pagesTotal) {
         this.id = id;
         this.title = title;
-        this.releaseYear = releaseYear;
+        this.titleOriginal = titleOriginal;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+        //this.genreIDs = genreIDs;
+        this.isAdult = isAdult;
+        this.language = language;
+        this.popularity = popularity;
+        this.voteAverage = voteAverage;
         this.posterPath = posterPath;
-        this.page = page;
+        this.backdropPath = backdropPath;
+        this.currentPage = currentPage;
         this.pagesTotal = pagesTotal;
-        this.isWatchlisted = true;
-    }
-
-    // used for DB
-    public MovieWatchlisted(int id, String title, String releaseYear, String posterPath, int page, int pagesTotal, boolean isWatchlisted) {
-        this.id = id;
-        this.title = title;
-        this.releaseYear = releaseYear;
-        this.posterPath = posterPath;
-        this.page = page;
-        this.pagesTotal = pagesTotal;
-        this.isWatchlisted = isWatchlisted;
     }
 
     public boolean equals(Object obj) {
@@ -72,23 +73,47 @@ public class MovieWatchlisted {
         return title;
     }
 
-    public String getReleaseYear() {
-        return releaseYear;
+    public String getTitleOriginal() {
+        return titleOriginal;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public boolean isAdult() {
+        return isAdult;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public float getPopularity() {
+        return popularity;
+    }
+
+    public float getVoteAverage() {
+        return voteAverage;
     }
 
     public String getPosterPath() {
         return posterPath;
     }
 
-    public int getPage() {
-        return page;
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
+    public int getCurrentPage() {
+        return currentPage;
     }
 
     public int getPagesTotal() {
         return pagesTotal;
-    }
-
-    public boolean isWatchlisted() {
-        return isWatchlisted;
     }
 }

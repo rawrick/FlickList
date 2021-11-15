@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="themeNegativeColor" format="reference"/>
+    <attr name="themeButtonBorderNegative" format="reference"/>
+</resources>

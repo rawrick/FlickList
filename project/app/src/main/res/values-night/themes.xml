@@ -1,0 +1,113 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.FlickList" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/colorPrimary</item>
+        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <!-- Customize your theme here. -->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+
+        <item name="themeNegativeColor">@color/brightRed</item>
+        <item name="themeButtonBorderNegative">@style/ButtonBorderNegative</item>
+    </style>
+
+
+
+    <style name="SplashTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="bottomNavigationView">
+        <item name="android:background">@color/backgroundVariationDark</item>
+    </style>
+
+    <style name="defaultBackground">
+        <item name="android:background">@color/backgroundDefaultDark</item>
+    </style>
+
+    <style name="homeFAB">
+        <item name="tint">@color/colorPrimary</item>
+        <item name="borderWidth">0dp</item>
+        <item name="elevation">0dp</item>
+        <item name="backgroundTint">@color/backgroundDefaultDark</item>
+    </style>
+
+    <style name="movieFAB">
+        <item name="tint">@color/textDefaultDark</item>
+        <item name="borderWidth">0dp</item>
+        <item name="elevation">0dp</item>
+        <item name="backgroundTint">@color/backgroundVariationDark</item>
+    </style>
+
+    <style name="ImageViewRoundedCorners">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/default_rounded_corners</item>
+    </style>
+
+    <style name="ImageViewRound">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="Toolbar">
+        <item name="android:background">@color/backgroundVariationDark</item>
+    </style>
+
+    <!-- TEXT -->
+    <style name="Title">
+        <item name="android:textColor">@color/textTitleDark</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Subtitle">
+        <item name="android:textColor">@color/textSubtitleDark</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Paragraph">
+        <item name="android:textColor">@color/textSubtitleVariationDark</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Editor">
+        <item name="android:textColor">@color/textEditorDark</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="EditorVariation">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TabTitles" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <!-- Button -->
+
+    <style name="ButtonBorderNegative" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeWidth">@dimen/lineWidth</item>
+        <item name="strokeColor">?themeNegativeColor</item>
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="android:textColor">?themeNegativeColor</item>
+        <item name="android:textAllCaps">false</item>
+        <!--<item name="android:fontFamily">@font/sourcesanspro_semibold</item> -->
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+</resources>

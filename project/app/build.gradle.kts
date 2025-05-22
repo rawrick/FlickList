@@ -1,5 +1,22 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
+}
+
+// Create a Properties object for local properties
+val keystoreProperties = Properties()
+// Define the path to your local.properties file
+val keystorePropertiesFile = rootProject.file("keystore.properties") // Reference from root
+
+// Check if the local.properties file exists and load it
+if (keystorePropertiesFile.exists()) {
+    FileInputStream(keystorePropertiesFile).use { input ->
+        keystoreProperties.load(input)
+    }
+} else {
+    println("Warning: local.properties not found. Some configurations might be missing.")
 }
 
 android {
@@ -15,10 +32,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val myApiKey = keystoreProperties.getProperty("apiKey", "DEFAULT_API_KEY_IF_NOT_FOUND")
+        buildConfigField("String", "ApiKey", "\"${myApiKey}\"")
     }
 
     buildTypes {
-
         release {
             isMinifyEnabled = false
             proguardFiles(

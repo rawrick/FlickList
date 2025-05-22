@@ -20,3 +20,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "FlickList"
+include(":app")
